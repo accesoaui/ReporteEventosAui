@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ReporteEventoAuiAccesos(1)</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #0f172a;
+      --input-bg: #1e293b;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-red: #e11d48;
+      --accent-blue: #2563eb;
+      --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    /* Modal Container (Screen View) */
+    .modal-container {
+      width: 100%;
+      max-width: 580px;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+      padding: 24px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .warning-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: rgba(225, 29, 72, 0.15);
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fda4af;
+    }
+
+    .modal-header h2 {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .input-control, .select-control, .textarea-control {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-control:focus, .select-control:focus, .textarea-control:focus {
+      border-color: var(--accent-red);
+      box-shadow: 0 0 10px rgba(225, 29, 72, 0.25);
+    }
+
+    .textarea-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* GPS Group */
+    .gps-flex {
+      display: flex;
+      gap: 10px;
+    }
+
+    .gps-input {
+      flex: 1;
+      font-family: monospace;
+    }
+
+    .btn-detect {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 0 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-detect:active {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    /* File Input Pill Button (Gallery & Camera Enabled) */
+    .file-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-file-select {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.2), rgba(159, 18, 57, 0.3));
+      border: 1px solid rgba(225, 29, 72, 0.4);
+      color: #fca5a5;
+      padding: 9px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn-file-select input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-status-text {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Extra Photos Annex Section */
+    .annex-section {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    .annex-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .btn-add-more-photos {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(37, 99, 235, 0.3));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-add-more-photos input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .annex-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .annex-thumb-card {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      height: 70px;
+      background: #0f172a;
+    }
+
+    .annex-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .annex-thumb-remove {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #f43f5e;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Footer Buttons */
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid #334155;
+      color: var(--text-main);
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-generate-pdf {
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-generate-pdf:active {
+      transform: scale(0.97);
+    }
+
+    .dynamic-section { display: none; }
+    .dynamic-section.active { display: block; }
+
+    /* ==========================================================================
+       EXACT AU-IA 5.0 PDF PRINT STYLING (MATCHING SCREENSHOTS 100%)
+       ========================================================================== */
+    .pdf-print-container {
+      display: none;
+      background: #ffffff;
+      color: #0f172a;
+      width: 100%;
+      padding: 30px 40px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    @media print {
+      html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-height: auto !important;
+        display: block !important;
+        overflow: visible !important;
+      }
+
+      .modal-container, #toast-box, .toast {
+        display: none !important;
+        height: 0 !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+      }
+
+      .pdf-print-container {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 10px 20px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      .pdf-header {
+        margin-bottom: 12px !important;
+        padding-bottom: 8px !important;
+      }
+
+      .pdf-event-banner {
+        padding: 8px 12px !important;
+        margin-bottom: 12px !important;
+        font-size: 14px !important;
+      }
+
+      .pdf-card {
+        padding: 12px 18px !important;
+        margin-bottom: 10px !important;
+        border-radius: 12px !important;
+      }
+
+      .pdf-grid-2 {
+        gap: 10px 18px !important;
+      }
+
+      .pdf-field-val {
+        font-size: 12px !important;
+      }
+
+      .pdf-photo-title {
+        margin-top: 12px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .pdf-photo-grid {
+        gap: 12px !important;
+      }
+
+      .pdf-photo-img {
+        height: 125px !important;
+      }
+
+      .pdf-footer {
+        margin-top: 18px !important;
+        padding-top: 8px !important;
+        page-break-inside: avoid !important;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 5mm 8mm;
+      }
+    }
+
+    /* PDF Header */
+    .pdf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #0f172a;
+      margin-bottom: 16px;
+    }
+
+    .pdf-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pdf-logo-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: #1e3a8a;
+      line-height: 1;
+    }
+    .pdf-logo-title span { color: #38bdf8; }
+
+    .pdf-logo-subtext {
+      font-size: 10px;
+      font-weight: 800;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .pdf-header-center {
+      text-align: center;
+    }
+
+    .pdf-header-center h1 {
+      font-size: 16px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 0.5px;
+    }
+
+    .pdf-header-center p {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2563eb;
+      text-transform: uppercase;
+    }
+
+    .pdf-header-right {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    /* PDF Dark Event Pill */
+    .pdf-event-banner {
+      background: #0f172a;
+      color: #ffffff;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    /* PDF Rounded Info Cards */
+    .pdf-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 16px;
+    }
+
+    .pdf-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+    }
+
+    .pdf-field-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .pdf-field-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .pdf-field-val {
+      font-size: 13px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    /* PDF Photo Section */
+    .pdf-photo-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 20px;
+      margin-bottom: 12px;
+    }
+
+    .pdf-photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .pdf-photo-grid.grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 70%;
+    }
+
+    .pdf-photo-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pdf-photo-img {
+      width: 100%;
+      height: 155px; padding: 2px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      background: #e2e8f0;
+    }
+
+    .pdf-photo-caption {
+      font-size: 9px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    /* PDF Anexo Section */
+    .pdf-anexo-wrapper {
+      margin-top: 24px;
+      page-break-before: auto;
+    }
+
+    .pdf-anexo-title {
+      font-size: 12px;
+      font-weight: 900;
+      color: #1e293b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 14px;
+    }
+
+    .pdf-anexo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .pdf-large-photo-page {
+      page-break-before: always;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .pdf-large-photo-title {
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 15px;
+      letter-spacing: 1.5px;
+    }
+    .pdf-large-photo-img {
+      max-width: 100%;
+      max-height: 820px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      object-fit: contain;
+    }
+
+    /* PDF Footer */
+    .pdf-footer {
+      margin-top: 40px;
+      padding-top: 12px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 9px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      color: #ffffff;
+      border: 1px solid #38bdf8;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SCREEN MODAL CONTAINER (MATCHING AU-IA 5.0 DESIGN)
+       ========================================================================== -->
+  <div class="modal-container">
+    
+    <div class="modal-header">
+      <div class="modal-title-group" style="display: flex; align-items: center; gap: 8px;">
+        <div style="font-size: 18px; font-weight: 900; color: #2563eb; line-height: 1; display: flex; align-items: center; gap: 2px; user-select: none;">AUI<span style="color: #38bdf8;">4.0</span></div>
+        <h2>REPORTAR EVENTO OPERATIVO</h2>
+      </div>
+      <button type="button" class="close-btn">&times;</button>
+    </div>
+
+    <form id="form-auia-evento">
+      
+      <!-- TIPO DE EVENTO -->
+      <div class="form-group">
+        <label class="form-label">TIPO DE EVENTO:</label>
+        <select id="sel-tipo-evento" class="select-control">
+          <option value="NAP/Botella Sin Potencia" selected>NAP/Botella Sin Potencia</option>
+          <option value="NAP/Botella Potencia Elevada">NAP/Botella Potencia Elevada</option>
+          <option value="Edesal Sin Energía">Edesal Sin Energía</option>
+          <option value="Municipalidad/Ente Sin Energía">Municipalidad/Ente Sin Energía</option>
+          <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
+          <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
+          <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
+          <option value="Shelter">Shelter</option>
+          <option value="Informe de Nueva Instalación">Informe de Nueva Instalación</option>
+        </select>
+      </div>
+
+      <!-- NOMBRE DEL TÉCNICO & COORDINADOR -->
+      <div class="form-group form-row-2">
+        <div>
+          <label class="form-label">NOMBRE DEL TÉCNICO:</label>
+          <input type="text" id="input-tecnico" class="input-control" placeholder="Nombre completo" autocomplete="off">
+        </div>
+        <div>
+          <label class="form-label">COORDINADOR:</label>
+          <input type="text" id="input-coordinador" class="input-control" placeholder="Nombre del coordinador" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- LOCALIDAD & DIRECCIÓN -->
+      <div class="form-group form-row-2">
+        <div>
+          <label class="form-label">LOCALIDAD:</label>
+          <input type="text" id="input-localidad" class="input-control" placeholder="Ej: Villa Mercedes / San Luis" autocomplete="off">
+        </div>
+        <div>
+          <label class="form-label">DIRECCIÓN:</label>
+          <input type="text" id="input-direccion" class="input-control" placeholder="Ej: Ruta 40 km" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- GPS (COORDENADAS) -->
+      <div class="form-group">
+        <label class="form-label">GPS (COORDENADAS):</label>
+        <div class="gps-flex">
+          <input type="text" id="input-gps" class="input-control gps-input" placeholder="Ej: -33.156378, -66.313137" autocomplete="off">
+          <button type="button" id="btn-detectar-gps" class="btn-detect">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Detectar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DINÁMICA 1: PARA NAP Sin Potencia & NAP Potencia Elevada -->
+      <div id="section-nap" class="dynamic-section active">
+        
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">TIPO DE NAP/BOTELLA:</label>
+            <select id="sel-tipo-nap" class="select-control">
+              <option value="SanLuisa1000">SanLuisa1000</option>
+              <option value="Wi-Fi">Wi-Fi</option>
+              <option value="Otras">Otras</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">FOTO NRO NAP/BOTELLA:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-nap" accept="image/*">
+              </div>
+              <span id="label-foto-nap" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">FOTO MEDICIÓN POTENCIA:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-potencia" accept="image/*">
+              </div>
+              <span id="label-foto-potencia" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">FOTO DEL POSTE:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-poste" accept="image/*">
+              </div>
+              <span id="label-foto-poste" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN DINÁMICA 2: PARA Edesal Sin Energía & Poste Inestable -->
+      <div id="section-edesal-poste" class="dynamic-section">
+        
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">TIPO DE SITIO:</label>
+          <select id="sel-tipo-sitio" class="select-control">
+            <option value="Sitio" selected>Sitio</option>
+            <option value="Wifi">Wifi</option>
+            <option value="Cámara">Cámara</option>
+            <option value="Alarma">Alarma</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-pre-ingenieria" style="display: none; margin-bottom: 16px;">
+          <label class="form-label">PRE-INGENIERÍA (NOMBRE) Ej: CCC-VM250:</label>
+          <input type="text" id="input-pre-ingenieria" class="input-control" placeholder="Ej: CCC-VM250" autocomplete="off">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">NOMBRE:</label>
+          <input type="text" id="input-edesal-nombre" class="input-control" placeholder="Ej: Institución/Cco/WiFi/Alarma" autocomplete="off">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">NRO DE NIS REFERENCIA:</label>
+          <input type="text" id="input-nis-ref" class="input-control" placeholder="NIS Referencia" autocomplete="off">
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">FOTO DE MEDIDOR:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-medidor" accept="image/*">
+              </div>
+              <span id="label-foto-medidor" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">FOTO CAJA ESTANCO (PRUEBA):</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-estanco" accept="image/*">
+              </div>
+              <span id="label-foto-estanco" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN DINÁMICA 3: Shelter con sub-reportes -->
+      <div id="section-shelter-nodo" class="dynamic-section">
+        <div class="form-group">
+          <label class="form-label">TIPO DE REPORTE SHELTER:</label>
+          <select id="sel-subtipo-shelter" class="select-control">
+            <option value="Ordenamiento Shelter" selected>Ordenamiento Shelter</option>
+            <option value="Problemas Eléctricos Internos">Problemas Eléctricos Internos</option>
+            <option value="Problema con el Rectificador">Problema con el Rectificador</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label id="label-shelter-desc" class="form-label">DETALLE ORDENAMIENTO SHELTER:</label>
+          <input type="text" id="input-shelter-desc" class="input-control" placeholder="Escriba detalles sobre el ordenamiento..." autocomplete="off">
+        </div>
+        
+        <div class="form-group">
+          <label id="label-shelter-foto" class="form-label">FOTO ORDENAMIENTO SHELTER:</label>
+          <div class="file-input-wrapper">
+            <div class="btn-file-select">
+              <span>Seleccionar archivo</span>
+              <input type="file" id="file-foto-shelter" accept="image/*">
+            </div>
+            <span id="label-foto-shelter-status" class="file-status-text">Sin archivos seleccionados</span>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- SECCIÓN DINÁMICA 4: INFORME DE NUEVA INSTALACIÓN / OBRA NUEVA -->
+      <div id="section-nueva-instalacion" class="dynamic-section">
+        
+        <!-- LISTA DINÁMICA DE TÉCNICOS (1 POR DEFECTO + BOTÓN AGREGAR) -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label class="form-label" style="margin-bottom:0;">TÉCNICOS INTERVINIENTES:</label>
+            <button type="button" onclick="agregarCampoTecnico()" style="background: rgba(56, 189, 248, 0.2); border: 1px solid rgba(56, 189, 248, 0.4); color: #7dd3fc; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              + Agregar Técnico
+            </button>
+          </div>
+          <div id="contenedor-tecnicos-instalacion" style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="tecnico-row" style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" class="input-control input-tecnico-item" placeholder="Técnico 1 (Nombre completo)" autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">TIPO DE SITIO:</label>
+            <select id="sel-tipo-sitio-inst" class="select-control" onchange="toggleOtroTipoSitio()">
+              <option value="Educación" selected>Educación</option>
+              <option value="Salud">Salud</option>
+              <option value="Seguridad">Seguridad</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">DETALLE / OTRO TIPO DE SITIO:</label>
+            <input type="text" id="input-otro-tipo-sitio" class="input-control" placeholder="Ej: Edificio Municipal, Registro Civil..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">NOMBRE DEL SITIO / INSTITUCIÓN:</label>
+          <input type="text" id="input-nombre-sitio-inst" class="input-control" placeholder="Ej: Comisaría Seccional 45, CAPS Batavia, Escuela N° 12..." autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">DETALLE DE LA INSTALACIÓN & EQUIPAMIENTO:</label>
+          <textarea id="input-detalle-instalacion" class="textarea-control" placeholder="Ej: Instalación y fijación de Rack 19'' 9U, Switch PoE 24 puertos, 3 Access Points Meraki MR36, 8 placas Wi-Fi en mástil exterior, cableado estructurado Cat6..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">MATERIALES & INSUMOS UTILIZADOS:</label>
+          <textarea id="input-materiales-instalacion" class="textarea-control" placeholder="Ej: 120m Cable UTP Cat6, 1 Rack mural 9U, 1 Patchera 24p, 1 PDU 8 tomas, 16 Fichas RJ45, 4 Cajas estancas, Grampas y precintos..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">FOTO PRINCIPAL DE LA INSTALACIÓN (RACK / GABINETE / EQUIPO):</label>
+          <div class="file-input-wrapper">
+            <div class="btn-file-select">
+              <span>Seleccionar archivo</span>
+              <input type="file" id="file-foto-instalacion" accept="image/*">
+            </div>
+            <span id="label-foto-instalacion" class="file-status-text">Sin archivos seleccionados</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COMENTARIOS / OBSERVACIONES DETALLES -->
+      <div class="form-group">
+        <label id="label-comentarios" class="form-label">COMENTARIOS:</label>
+        <textarea id="input-observaciones" class="textarea-control" placeholder="Observaciones..."></textarea>
+      </div>
+
+      <!-- ANEXO DE FOTOS ADICIONALES -->
+      <div class="annex-section">
+        <div class="annex-header">
+          <label class="form-label" style="margin-bottom:0;">FOTOS ADICIONALES (ANEXO):</label>
+          <div class="btn-add-more-photos">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Agregar más fotos</span>
+            <input type="file" id="file-foto-anexo" accept="image/*" multiple>
+          </div>
+        </div>
+        <div id="annex-preview-container" class="annex-preview-grid"></div>
+      </div>
+
+      <!-- FOOTER BUTTONS -->
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel">Cancelar</button>
+        <button type="button" id="btn-generar-pdf" class="btn-generate-pdf">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Generar Reporte PDF</span>
+        </button>
+        <button type="button" id="btn-redactar-email" class="btn-generate-pdf" style="display: none; background: linear-gradient(135deg, #f59e0b, #d97706); margin-left: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>Redactar Email</span>
+        </button>
+      </div>
+
+    </form>
+    <div style="text-align: center; font-size: 10px; color: var(--text-muted); margin-top: 18px; font-weight: 700; opacity: 0.7; letter-spacing: 0.5px;">by Merak.ia DevFK</div>
+  </div>
+
+
+  <!-- ==========================================================================
+       EXACT AU-IA 5.0 PRINTABLE PDF TEMPLATE (MATCHING SCREENSHOTS 100%)
+       ========================================================================== -->
+  <div id="pdf-container" class="pdf-print-container">
+    
+    <!-- PDF Header -->
+    <div class="pdf-header">
+      <div class="pdf-header-left">
+        <div class="pdf-logo-title">AUI<span>4.0</span></div>
+        <div class="pdf-logo-subtext">AUTOPISTA DE<br>LA INFORMACIÓN</div>
+      </div>
+
+      <div class="pdf-header-center">
+        <h1>AUTOPISTA DE LA INFORMACIÓN</h1>
+        <p>SOLICITUD DE GENERACIÓN DE TICKET-RECLAMO</p>
+      </div>
+
+      <div class="pdf-header-right">
+        <span id="pdf-date-time">FECHA: 21/7/2026 12:36:17</span>
+      </div>
+    </div>
+
+    <!-- Event Dark Pill Banner -->
+    <div id="pdf-event-pill" class="pdf-event-banner">
+      NAP SIN POTENCIA
+    </div>
+    
+
+
+    <!-- Data Card 1: Core Details -->
+    <div class="pdf-card">
+      <div id="pdf-grid-details" class="pdf-grid-2">
+        <!-- Dynamically rendered fields -->
+      </div>
+    </div>
+
+    <!-- Container for dynamic extra cards (Detalle de Instalación, Materiales, etc.) -->
+    <div id="pdf-extra-cards-container"></div>
+
+    <!-- Data Card 2: Observaciones / Detalles -->
+    <div class="pdf-card" id="pdf-card-observaciones">
+      <div class="pdf-field-item">
+        <span class="pdf-field-label" id="pdf-obs-label">OBSERVACIONES / DETALLES</span>
+        <span id="pdf-obs-text" class="pdf-field-val" style="font-weight:700;">Sin observaciones</span>
+      </div>
+    </div>
+
+    <!-- Registro Fotográfico Title -->
+    <div class="pdf-photo-title">REGISTRO FOTOGRÁFICO</div>
+
+    <!-- Photo Thumbnails Grid -->
+    <div id="pdf-photo-grid" class="pdf-photo-grid">
+      <!-- Dynamically filled photos -->
+    </div>
+
+    <!-- ANEXO FOTOGRÁFICO AL FINAL DEL PDF -->
+    <div id="pdf-anexo-section" class="pdf-anexo-wrapper" style="display:none;">
+      <div class="pdf-anexo-title">ANEXO FOTOGRÁFICO</div>
+      <div id="pdf-anexo-grid" class="pdf-anexo-grid"></div>
+    </div>
+
+    <!-- SECCIÓN DE FOTOS AMPLIADAS A PÁGINA COMPLETA AL FINAL -->
+    <div id="pdf-large-photos-section" class="pdf-large-photos-wrapper" style="display:none;">
+      <div id="pdf-large-photos-list"></div>
+    </div>
+
+    <!-- Banner de Acción para la Mesa de Ayuda en el PDF (al final del documento) -->
+    <div id="pdf-mail-action-container" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 12px; margin-top: 20px; margin-bottom: 10px; text-align: center;">
+      <span style="font-size: 10px; font-weight: 800; color: #1e40af; text-transform: uppercase;">MESA DE AYUDA: </span>
+      <a id="pdf-mail-link" href="#" target="_blank" style="color: #2563eb; font-weight: 900; font-size: 11px; text-decoration: underline; cursor: pointer;">
+        ✉️ Hacé clic aquí para abrir Gmail con el correo a Edesal pre-cargado
+      </a>
+    </div>
+
+    <!-- PDF Footer -->
+    <div class="pdf-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 12px; margin-top: 40px; font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px;">
+      <span>AUTOPISTA DE LA INFORMACIÓN - AREA ACCESOS - FIRMA DIGITAL TECNICO.</span>
+      <span style="font-size: 8px; opacity: 0.8; font-weight: 900; letter-spacing: 0.5px; color: #475569; text-transform: none;">by Merak.ia DevFK</span>
+    </div>
+
+  </div>
+
+  <div id="toast-box" class="toast">Notificación</div>
+
+  <script>
+
+    function agregarCampoTecnico() {
+      const container = document.getElementById('contenedor-tecnicos-instalacion');
+      if (!container) return;
+      const count = container.querySelectorAll('.tecnico-row').length + 1;
+      
+      const div = document.createElement('div');
+      div.className = 'tecnico-row';
+      div.style.cssText = 'display: flex; gap: 8px; align-items: center;';
+      div.innerHTML = `
+        <input type="text" class="input-control input-tecnico-item" placeholder="Técnico ${count} (Nombre completo)" autocomplete="off">
+        <button type="button" onclick="this.parentElement.remove()" style="background: rgba(244, 63, 94, 0.2); border: 1px solid rgba(244, 63, 94, 0.4); color: #fda4af; padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight: 900; cursor: pointer;">✕</button>
+      `;
+      container.appendChild(div);
+    }
+    window.agregarCampoTecnico = agregarCampoTecnico;
+
+    function toggleOtroTipoSitio() {
+      const sel = document.getElementById('sel-tipo-sitio-inst')?.value;
+      const inp = document.getElementById('input-otro-tipo-sitio');
+      if (inp) {
+        if (sel === 'Otros') {
+          inp.placeholder = 'Especifique el tipo de sitio...';
+          inp.focus();
+        } else {
+          inp.placeholder = 'Detalle complementario (opcional)...';
+        }
+      }
+    }
+    window.toggleOtroTipoSitio = toggleOtroTipoSitio;
+
+
+    const toastBox = document.getElementById('toast-box');
+    function showNotification(text) {
+      toastBox.textContent = text;
+      toastBox.classList.add('show');
+      setTimeout(() => toastBox.classList.remove('show'), 3000);
+    }
+
+    // 1. Selector Dinámico de Formulario según Tipo de Evento
+    const selTipoEvento = document.getElementById('sel-tipo-evento');
+    const selSubtipoShelter = document.getElementById('sel-subtipo-shelter');
+    const secNap = document.getElementById('section-nap');
+    const secEdesalPoste = document.getElementById('section-edesal-poste');
+    const secShelter = document.getElementById('section-shelter-nodo');
+    
+    const labelShelterDesc = document.getElementById('label-shelter-desc');
+    const inputShelterDesc = document.getElementById('input-shelter-desc');
+    const labelShelterFoto = document.getElementById('label-shelter-foto');
+    
+    const labelComentarios = document.getElementById('label-comentarios');
+
+    function updateDynamicForm() {
+      const val = selTipoEvento.value;
+      const secInstalacion = document.getElementById('section-nueva-instalacion');
+      const standardTecnicoGroup = document.getElementById('input-tecnico')?.closest('.form-group');
+      
+      secNap.classList.remove('active');
+      secEdesalPoste.classList.remove('active');
+      secShelter.classList.remove('active');
+      if (secInstalacion) secInstalacion.classList.remove('active');
+      if (standardTecnicoGroup) standardTecnicoGroup.style.display = 'grid';
+      
+      document.getElementById('group-pre-ingenieria').style.display = 'none';
+      // btn-redactar-email oculto
+      
+      if (val === 'NAP/Botella Sin Potencia' || val === 'NAP/Botella Potencia Elevada') {
+        secNap.classList.add('active');
+        labelComentarios.textContent = 'COMENTARIOS:';
+      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
+        secEdesalPoste.classList.add('active');
+        labelComentarios.textContent = 'OBSERVACIONES DETALLES:';
+        if (val.includes('energización') || val.includes('energizacion')) {
+          document.getElementById('group-pre-ingenieria').style.display = 'block';
+        }
+      } else if (val === 'Informe de Nueva Instalación') {
+        const secInst = document.getElementById('section-nueva-instalacion');
+        if (secInst) secInst.classList.add('active');
+        const standardTecnicoGroup = document.getElementById('input-tecnico')?.closest('.form-group');
+        if (standardTecnicoGroup) standardTecnicoGroup.style.display = 'none';
+        labelComentarios.textContent = 'OBSERVACIONES / NOVEDADES ADICIONALES:';
+      } else if (val === 'Shelter') {
+        secShelter.classList.add('active');
+        labelComentarios.textContent = 'COMENTARIOS Y OBSERVACIONES:';
+        updateShelterLabels();
+      }
+    }
+
+    function updateShelterLabels() {
+      const subVal = selSubtipoShelter.value;
+      if (subVal === 'Ordenamiento Shelter') {
+        labelShelterDesc.textContent = 'DETALLE ORDENAMIENTO SHELTER:';
+        inputShelterDesc.placeholder = 'Escriba detalles sobre el ordenamiento del Shelter...';
+        labelShelterFoto.textContent = 'FOTO ORDENAMIENTO SHELTER:';
+      } else if (subVal === 'Problemas Eléctricos Internos') {
+        labelShelterDesc.textContent = 'DETALLE PROBLEMAS ELÉCTRICOS INTERNOS:';
+        inputShelterDesc.placeholder = 'Describa los problemas eléctricos internos...';
+        labelShelterFoto.textContent = 'FOTO PROBLEMAS ELÉCTRICOS INTERNOS:';
+      } else if (subVal === 'Problema con el Rectificador') {
+        labelShelterDesc.textContent = 'DETALLE PROBLEMA CON EL RECTIFICADOR:';
+        inputShelterDesc.placeholder = 'Describa los problemas con el rectificador...';
+        labelShelterFoto.textContent = 'FOTO PROBLEMA CON EL RECTIFICADOR:';
+      } else if (subVal === 'Otros') {
+        labelShelterDesc.textContent = 'DESCRIPCIÓN DE OTROS EVENTOS:';
+        inputShelterDesc.placeholder = 'Describa el evento...';
+        labelShelterFoto.textContent = 'FOTO DEL EVENTO:';
+      }
+    }
+
+    selSubtipoShelter.addEventListener('change', updateShelterLabels);
+
+    selTipoEvento.addEventListener('change', updateDynamicForm);
+
+    // 2. Detección GPS del Celular
+    document.getElementById('btn-detectar-gps').addEventListener('click', () => {
+      showNotification('Obteniendo coordenadas GPS del celular...');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude.toFixed(6);
+            const lng = pos.coords.longitude.toFixed(6);
+            document.getElementById('input-gps').value = `${lat}, ${lng}`;
+            showNotification('📍 Coordenadas GPS obtenidas');
+          },
+          (err) => {
+            showNotification('⚠️ GPS Error: ' + err.message);
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else {
+        showNotification('⚠️ Geolocation no soportado');
+      }
+    });
+
+    // 3. Manejo de Archivos e Imágenes con Compresión Automática para iOS (Carrete + Cámara)
+    
+    const fileFotoInst = document.getElementById('file-foto-instalacion');
+    if (fileFotoInst) {
+      fileFotoInst.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        compressImageFile(file, (dataUrl) => {
+          photoStore.fotoInstalacion = dataUrl;
+          document.getElementById('label-foto-instalacion').textContent = '✓ ' + file.name;
+          showNotification('✓ Foto de Instalación cargada');
+        });
+      });
+    }
+
+const photoStore = {};
+    const extraAnnexPhotos = []; // Store for + Agregar más fotos
+
+    function compressImageFile(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1280;
+          let w = img.width;
+          let h = img.height;
+
+          if (w > h) {
+            if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          } else {
+            if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          callback(compressedBase64);
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleFileInput(fileInputId, labelId, storeKey) {
+      const fileInput = document.getElementById(fileInputId);
+      const labelEl = document.getElementById(labelId);
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        showNotification('Comprimiendo imagen...');
+        labelEl.textContent = 'Procesando...';
+
+        compressImageFile(file, (compressedBase64) => {
+          photoStore[storeKey] = compressedBase64;
+          const sizeKb = Math.round((compressedBase64.length * 3 / 4) / 1024);
+          labelEl.textContent = `✓ Imagen lista (${sizeKb} KB)`;
+          labelEl.style.color = '#34d399';
+          showNotification('📷 Foto optimizada correctamente');
+        });
+      });
+    }
+
+    handleFileInput('file-foto-nap', 'label-foto-nap', 'fotoNap');
+    handleFileInput('file-foto-potencia', 'label-foto-potencia', 'fotoPotencia');
+    handleFileInput('file-foto-poste', 'label-foto-poste', 'fotoPoste');
+    handleFileInput('file-foto-medidor', 'label-foto-medidor', 'fotoMedidor');
+    handleFileInput('file-foto-estanco', 'label-foto-estanco', 'fotoEstanco');
+    handleFileInput('file-foto-shelter', 'label-foto-shelter-status', 'fotoShelter');
+
+    // 4. Manejo de "+ Agregar más fotos" (Anexo)
+    const fileAnexoInput = document.getElementById('file-foto-anexo');
+    const annexContainer = document.getElementById('annex-preview-container');
+
+    fileAnexoInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      showNotification(`Procesando ${files.length} foto(s) para el Anexo...`);
+
+      let processedCount = 0;
+      files.forEach(file => {
+        compressImageFile(file, (compressedBase64) => {
+          extraAnnexPhotos.push(compressedBase64);
+          processedCount++;
+          renderAnnexThumbnails();
+          if (processedCount === files.length) {
+            showNotification('📸 Foto(s) agregada(s) al Anexo correctamente');
+          }
+        });
+      });
+
+      fileAnexoInput.value = '';
+    });
+
+    function renderAnnexThumbnails() {
+      annexContainer.innerHTML = '';
+      extraAnnexPhotos.forEach((src, idx) => {
+        const card = document.createElement('div');
+        card.className = 'annex-thumb-card';
+        card.innerHTML = `
+          <img src="${src}" class="annex-thumb-img" />
+          <button type="button" class="annex-thumb-remove" onclick="removeAnnexPhoto(${idx})">&times;</button>
+        `;
+        annexContainer.appendChild(card);
+      });
+    }
+
+    window.removeAnnexPhoto = function(idx) {
+      extraAnnexPhotos.splice(idx, 1);
+      renderAnnexThumbnails();
+      showNotification('Foto removida del Anexo');
+    };
+
+    function convertDecimalToDMS(val, isLat) {
+      const num = parseFloat(val);
+      if (isNaN(num)) return { deg: 0, min: 0, sec: '0.00', dir: isLat ? 'S' : 'W' };
+      
+      const absVal = Math.abs(num);
+      const deg = Math.floor(absVal);
+      const min = Math.floor((absVal - deg) * 60);
+      const sec = (((absVal - deg) * 60 - min) * 60).toFixed(2);
+      
+      let dir = '';
+      if (isLat) {
+        dir = num < 0 ? 'S' : 'N';
+      } else {
+        dir = num < 0 ? 'W' : 'E';
+      }
+      
+      return { deg, min, sec, dir };
+    }
+
+    document.getElementById('btn-redactar-email').addEventListener('click', () => {
+      const val = selTipoEvento.value;
+      const preIng = document.getElementById('input-pre-ingenieria').value.trim() || 'S/D';
+      const edesalNombre = document.getElementById('input-edesal-nombre').value.trim() || 'N/A';
+      const nisRef = document.getElementById('input-nis-ref').value.trim() || 'N/A';
+      const localidad = document.getElementById('input-localidad').value.trim() || 'S/D';
+      const domicilio = document.getElementById('input-direccion').value.trim() || 'S/D';
+      const gps = document.getElementById('input-gps').value.trim();
+      
+      let lat = '';
+      let lng = '';
+      if (gps && gps.includes(',')) {
+        const parts = gps.split(',');
+        lat = parts[0].trim();
+        lng = parts[1].trim();
+      }
+      
+      const dmsLat = convertDecimalToDMS(lat, true);
+      const dmsLon = convertDecimalToDMS(lng, false);
+      
+      const now = new Date();
+      const dateFormatted = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()}`;
+      
+      let edesalStatusText = 'PENDIENTE';
+      let subjectText = `Solicitud de nueva energización - ${preIng}`;
+      let bodyText = `Buen día,\n\nSolicitamos por la misma se pueda realizar la energización de estas nuevas cajas, para cámaras de seguridad en ciudad de San Luis, en las siguientes locaciones:\n\n[Pega la tabla copiada usando Ctrl+V aquí]\n\nMuchas gracias, quedamos a disposición.\n\nSaludos cordiales,`;
+
+      if (val === 'Edesal Sin Energía') {
+        edesalStatusText = 'SIN ENERGÍA';
+        subjectText = `Edesal Sin Energía - Localidad: ${localidad} - Sitio: ${edesalNombre !== 'N/A' ? edesalNombre : (preIng !== 'S/D' ? preIng : domicilio)}`;
+        bodyText = `Buen día,\n\nInformamos que el siguiente sitio se encuentra sin energía de Edesal:\n\n[Pega la tabla copiada usando Ctrl+V aquí]\n\nMuchas gracias, quedamos a disposición.\n\nSaludos cordiales,`;
+      } else if (val.includes('Municipal') || val.includes('Ente')) {
+        edesalStatusText = 'POSTE INESTABLE MUNICIPAL/ENTE';
+        subjectText = `Poste Inestable Municipal/Ente - Localidad: ${localidad} - Nombre: ${edesalNombre !== 'N/A' ? edesalNombre : domicilio}`;
+        bodyText = `Buen día,\n\nInformamos sobre un poste inestable (Municipal/Ente) en la siguiente ubicación que requiere atención:\n\n[Pega la tabla copiada usando Ctrl+V aquí]\n\nMuchas gracias, quedamos a disposición.\n\nSaludos cordiales,`;
+      } else if (val.includes('Poste Inestable')) {
+        edesalStatusText = 'POSTE INESTABLE EDESAL';
+        subjectText = `Poste Inestable Edesal - Localidad: ${localidad} - Nombre: ${edesalNombre !== 'N/A' ? edesalNombre : domicilio}`;
+        bodyText = `Buen día,\n\nInformamos sobre un poste inestable en la siguiente ubicación que requiere atención de Edesal:\n\n[Pega la tabla copiada usando Ctrl+V aquí]\n\nMuchas gracias, quedamos a disposición.\n\nSaludos cordiales,`;
+      }
+
+      const htmlTable = `
+        <table border="1" cellpadding="8" style="border-collapse:collapse; font-family:Arial, sans-serif; font-size:12px; width:100%; border:1px solid #cbd5e1; text-align:center; color:#1e293b;">
+          <thead>
+            <tr style="background-color:#f59e0b; color:white; font-weight:bold; text-transform:uppercase; font-size:11px;">
+              <th style="padding:10px; border:1px solid #cbd5e1;">Nombre</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Pre-Ingeniería</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Nis / Medidor de Referencia</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Edesal</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Fecha Solicitud</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Latitud</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Longitud</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Localidad</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Domicilio</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Ingeniería / Documentos</th>
+              <th style="padding:10px; border:1px solid #cbd5e1;">Mapa</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Glat</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Mlat</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Slat</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Lat</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Glon</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Mlon</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Slon</th>
+              <th style="padding:10px; border:1px solid #cbd5e1; background-color:#e2e8f0; color:#475569;">Long</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#0f172a;">${edesalNombre}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${preIng}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${nisRef}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#fef3c7; color:#b45309; font-weight:bold;">${edesalStatusText}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${dateFormatted}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${lat}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${lng}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${localidad}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;">${domicilio}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1;"><a href="#" style="color:#2563eb; text-decoration:none; font-weight:bold;">ver adjunto</a></td>
+              <td style="padding:10px; border:1px solid #cbd5e1;"><a href="https://maps.google.com/?q=${lat},${lng}" style="color:#2563eb; text-decoration:none; font-weight:bold;">ver mapa</a></td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc;">${dmsLat.deg}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc;">${dmsLat.min}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc;">${dmsLat.sec}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc; font-weight:bold;">${dmsLat.dir}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc;">${dmsLon.deg}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc;">${dmsLon.min}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc;">${dmsLon.sec}</td>
+              <td style="padding:10px; border:1px solid #cbd5e1; background-color:#f8fafc; font-weight:bold;">${dmsLon.dir}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+
+      const plainText = `Nombre: ${edesalNombre}\nPre-Ingeniería: ${preIng}\nNIS/Medidor de Referencia: ${nisRef}\nEdesal: ${edesalStatusText}\nFecha: ${dateFormatted}\nCoordenadas: ${gps}\nLocalidad: ${localidad}\nDomicilio: ${domicilio}`;
+      
+      try {
+        const blob = new Blob([htmlTable], { type: 'text/html' });
+        const plainBlob = new Blob([plainText], { type: 'text/plain' });
+        const item = new ClipboardItem({
+          'text/html': blob,
+          'text/plain': plainBlob
+        });
+        
+        navigator.clipboard.write([item]).then(() => {
+          showNotification('✓ Tabla copiada en formato rico para Email');
+          const finalSubject = encodeURIComponent(subjectText);
+          const finalBody = encodeURIComponent(bodyText);
+          window.open(`mailto:fkelli@ulp.edu.ar?subject=${finalSubject}&body=${finalBody}`, '_blank');
+        });
+      } catch(clipErr) {
+        console.error("Clipboard Error: ", clipErr);
+        const textarea = document.createElement('textarea');
+        textarea.value = htmlTable;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showNotification('✓ Código HTML copiado (Fallback)');
+        const finalSubject = encodeURIComponent(subjectText);
+        window.open(`mailto:fkelli@ulp.edu.ar?subject=${finalSubject}`, '_blank');
+      }
+    });
+
+    // 5. GENERACIÓN DE REPORTES PDF IDÉNTICOS AL SISTEMA AU-IA 5.0 (CON COORDINADOR)
+    document.getElementById('btn-generar-pdf').addEventListener('click', (e) => {
+      if (e) e.preventDefault();
+      try {
+        const eventoVal = selTipoEvento.value;
+        const tecnico = (document.getElementById('input-tecnico')?.value || '').trim() || 'Técnico Operativo';
+        const coordinador = (document.getElementById('input-coordinador')?.value || '').trim() || 'Coordinador CT';
+        const localidad = (document.getElementById('input-localidad')?.value || '').trim() || 'San Luis';
+        const direccion = (document.getElementById('input-direccion')?.value || '').trim() || 'S/D';
+        const gps = (document.getElementById('input-gps')?.value || '').trim() || 'Sin GPS';
+        const obs = (document.getElementById('input-observaciones')?.value || '').trim() || 'Sin observaciones';
+
+        // Update Date & Header
+        const now = new Date();
+        const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+        const dateEl = document.getElementById('pdf-date-time');
+        if (dateEl) dateEl.textContent = 'FECHA: ' + dateStr;
+
+        const pillEl = document.getElementById('pdf-event-pill');
+        if (pillEl) {
+          if (eventoVal === 'Shelter') {
+            const subVal = document.getElementById('sel-subtipo-shelter')?.value || 'Shelter';
+            pillEl.textContent = subVal.toUpperCase();
+          } else {
+            pillEl.textContent = eventoVal.toUpperCase();
+          }
+        }
+
+        const isNap = (eventoVal === 'NAP/Botella Sin Potencia' || eventoVal === 'NAP/Botella Potencia Elevada');
+        const isShelter = (eventoVal === 'Shelter');
+        const isNuevaInstalacion = (eventoVal === 'Informe de Nueva Instalación');
+
+        // Reset extra cards container
+        const extraCardsCont = document.getElementById('pdf-extra-cards-container');
+        if (extraCardsCont) extraCardsCont.innerHTML = '';
+
+        const obsLabelEl = document.getElementById('pdf-obs-label');
+        if (obsLabelEl) {
+          obsLabelEl.textContent = isNuevaInstalacion ? 'OBSERVACIONES / NOVEDADES DE OBRA' : 'OBSERVACIONES / DETALLES';
+        }
+
+        const obsTextEl = document.getElementById('pdf-obs-text');
+        if (obsTextEl) obsTextEl.textContent = obs;
+
+        // Render Details Grid
+        const gridEl = document.getElementById('pdf-grid-details');
+        let detailsHtml = '';
+
+        if (isNuevaInstalacion) {
+          // Collect all technicians
+          const tecInputs = document.querySelectorAll('.input-tecnico-item');
+          const tecs = [];
+          tecInputs.forEach(inp => {
+            if (inp.value && inp.value.trim()) tecs.push(inp.value.trim());
+          });
+          const tecFinalStr = tecs.length > 0 ? tecs.join(' • ') : tecnico;
+
+          const tipoSitioInst = document.getElementById('sel-tipo-sitio-inst')?.value || 'Educación';
+          const otroTipoSitio = document.getElementById('input-otro-tipo-sitio')?.value.trim();
+          const tipoSitioCompleto = otroTipoSitio ? `${tipoSitioInst} (${otroTipoSitio})` : tipoSitioInst;
+          const nombreSitioInst = document.getElementById('input-nombre-sitio-inst')?.value.trim() || 'S/D';
+          const detalleInst = document.getElementById('input-detalle-instalacion')?.value.trim() || 'Sin detalles especificados';
+          const materialesInst = document.getElementById('input-materiales-instalacion')?.value.trim() || 'Sin materiales especificados';
+
+          detailsHtml = `
+            <div class="pdf-field-item" style="grid-column: span 2;">
+              <span class="pdf-field-label">TÉCNICOS INTERVINIENTES</span>
+              <span class="pdf-field-val" style="color: #2563eb;">${tecFinalStr}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR OPERATIVO</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN / UBICACIÓN</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TIPO DE SITIO / DESTINO</span>
+              <span class="pdf-field-val">${tipoSitioCompleto}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">NOMBRE DEL SITIO / INSTITUCIÓN</span>
+              <span class="pdf-field-val" style="font-size: 14px; color: #0f172a;">${nombreSitioInst}</span>
+            </div>
+          `;
+
+          if (extraCardsCont) {
+            extraCardsCont.innerHTML = `
+              <div class="pdf-card">
+                <div class="pdf-field-item">
+                  <span class="pdf-field-label" style="color: #2563eb;">DETALLE DE LA INSTALACIÓN & EQUIPAMIENTO</span>
+                  <span class="pdf-field-val" style="font-weight:700; white-space: pre-line; line-height: 1.4;">${detalleInst}</span>
+                </div>
+              </div>
+              <div class="pdf-card">
+                <div class="pdf-field-item">
+                  <span class="pdf-field-label" style="color: #059669;">MATERIALES & INSUMOS UTILIZADOS</span>
+                  <span class="pdf-field-val" style="font-weight:700; white-space: pre-line; line-height: 1.4;">${materialesInst}</span>
+                </div>
+              </div>
+            `;
+          }
+
+        } else if (isNap) {
+          const tipoNap = document.getElementById('sel-tipo-nap')?.value || 'SanLuisa1000';
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
+              <span class="pdf-field-val">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TIPO DE NAP/BOTELLA</span>
+              <span class="pdf-field-val">${tipoNap}</span>
+            </div>
+          `;
+
+        } else if (isShelter) {
+          const shelterDesc = document.getElementById('input-shelter-desc')?.value.trim() || 'Sin detalles';
+          const dynamicLabel = document.getElementById('label-shelter-desc')?.textContent.replace(':', '') || 'DETALLE SHELTER';
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
+              <span class="pdf-field-val">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">${dynamicLabel}</span>
+              <span class="pdf-field-val">${shelterDesc}</span>
+            </div>
+          `;
+
+        } else {
+          // Edesal / Municipalidad / Postes
+          const tipoSitio = document.getElementById('sel-tipo-sitio')?.value || 'Sitio';
+          const edesalNombre = document.getElementById('input-edesal-nombre')?.value.trim() || 'N/A';
+          const nisRef = document.getElementById('input-nis-ref')?.value.trim() || 'N/A';
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
+              <span class="pdf-field-val">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TIPO DE SITIO</span>
+              <span class="pdf-field-val">${tipoSitio}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">NOMBRE</span>
+              <span class="pdf-field-val">${edesalNombre}</span>
+            </div>
+          `;
+          if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) {
+            const preIng = document.getElementById('input-pre-ingenieria')?.value.trim() || 'N/A';
+            detailsHtml += `
+              <div class="pdf-field-item">
+                <span class="pdf-field-label">PRE-INGENIERÍA</span>
+                <span class="pdf-field-val">${preIng}</span>
+              </div>
+            `;
+          }
+          detailsHtml += `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">NÚMERO DE NIS REFERENCIA</span>
+              <span class="pdf-field-val">${nisRef}</span>
+            </div>
+          `;
+        }
+
+        if (gridEl) gridEl.innerHTML = detailsHtml;
+
+        // Render Photo Grid
+        const photoGridEl = document.getElementById('pdf-photo-grid');
+        if (photoGridEl) {
+          photoGridEl.innerHTML = '';
+
+          if (isNuevaInstalacion) {
+            photoGridEl.className = 'pdf-photo-grid grid-2';
+            const instPhotos = [
+              { label: 'FOTO PRINCIPAL DE INSTALACIÓN', src: photoStore.fotoInstalacion }
+            ];
+            instPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" style="height: 180px;" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700; height: 180px;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
+          } else if (isNap) {
+            photoGridEl.className = 'pdf-photo-grid';
+            const napPhotos = [
+              { label: 'NRO NAP/BOTELLA', src: photoStore.fotoNap },
+              { label: 'POTENCIA', src: photoStore.fotoPotencia },
+              { label: 'POSTE', src: photoStore.fotoPoste }
+            ];
+            napPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
+          } else if (isShelter) {
+            photoGridEl.className = 'pdf-photo-grid grid-2';
+            const dynamicFotoLabel = document.getElementById('label-shelter-foto')?.textContent.replace(':', '') || 'FOTO SHELTER';
+            const shelterPhotos = [
+              { label: dynamicFotoLabel, src: photoStore.fotoShelter }
+            ];
+            shelterPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
+          } else {
+            photoGridEl.className = 'pdf-photo-grid grid-2';
+            const estancoLabel = eventoVal.includes('Poste Inestable') ? 'FOTO CAJA ESTANCO / POSTE' : 'FOTO CAJA ESTANCO';
+            const edesalPhotos = [
+              { label: 'FOTO MEDIDOR', src: photoStore.fotoMedidor },
+              { label: estancoLabel, src: photoStore.fotoEstanco }
+            ];
+            edesalPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+          }
+        }
+
+        // Render Anexo
+        const pdfAnexoSec = document.getElementById('pdf-anexo-section');
+        const pdfAnexoGrid = document.getElementById('pdf-anexo-grid');
+        if (pdfAnexoSec && pdfAnexoGrid) {
+          if (extraAnnexPhotos.length > 0) {
+            pdfAnexoGrid.innerHTML = '';
+            extraAnnexPhotos.forEach((src, i) => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              card.innerHTML = `
+                <img src="${src}" class="pdf-photo-img" />
+                <span class="pdf-photo-caption">ANEXO ${i + 1}</span>
+              `;
+              pdfAnexoGrid.appendChild(card);
+            });
+            pdfAnexoSec.style.display = 'block';
+          } else {
+            pdfAnexoSec.style.display = 'none';
+          }
+        }
+
+        // Render Large Photos
+        const pdfLargeSec = document.getElementById('pdf-large-photos-section');
+        const pdfLargeList = document.getElementById('pdf-large-photos-list');
+        if (pdfLargeSec && pdfLargeList) {
+          pdfLargeList.innerHTML = '';
+          let largePhotos = [];
+          if (isNuevaInstalacion) {
+            if (photoStore.fotoInstalacion) largePhotos.push({ label: 'FOTO PRINCIPAL DE INSTALACIÓN', src: photoStore.fotoInstalacion });
+          } else if (isNap) {
+            if (photoStore.fotoNap) largePhotos.push({ label: 'NRO NAP/BOTELLA', src: photoStore.fotoNap });
+            if (photoStore.fotoPotencia) largePhotos.push({ label: 'POTENCIA', src: photoStore.fotoPotencia });
+            if (photoStore.fotoPoste) largePhotos.push({ label: 'POSTE', src: photoStore.fotoPoste });
+          } else if (isShelter) {
+            const dynamicFotoLabel = document.getElementById('label-shelter-foto')?.textContent.replace(':', '') || 'FOTO SHELTER';
+            if (photoStore.fotoShelter) largePhotos.push({ label: dynamicFotoLabel, src: photoStore.fotoShelter });
+          } else {
+            const estancoLabel = eventoVal.includes('Poste Inestable') ? 'FOTO CAJA ESTANCO / POSTE' : 'FOTO CAJA ESTANCO';
+            if (photoStore.fotoMedidor) largePhotos.push({ label: 'FOTO MEDIDOR', src: photoStore.fotoMedidor });
+            if (photoStore.fotoEstanco) largePhotos.push({ label: estancoLabel, src: photoStore.fotoEstanco });
+          }
+          extraAnnexPhotos.forEach((src, idx) => {
+            largePhotos.push({ label: `ANEXO ${idx + 1}`, src: src });
+          });
+
+          if (largePhotos.length > 0) {
+            largePhotos.forEach(p => {
+              const div = document.createElement('div');
+              div.className = 'pdf-large-photo-page';
+              div.innerHTML = `
+                <div class="pdf-large-photo-title">${p.label}</div>
+                <img src="${p.src}" class="pdf-large-photo-img" />
+              `;
+              pdfLargeList.appendChild(div);
+            });
+            pdfLargeSec.style.display = 'block';
+          } else {
+            pdfLargeSec.style.display = 'none';
+          }
+        }
+
+        
+        // Configurar Banner / Link mailto para la Mesa de Ayuda en Eventos Edesal y Municipalidad/Ente
+        const mailContainer = document.getElementById('pdf-mail-action-container');
+        const mailLink = document.getElementById('pdf-mail-link');
+
+        const isEdesalEvent = (eventoVal === 'Edesal Sin Energía' || eventoVal === 'Municipalidad/Ente Sin Energía' || eventoVal.includes('energización') || eventoVal.includes('energizacion') || eventoVal.includes('Poste Inestable'));
+        
+        if (isEdesalEvent && mailContainer && mailLink) {
+          mailContainer.style.display = 'block';
+          
+          const preIng = (document.getElementById('input-pre-ingenieria')?.value || '').trim() || 'N/A';
+          const tipoSitio = document.getElementById('sel-tipo-sitio')?.value || 'Sitio';
+          const edesalNombre = (document.getElementById('input-edesal-nombre')?.value || '').trim() || 'N/A';
+          const nisRef = (document.getElementById('input-nis-ref')?.value || '').trim() || 'N/A';
+
+          let nroReclamoInfo = preIng !== 'N/A' ? preIng : (nisRef !== 'N/A' ? nisRef : (edesalNombre !== 'N/A' ? edesalNombre : localidad));
+          
+          let subjectText = "";
+          let introText = "";
+          let linkText = "✉️ Hacé clic aquí para abrir Gmail con el correo a Edesal pre-cargado";
+
+          if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) {
+            subjectText = `Pedido de Nueva Energización - Autopista de la Información solicitud interna: ${nroReclamoInfo}`;
+            introText = `Solicitamos por la misma se pueda realizar la energización de estos nuevos dispositivos.`;
+            linkText = "✉️ Hacé clic aquí para abrir Gmail con el pedido de Nueva Energización pre-cargado";
+          } else if (eventoVal.includes('Municipal') || eventoVal.includes('Ente')) {
+            subjectText = `Poste / Sitio Inestable Municipal/Ente - Autopista de la Información: ${nroReclamoInfo}`;
+            introText = `Solicitamos por la misma se pueda realizar la verificación y reparación correspondiente.`;
+            linkText = "✉️ Hacé clic aquí para abrir correo con el reporte Municipal/Ente pre-cargado";
+          } else if (eventoVal.includes('Poste Inestable')) {
+            subjectText = `Poste Inestable Edesal - Autopista de la Información solicitud interna: ${nroReclamoInfo}`;
+            introText = `Solicitamos por la misma se pueda realizar la reparación de este poste inestable.`;
+            linkText = "✉️ Hacé clic aquí para abrir Gmail con el reporte de Poste Inestable Edesal pre-cargado";
+          } else if (eventoVal === 'Edesal Sin Energía') {
+            subjectText = `Dispositivos sin energía - Autopista de la Información solicitud interna: ${nroReclamoInfo}`;
+            introText = `Solicitamos por la misma se pueda verificar y restablecer la energía en estos dispositivos.`;
+            linkText = "✉️ Hacé clic aquí para abrir Gmail con el correo a Edesal pre-cargado";
+          } else {
+            subjectText = `[REPORTE] ${eventoVal.toUpperCase()} - ${localidad}`;
+            introText = `Solicitamos por la misma la atención del siguiente evento operativo.`;
+          }
+
+          // Convertir Coordenadas GPS a DMS (Grados, Minutos, Segundos)
+          let dmsFormatted = gps;
+          let mapsLink = "N/A";
+          if (gps && gps.includes(',')) {
+            const parts = gps.split(',');
+            const latDMS = convertDecimalToDMS(parts[0], true);
+            const lngDMS = convertDecimalToDMS(parts[1], false);
+            dmsFormatted = `${latDMS.deg}°${latDMS.min}'${latDMS.sec}"${latDMS.dir} ${lngDMS.deg}°${lngDMS.min}'${lngDMS.sec}"${lngDMS.dir} (${gps.trim()})`;
+            mapsLink = `https://www.google.com/maps?q=${encodeURIComponent(gps.trim())}`;
+          }
+
+          let bodyText = `Buenos días:\n\n${introText}\nSe adjunta el pdf con todo el material fotográfico necesario:\n\n` +
+            `• TIPO DE EVENTO: ${eventoVal}\n` +
+            `• TIPO DE SITIO: ${tipoSitio}\n` +
+            `• NOMBRE: ${edesalNombre}\n` +
+            `• LOCALIDAD: ${localidad}\n` +
+            `• DIRECCIÓN: ${direccion}\n` +
+            `• COORDENADAS GPS: ${dmsFormatted}\n` +
+            `• LINK GOOGLE MAPS: ${mapsLink}\n` +
+            `• NIS REFERENCIA: ${nisRef}\n` +
+            `• TÉCNICO: ${tecnico}\n` +
+            `• OBSERVACIONES: ${obs}\n\n` +
+            `Saludos cordiales,\nMesa de Ayuda - Autopista de la Información`;
+
+          const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=fkelli@ulp.edu.ar&su=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(bodyText)}`;
+          mailLink.href = gmailWebUrl;
+          mailLink.textContent = linkText;
+        } else if (mailContainer) {
+          mailContainer.style.display = 'none';
+        }
+
+        // Filename and Print
+        let reportCounter = parseInt(localStorage.getItem('aui_report_counter') || '1', 10);
+        let baseName = 'Reporte_Evento_Accesos';
+        if (eventoVal === 'NAP/Botella Sin Potencia') baseName = 'NAP_Sin_Potencia_Accesos';
+        else if (eventoVal === 'NAP/Botella Potencia Elevada') baseName = 'NAP_Potencia_Elevada_Accesos';
+        else if (eventoVal === 'Edesal Sin Energía') baseName = 'Edesal_Sin_Energia_Accesos';
+        else if (eventoVal === 'Municipalidad/Ente Sin Energía') baseName = 'Municipalidad_Sin_Energia_Accesos';
+        else if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) baseName = 'Solicitud_Energizacion_Accesos';
+        else if (eventoVal.includes('Municipal') || eventoVal.includes('Ente')) baseName = 'Poste_Inestable_Municipal_Accesos';
+        else if (eventoVal.includes('Poste Inestable')) baseName = 'Poste_Inestable_Edesal_Accesos';
+        else if (eventoVal === 'Shelter') {
+          const subtipo = (document.getElementById('sel-subtipo-shelter')?.value || 'Shelter').replace(/\s+/g, '_');
+          baseName = `Shelter_Accesos_${subtipo}`;
+        } else if (eventoVal === 'Informe de Nueva Instalación') {
+          baseName = 'Informe_Nueva_Instalacion_Accesos';
+        }
+
+        const pdfFileName = `${baseName}(${reportCounter})`;
+        document.title = pdfFileName;
+        localStorage.setItem('aui_report_counter', (reportCounter + 1).toString());
+
+        showNotification(`📄 Generando ${pdfFileName}.pdf...`);
+        setTimeout(() => {
+          window.print();
+          setTimeout(() => {
+            document.title = `${baseName}(${reportCounter + 1})`;
+          }, 1000);
+        }, 200);
+
+      } catch(err) {
+        console.error('Error al generar PDF:', err);
+        alert('Error al generar PDF: ' + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>
