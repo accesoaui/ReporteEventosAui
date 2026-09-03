@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AUI 4.0 · Reportes de Eventos Operativos</title>
+    <title>AUI 4.0 · Reportes de Eventos Operativos</title>
   <meta name="description" content="Sistema Institucional de Reportes Técnicos, Incidentes y Nuevas Instalaciones - Autopista de la Información">
   
   <!-- WhatsApp & Redes Sociales OpenGraph Preview -->
@@ -699,6 +699,7 @@
           <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
           <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
           <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
+          <option value="Torre Inestable">Torre Inestable</option>
           <option value="Shelter">Shelter</option>
           <option value="Informe de Nueva Instalación">Informe de Nueva Instalación</option>
         </select>
@@ -840,6 +841,69 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- SECCIÓN DINÁMICA: PARA Torre Inestable -->
+      <div id="section-torre-inestable" class="dynamic-section">
+        
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">NOMBRE DE LA TORRE / NODO / SITIO:</label>
+          <input type="text" id="input-torre-nombre" class="input-control" placeholder="Ej: Torre Nodo La Punta / Cerro El Amago / Escuela 25" autocomplete="off">
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">TIPO DE TORRE (Ej: Arriostrada, Autosoportada, Monoposte):</label>
+            <input type="text" id="input-torre-tipo" class="input-control" placeholder="Ej: Arriostrada / Autosoportada / Monoposte" autocomplete="off">
+          </div>
+          <div>
+            <label class="form-label">ALTURA ESTIMADA (Mts):</label>
+            <input type="text" id="input-torre-altura" class="input-control" placeholder="Ej: 36 metros / 4 tramos" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">FOTO BASE / ANCLAJE:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar foto</span>
+                <input type="file" id="file-foto-torre-base" accept="image/*">
+              </div>
+              <span id="label-foto-torre-base" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">FOTO PANORÁMICA / RIENDAS:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar foto</span>
+                <input type="file" id="file-foto-torre-panoramica" accept="image/*">
+              </div>
+              <span id="label-foto-torre-panoramica" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN GENERAL DE VIDEO DE EVIDENCIA (Para Torre Inestable y Postes Inestables) -->
+      <div id="section-video-evidencia" class="form-group" style="display: none; background: rgba(37, 99, 235, 0.08); border: 1px dashed rgba(56, 189, 248, 0.4); border-radius: 14px; padding: 14px; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <label class="form-label" style="color: #38bdf8; margin-bottom: 0;">🎥 VIDEO DE EVIDENCIA (Opcional - Torre / Poste Inestable):</label>
+          <span style="font-size: 10px; font-weight: 800; background: rgba(56, 189, 248, 0.2); color: #7dd3fc; padding: 2px 8px; border-radius: 6px;">Google Drive</span>
+        </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Podés grabar o subir un video corto (10 a 30s) mostrando la oscilación, fisura o inestabilidad. Se subirá automáticamente a la carpeta de Drive y se agregará el link en el PDF.</p>
+        <div class="file-input-wrapper">
+          <div class="btn-file-select" style="background: #2563eb; color: #fff;">
+            <span>📹 Seleccionar / Grabar Video</span>
+            <input type="file" id="file-video-evento" accept="video/mp4,video/quicktime,video/*">
+          </div>
+          <span id="label-video-evento" class="file-status-text">Sin video seleccionado</span>
+        </div>
+        <div id="video-upload-progress" style="display: none; margin-top: 10px; font-size: 11px; font-weight: bold; color: #38bdf8;">
+          ⏳ Subiendo video a Google Drive...
+        </div>
       </div>
 
       <!-- SECCIÓN DINÁMICA 3: Shelter con sub-reportes -->
@@ -1018,6 +1082,21 @@
       </div>
     </div>
 
+    <!-- Data Card 3: Video de Evidencia en Google Drive (Si aplica) -->
+    <div class="pdf-card" id="pdf-card-video" style="display: none; background: #f0f9ff; border: 1.5px solid #0284c7;">
+      <div class="pdf-field-item">
+        <span class="pdf-field-label" style="color: #0369a1; font-size: 11px;">🎥 EVIDENCIA EN VIDEO (GOOGLE DRIVE - VISUALIZACIÓN EN PC)</span>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <a id="pdf-video-link" href="#" target="_blank" style="display: inline-block; background: #0284c7; color: #ffffff; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 900; text-decoration: none;">
+              ▶️ HACÉ CLIC AQUÍ PARA REPRODUCIR EL VIDEO EN GOOGLE DRIVE
+            </a>
+          </div>
+          <span id="pdf-video-url-text" style="font-size: 10px; color: #64748b; font-weight: 600;"></span>
+        </div>
+      </div>
+    </div>
+
     <!-- Registro Fotográfico Title -->
     <div class="pdf-photo-title">REGISTRO FOTOGRÁFICO</div>
 
@@ -1122,10 +1201,23 @@
       document.getElementById('group-pre-ingenieria').style.display = 'none';
       // btn-redactar-email oculto
       
+      const secTorre = document.getElementById('section-torre-inestable');
+      const secVideo = document.getElementById('section-video-evidencia');
+      if (secTorre) secTorre.classList.remove('active');
+      if (secVideo) secVideo.style.display = 'none';
+
       if (val === 'NAP/Botella Sin Potencia' || val === 'NAP/Botella Potencia Elevada') {
         secNap.classList.add('active');
         labelComentarios.textContent = 'COMENTARIOS:';
-      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
+      } else if (val.includes('Poste Inestable')) {
+        secEdesalPoste.classList.add('active');
+        if (secVideo) secVideo.style.display = 'block';
+        labelComentarios.textContent = 'OBSERVACIONES DETALLES / ESTADO DEL POSTE:';
+      } else if (val === 'Torre Inestable') {
+        if (secTorre) secTorre.classList.add('active');
+        if (secVideo) secVideo.style.display = 'block';
+        labelComentarios.textContent = 'OBSERVACIONES DETALLES / ESTADO DE LA TORRE:';
+      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('energización') || val.includes('energizacion')) {
         secEdesalPoste.classList.add('active');
         labelComentarios.textContent = 'OBSERVACIONES DETALLES:';
         if (val.includes('energización') || val.includes('energizacion')) {
@@ -1264,6 +1356,30 @@ const photoStore = {};
     handleFileInput('file-foto-medidor', 'label-foto-medidor', 'fotoMedidor');
     handleFileInput('file-foto-estanco', 'label-foto-estanco', 'fotoEstanco');
     handleFileInput('file-foto-shelter', 'label-foto-shelter-status', 'fotoShelter');
+    handleFileInput('file-foto-torre-base', 'label-foto-torre-base', 'fotoTorreBase');
+    handleFileInput('file-foto-torre-panoramica', 'label-foto-torre-panoramica', 'fotoTorrePanoramica');
+
+    // Manejo de carga de video
+    const fileVideoInput = document.getElementById('file-video-evento');
+    const labelVideoEl = document.getElementById('label-video-evento');
+    if (fileVideoInput && labelVideoEl) {
+      fileVideoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        labelVideoEl.textContent = `✓ Video cargado: ${file.name} (${sizeMb} MB)`;
+        labelVideoEl.style.color = '#38bdf8';
+        showNotification(`📹 Video seleccionado (${sizeMb} MB)`);
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          photoStore.videoEventoData = evt.target.result;
+          photoStore.videoEventoName = file.name;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
 
     // 4. Manejo de "+ Agregar más fotos" (Anexo)
     const fileAnexoInput = document.getElementById('file-foto-anexo');
@@ -1591,6 +1707,46 @@ const photoStore = {};
             </div>
           `;
 
+        } else if (eventoVal === 'Torre Inestable') {
+          const torreNombre = document.getElementById('input-torre-nombre')?.value.trim() || 'N/A';
+          const torreTipo = document.getElementById('input-torre-tipo')?.value.trim() || 'Arriostrada';
+          const torreAltura = document.getElementById('input-torre-altura')?.value.trim() || 'S/D';
+
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
+              <span class="pdf-field-val">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN / EMPLAZAMIENTO</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">NOMBRE DE LA TORRE / NODO</span>
+              <span class="pdf-field-val" style="color: #0369a1;">${torreNombre}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TIPO DE ESTRUCTURA</span>
+              <span class="pdf-field-val">${torreTipo}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">ALTURA ESTIMADA</span>
+              <span class="pdf-field-val">${torreAltura}</span>
+            </div>
+          `;
+
         } else if (isShelter) {
           const shelterDesc = document.getElementById('input-shelter-desc')?.value.trim() || 'Sin detalles';
           const dynamicLabel = document.getElementById('label-shelter-desc')?.textContent.replace(':', '') || 'DETALLE SHELTER';
@@ -1701,6 +1857,20 @@ const photoStore = {};
               { label: 'POSTE', src: photoStore.fotoPoste }
             ];
             napPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
+          } else if (eventoVal === 'Torre Inestable') {
+            photoGridEl.className = 'pdf-photo-grid grid-2';
+            const torrePhotos = [
+              { label: 'BASE / ANCLAJE', src: photoStore.fotoTorreBase },
+              { label: 'PANORÁMICA / RIENDAS', src: photoStore.fotoTorrePanoramica }
+            ];
+            torrePhotos.forEach(p => {
               const card = document.createElement('div');
               card.className = 'pdf-photo-card';
               const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
@@ -1873,26 +2043,34 @@ const photoStore = {};
           mailContainer.style.display = 'none';
         }
 
-        // Filename and Print
-        let reportCounter = parseInt(localStorage.getItem('aui_report_counter') || '1', 10);
-        let baseName = 'Reporte_Evento_Accesos';
-        if (eventoVal === 'NAP/Botella Sin Potencia') baseName = 'NAP_Sin_Potencia_Accesos';
-        else if (eventoVal === 'NAP/Botella Potencia Elevada') baseName = 'NAP_Potencia_Elevada_Accesos';
-        else if (eventoVal === 'Edesal Sin Energía') baseName = 'Edesal_Sin_Energia_Accesos';
-        else if (eventoVal === 'Municipalidad/Ente Sin Energía') baseName = 'Municipalidad_Sin_Energia_Accesos';
-        else if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) baseName = 'Solicitud_Energizacion_Accesos';
-        else if (eventoVal.includes('Municipal') || eventoVal.includes('Ente')) baseName = 'Poste_Inestable_Municipal_Accesos';
-        else if (eventoVal.includes('Poste Inestable')) baseName = 'Poste_Inestable_Edesal_Accesos';
+        // Smart Clean Filename Generator (Ej: NapSinPotencia-SanLuis3-9-26)
+        let cleanEventoName = 'Reporte';
+        if (eventoVal.includes('NAP') && eventoVal.includes('Sin Potencia')) cleanEventoName = 'NapSinPotencia';
+        else if (eventoVal.includes('NAP') && eventoVal.includes('Elevada')) cleanEventoName = 'NapPotenciaElevada';
+        else if (eventoVal.includes('Torre')) cleanEventoName = 'TorreInestable';
+        else if (eventoVal.includes('Poste') && (eventoVal.includes('Municipal') || eventoVal.includes('Ente'))) cleanEventoName = 'PosteInestableMunicipal';
+        else if (eventoVal.includes('Poste')) cleanEventoName = 'PosteInestableEdesal';
+        else if (eventoVal.includes('Edesal Sin Energía')) cleanEventoName = 'EdesalSinEnergia';
+        else if (eventoVal.includes('Municipalidad') && eventoVal.includes('Sin Energía')) cleanEventoName = 'MunicipalidadSinEnergia';
+        else if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) cleanEventoName = 'SolicitudEnergizacion';
         else if (eventoVal === 'Shelter') {
-          const subtipo = (document.getElementById('sel-subtipo-shelter')?.value || 'Shelter').replace(/\s+/g, '_');
-          baseName = `Shelter_Accesos_${subtipo}`;
+          const subtipo = (document.getElementById('sel-subtipo-shelter')?.value || 'Shelter').replace(/\s+/g, '');
+          cleanEventoName = `Shelter-${subtipo}`;
         } else if (eventoVal === 'Informe de Nueva Instalación') {
-          baseName = 'Informe_Nueva_Instalacion_Accesos';
+          cleanEventoName = 'NuevaInstalacion';
         }
 
-        const pdfFileName = `${baseName}(${reportCounter})`;
+        // Clean Localidad (quitar tildes, espacios y caracteres raros)
+        const cleanLoc = (localidad || 'SanLuis')
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-zA-Z0-9]/g, '');
+
+        // Formato de fecha corta: d-m-yy (ej: 3-9-26)
+        const dNow = new Date();
+        const shortDate = `${dNow.getDate()}-${dNow.getMonth() + 1}-${dNow.getFullYear().toString().slice(-2)}`;
+
+        const pdfFileName = `${cleanEventoName}-${cleanLoc}${shortDate}`;
         document.title = pdfFileName;
-        localStorage.setItem('aui_report_counter', (reportCounter + 1).toString());
 
         showNotification(`📄 Generando ${pdfFileName}.pdf...`);
         setTimeout(() => {
