@@ -3,15 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AUI 4.0 · Reportes de Eventos Operativos</title>
-  <meta name="description" content="Sistema Institucional de Reportes Técnicos, Incidentes y Nuevas Instalaciones - Autopista de la Información">
-  
-  <!-- WhatsApp & Redes Sociales OpenGraph Preview -->
-  <meta property="og:site_name" content="Autopista de la Información (AUI)">
-  <meta property="og:title" content="AUI 4.0 · Reportes de Eventos e Instalaciones">
-  <meta property="og:description" content="Generación de Actas Técnicas, Reclamos y Nuevas Obras de Accesos.">
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#2563eb">
+  <title>AUI 4.0 · Reportes de Eventos Operativos</title>
   <!-- Google Fonts: Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -669,6 +661,114 @@
       pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  
+    /* POP-UP MODAL MESA DE AYUDA TRAS DESCARGAR PDF */
+    .popup-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 8, 20, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      padding: 20px;
+      animation: fadeInPopup 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeInPopup {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .popup-modal-content {
+      background: #0f172a;
+      border: 2px solid #38bdf8;
+      border-radius: 20px;
+      padding: 32px 28px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
+      text-align: center;
+      position: relative;
+      color: #f8fafc;
+    }
+    .popup-icon-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      border: 2px solid rgba(56, 189, 248, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+    .popup-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: #38bdf8;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .popup-alert-box {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1.5px solid rgba(245, 158, 11, 0.5);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .popup-alert-text {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.45;
+      color: #fbbf24;
+      margin: 0;
+    }
+    .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .btn-popup-ok {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      flex: 1;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+    .btn-popup-ok:hover {
+      background: linear-gradient(135deg, #0ea5e9, #1d4ed8);
+      transform: translateY(-1px);
+    }
+    .btn-popup-wsp {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    }
+    .btn-popup-wsp:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
   </style>
 </head>
 <body>
@@ -699,7 +799,6 @@
           <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
           <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
           <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
-          <option value="Torre Inestable">Torre Inestable</option>
           <option value="Shelter">Shelter</option>
           <option value="Informe de Nueva Instalación">Informe de Nueva Instalación</option>
         </select>
@@ -843,69 +942,6 @@
 
       </div>
 
-      <!-- SECCIÓN DINÁMICA: PARA Torre Inestable -->
-      <div id="section-torre-inestable" class="dynamic-section">
-        
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label class="form-label">NOMBRE DE LA TORRE / NODO / SITIO:</label>
-          <input type="text" id="input-torre-nombre" class="input-control" placeholder="Ej: Torre Nodo La Punta / Cerro El Amago / Escuela 25" autocomplete="off">
-        </div>
-
-        <div class="form-group form-row-2">
-          <div>
-            <label class="form-label">TIPO DE TORRE (Ej: Arriostrada, Autosoportada, Monoposte):</label>
-            <input type="text" id="input-torre-tipo" class="input-control" placeholder="Ej: Arriostrada / Autosoportada / Monoposte" autocomplete="off">
-          </div>
-          <div>
-            <label class="form-label">ALTURA ESTIMADA (Mts):</label>
-            <input type="text" id="input-torre-altura" class="input-control" placeholder="Ej: 36 metros / 4 tramos" autocomplete="off">
-          </div>
-        </div>
-
-        <div class="form-group form-row-2">
-          <div>
-            <label class="form-label">FOTO BASE / ANCLAJE:</label>
-            <div class="file-input-wrapper">
-              <div class="btn-file-select">
-                <span>Seleccionar foto</span>
-                <input type="file" id="file-foto-torre-base" accept="image/*">
-              </div>
-              <span id="label-foto-torre-base" class="file-status-text">Sin archivos seleccionados</span>
-            </div>
-          </div>
-          <div>
-            <label class="form-label">FOTO PANORÁMICA / RIENDAS:</label>
-            <div class="file-input-wrapper">
-              <div class="btn-file-select">
-                <span>Seleccionar foto</span>
-                <input type="file" id="file-foto-torre-panoramica" accept="image/*">
-              </div>
-              <span id="label-foto-torre-panoramica" class="file-status-text">Sin archivos seleccionados</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- SECCIÓN GENERAL DE VIDEO DE EVIDENCIA (Para Torre Inestable y Postes Inestables) -->
-      <div id="section-video-evidencia" class="form-group" style="display: none; background: rgba(37, 99, 235, 0.08); border: 1px dashed rgba(56, 189, 248, 0.4); border-radius: 14px; padding: 14px; margin-bottom: 18px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-          <label class="form-label" style="color: #38bdf8; margin-bottom: 0;">🎥 VIDEO DE EVIDENCIA (Opcional - Torre / Poste Inestable):</label>
-          <span style="font-size: 10px; font-weight: 800; background: rgba(56, 189, 248, 0.2); color: #7dd3fc; padding: 2px 8px; border-radius: 6px;">Google Drive</span>
-        </div>
-        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Podés grabar o subir un video corto (10 a 30s) mostrando la oscilación, fisura o inestabilidad. Se subirá automáticamente a la carpeta de Drive y se agregará el link en el PDF.</p>
-        <div class="file-input-wrapper">
-          <div class="btn-file-select" style="background: #2563eb; color: #fff;">
-            <span>📹 Seleccionar / Grabar Video</span>
-            <input type="file" id="file-video-evento" accept="video/mp4,video/quicktime,video/*">
-          </div>
-          <span id="label-video-evento" class="file-status-text">Sin video seleccionado</span>
-        </div>
-        <div id="video-upload-progress" style="display: none; margin-top: 10px; font-size: 11px; font-weight: bold; color: #38bdf8;">
-          ⏳ Subiendo video a Google Drive...
-        </div>
-      </div>
-
       <!-- SECCIÓN DINÁMICA 3: Shelter con sub-reportes -->
       <div id="section-shelter-nodo" class="dynamic-section">
         <div class="form-group">
@@ -998,6 +1034,68 @@
 
       </div>
 
+      
+      <!-- SECCIÓN DINÁMICA 5: MOVILIDAD -->
+      <div id="section-movilidad" class="dynamic-section">
+        
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">PATENTE DE LA CAMIONETA / MÓVIL:</label>
+            <input type="text" id="input-movilidad-patente" class="input-control" placeholder="Ej: AF 123 CD o AB 456 CD" style="text-transform: uppercase; font-weight: 800; letter-spacing: 1px;" autocomplete="off">
+          </div>
+          <div>
+            <label class="form-label">TIPO DE VEHÍCULO / MODELO:</label>
+            <input type="text" id="input-movilidad-vehiculo" class="input-control" placeholder="Ej: Toyota Hilux, Ford Ranger, Renault Kangoo..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label id="label-movilidad-detalle" class="form-label">DESCRIPCIÓN DEL PROBLEMA (LUGAR PARA ESCRIBIR):</label>
+          <textarea id="input-movilidad-detalle" class="textarea-control" placeholder="Escriba aquí los detalles del problema o rotura..."></textarea>
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">FOTO DE CAMIONETA / PATENTE:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-camioneta-patente" accept="image/*">
+              </div>
+              <span id="label-foto-camioneta-patente" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">FOTO 1 (DETALLE DEL PROBLEMA):</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-movilidad-1" accept="image/*">
+              </div>
+              <span id="label-foto-movilidad-1" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">AGREGAR MATERIAL FOTOGRÁFICO O VIDEO:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-movilidad-extra" accept="image/*,video/*">
+              </div>
+              <span id="label-foto-movilidad-extra" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">ENLACE DE VIDEO / DRIVE (OPCIONAL):</label>
+            <input type="text" id="input-movilidad-video-link" class="input-control" placeholder="https://drive.google.com/... o WhatsApp" autocomplete="off">
+          </div>
+        </div>
+
+      </div>
+
       <!-- COMENTARIOS / OBSERVACIONES DETALLES -->
       <div class="form-group">
         <label id="label-comentarios" class="form-label">COMENTARIOS:</label>
@@ -1079,21 +1177,6 @@
       <div class="pdf-field-item">
         <span class="pdf-field-label" id="pdf-obs-label">OBSERVACIONES / DETALLES</span>
         <span id="pdf-obs-text" class="pdf-field-val" style="font-weight:700;">Sin observaciones</span>
-      </div>
-    </div>
-
-    <!-- Data Card 3: Video de Evidencia en Google Drive (Si aplica) -->
-    <div class="pdf-card" id="pdf-card-video" style="display: none; background: #f0f9ff; border: 1.5px solid #0284c7;">
-      <div class="pdf-field-item">
-        <span class="pdf-field-label" style="color: #0369a1; font-size: 11px;">🎥 EVIDENCIA EN VIDEO (GOOGLE DRIVE - VISUALIZACIÓN EN PC)</span>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; flex-wrap: wrap; gap: 8px;">
-          <div>
-            <a id="pdf-video-link" href="#" target="_blank" style="display: inline-block; background: #0284c7; color: #ffffff; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 900; text-decoration: none;">
-              ▶️ HACÉ CLIC AQUÍ PARA REPRODUCIR EL VIDEO EN GOOGLE DRIVE
-            </a>
-          </div>
-          <span id="pdf-video-url-text" style="font-size: 10px; color: #64748b; font-weight: 600;"></span>
-        </div>
       </div>
     </div>
 
@@ -1190,34 +1273,27 @@
     function updateDynamicForm() {
       const val = selTipoEvento.value;
       const secInstalacion = document.getElementById('section-nueva-instalacion');
+      const secMovilidad = document.getElementById('section-movilidad');
       const standardTecnicoGroup = document.getElementById('input-tecnico')?.closest('.form-group');
+      const labelTecnico = document.getElementById('input-tecnico')?.closest('div')?.querySelector('.form-label');
       
       secNap.classList.remove('active');
       secEdesalPoste.classList.remove('active');
       secShelter.classList.remove('active');
       if (secInstalacion) secInstalacion.classList.remove('active');
+      if (secMovilidad) secMovilidad.classList.remove('active');
       if (standardTecnicoGroup) standardTecnicoGroup.style.display = 'grid';
       
-      document.getElementById('group-pre-ingenieria').style.display = 'none';
-      // btn-redactar-email oculto
+      if (labelTecnico) {
+        labelTecnico.textContent = val.startsWith('Movilidad') ? 'CONDUCTOR / TÉCNICO:' : 'NOMBRE DEL TÉCNICO:';
+      }
       
-      const secTorre = document.getElementById('section-torre-inestable');
-      const secVideo = document.getElementById('section-video-evidencia');
-      if (secTorre) secTorre.classList.remove('active');
-      if (secVideo) secVideo.style.display = 'none';
-
+      document.getElementById('group-pre-ingenieria').style.display = 'none';
+      
       if (val === 'NAP/Botella Sin Potencia' || val === 'NAP/Botella Potencia Elevada') {
         secNap.classList.add('active');
         labelComentarios.textContent = 'COMENTARIOS:';
-      } else if (val.includes('Poste Inestable')) {
-        secEdesalPoste.classList.add('active');
-        if (secVideo) secVideo.style.display = 'block';
-        labelComentarios.textContent = 'OBSERVACIONES DETALLES / ESTADO DEL POSTE:';
-      } else if (val === 'Torre Inestable') {
-        if (secTorre) secTorre.classList.add('active');
-        if (secVideo) secVideo.style.display = 'block';
-        labelComentarios.textContent = 'OBSERVACIONES DETALLES / ESTADO DE LA TORRE:';
-      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('energización') || val.includes('energizacion')) {
+      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
         secEdesalPoste.classList.add('active');
         labelComentarios.textContent = 'OBSERVACIONES DETALLES:';
         if (val.includes('energización') || val.includes('energizacion')) {
@@ -1233,6 +1309,24 @@
         secShelter.classList.add('active');
         labelComentarios.textContent = 'COMENTARIOS Y OBSERVACIONES:';
         updateShelterLabels();
+      } else if (val.startsWith('Movilidad')) {
+        if (secMovilidad) secMovilidad.classList.add('active');
+        labelComentarios.textContent = 'OBSERVACIONES / COMENTARIOS ADICIONALES:';
+        const labelDetalle = document.getElementById('label-movilidad-detalle');
+        const inputDetalle = document.getElementById('input-movilidad-detalle');
+        if (val === 'Movilidad - Otros problemas') {
+          labelDetalle.textContent = 'DESCRIPCIÓN DEL PROBLEMA (LUGAR PARA ESCRIBIR):';
+          inputDetalle.placeholder = 'Describa detalladamente el problema o desperfecto que presenta la unidad...';
+        } else if (val === 'Movilidad - Reporte de cubiertas') {
+          labelDetalle.textContent = 'DETALLE DEL PROBLEMA DE CUBIERTAS:';
+          inputDetalle.placeholder = 'Indique estado (desinflada, pinchada, reventada, gastada), auxilio o posición (delantera izq/der, trasera)...';
+        } else if (val === 'Movilidad - Reporte de Luces rotas') {
+          labelDetalle.textContent = 'DETALLE DE LUCES ROTAS:';
+          inputDetalle.placeholder = 'Indique si es óptica delantera, trasera, luz baja/alta, giro, stop o posición rota o quemada...';
+        } else if (val === 'Movilidad - Reporte de Tarjeta de peaje sin saldo') {
+          labelDetalle.textContent = 'DETALLE DE TARJETA DE PEAJE:';
+          inputDetalle.placeholder = 'Indique número de tarjeta de peaje, estación/cabina de peaje o saldo...';
+        }
       }
     }
 
@@ -1356,28 +1450,31 @@ const photoStore = {};
     handleFileInput('file-foto-medidor', 'label-foto-medidor', 'fotoMedidor');
     handleFileInput('file-foto-estanco', 'label-foto-estanco', 'fotoEstanco');
     handleFileInput('file-foto-shelter', 'label-foto-shelter-status', 'fotoShelter');
-    handleFileInput('file-foto-torre-base', 'label-foto-torre-base', 'fotoTorreBase');
-    handleFileInput('file-foto-torre-panoramica', 'label-foto-torre-panoramica', 'fotoTorrePanoramica');
-
-    // Manejo de carga de video
-    const fileVideoInput = document.getElementById('file-video-evento');
-    const labelVideoEl = document.getElementById('label-video-evento');
-    if (fileVideoInput && labelVideoEl) {
-      fileVideoInput.addEventListener('change', (e) => {
+    handleFileInput('file-foto-camioneta-patente', 'label-foto-camioneta-patente', 'fotoCamionetaPatente');
+    handleFileInput('file-foto-movilidad-1', 'label-foto-movilidad-1', 'fotoMovilidad1');
+    
+    // Manejo de material adicional o video de Movilidad
+    const fileMovExtra = document.getElementById('file-foto-movilidad-extra');
+    if (fileMovExtra) {
+      fileMovExtra.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-        labelVideoEl.textContent = `✓ Video cargado: ${file.name} (${sizeMb} MB)`;
-        labelVideoEl.style.color = '#38bdf8';
-        showNotification(`📹 Video seleccionado (${sizeMb} MB)`);
-
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          photoStore.videoEventoData = evt.target.result;
-          photoStore.videoEventoName = file.name;
-        };
-        reader.readAsDataURL(file);
+        const lbl = document.getElementById('label-foto-movilidad-extra');
+        if (file.type.startsWith('video/')) {
+          photoStore.videoMovilidadInfo = { name: file.name, size: (file.size / (1024*1024)).toFixed(1) + ' MB' };
+          photoStore.fotoMovilidadExtra = null;
+          lbl.textContent = '✓ Video: ' + file.name + ' (' + photoStore.videoMovilidadInfo.size + ')';
+          lbl.style.color = '#38bdf8';
+          showNotification('🎥 Video adjuntado correctamente');
+        } else {
+          compressImageFile(file, (dataUrl) => {
+            photoStore.fotoMovilidadExtra = dataUrl;
+            photoStore.videoMovilidadInfo = null;
+            lbl.textContent = '✓ Imagen lista (' + Math.round((dataUrl.length * 3 / 4)/1024) + ' KB)';
+            lbl.style.color = '#34d399';
+            showNotification('📷 Foto adicional cargada');
+          });
+        }
       });
     }
 
@@ -1597,6 +1694,7 @@ const photoStore = {};
         const isNap = (eventoVal === 'NAP/Botella Sin Potencia' || eventoVal === 'NAP/Botella Potencia Elevada');
         const isShelter = (eventoVal === 'Shelter');
         const isNuevaInstalacion = (eventoVal === 'Informe de Nueva Instalación');
+        const isMovilidad = eventoVal.startsWith('Movilidad');
 
         // Reset extra cards container
         const extraCardsCont = document.getElementById('pdf-extra-cards-container');
@@ -1707,46 +1805,6 @@ const photoStore = {};
             </div>
           `;
 
-        } else if (eventoVal === 'Torre Inestable') {
-          const torreNombre = document.getElementById('input-torre-nombre')?.value.trim() || 'N/A';
-          const torreTipo = document.getElementById('input-torre-tipo')?.value.trim() || 'Arriostrada';
-          const torreAltura = document.getElementById('input-torre-altura')?.value.trim() || 'S/D';
-
-          detailsHtml = `
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
-              <span class="pdf-field-val">${tecnico}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">COORDENADAS GPS</span>
-              <span class="pdf-field-val">${gps}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">COORDINADOR</span>
-              <span class="pdf-field-val">${coordinador}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">LOCALIDAD</span>
-              <span class="pdf-field-val">${localidad}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">DIRECCIÓN / EMPLAZAMIENTO</span>
-              <span class="pdf-field-val">${direccion}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">NOMBRE DE LA TORRE / NODO</span>
-              <span class="pdf-field-val" style="color: #0369a1;">${torreNombre}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">TIPO DE ESTRUCTURA</span>
-              <span class="pdf-field-val">${torreTipo}</span>
-            </div>
-            <div class="pdf-field-item">
-              <span class="pdf-field-label">ALTURA ESTIMADA</span>
-              <span class="pdf-field-val">${torreAltura}</span>
-            </div>
-          `;
-
         } else if (isShelter) {
           const shelterDesc = document.getElementById('input-shelter-desc')?.value.trim() || 'Sin detalles';
           const dynamicLabel = document.getElementById('label-shelter-desc')?.textContent.replace(':', '') || 'DETALLE SHELTER';
@@ -1776,6 +1834,78 @@ const photoStore = {};
               <span class="pdf-field-val">${shelterDesc}</span>
             </div>
           `;
+
+        } else if (isMovilidad) {
+          const patente = (document.getElementById('input-movilidad-patente')?.value || '').trim() || 'S/D';
+          const vehiculo = (document.getElementById('input-movilidad-vehiculo')?.value || '').trim() || 'Camioneta Operativa';
+          const detalleMov = (document.getElementById('input-movilidad-detalle')?.value || '').trim();
+          const videoLink = (document.getElementById('input-movilidad-video-link')?.value || '').trim();
+
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">CONDUCTOR / TÉCNICO</span>
+              <span class="pdf-field-val" style="color: #2563eb;">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">PATENTE DEL VEHÍCULO</span>
+              <span class="pdf-field-val" style="font-size: 15px; font-weight: 900; color: #e11d48; letter-spacing: 1px;">${patente.toUpperCase()}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TIPO / MODELO DE MÓVIL</span>
+              <span class="pdf-field-val">${vehiculo}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD / BASE</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN / UBICACIÓN</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item" style="grid-column: span 2;">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+          `;
+
+          if (extraCardsCont) {
+            let cards = '';
+            if (detalleMov) {
+              cards += `
+                <div class="pdf-card">
+                  <div class="pdf-field-item">
+                    <span class="pdf-field-label" style="color: #e11d48;">DETALLE / DESCRIPCIÓN DEL PROBLEMA</span>
+                    <span class="pdf-field-val" style="font-weight:700; white-space: pre-line; line-height: 1.4;">${detalleMov}</span>
+                  </div>
+                </div>
+              `;
+            }
+            if (videoLink) {
+              cards += `
+                <div class="pdf-card">
+                  <div class="pdf-field-item">
+                    <span class="pdf-field-label" style="color: #2563eb;">ENLACE DE MATERIAL AUDIOVISUAL / VIDEO</span>
+                    <span class="pdf-field-val" style="font-weight:700;"><a href="${videoLink}" target="_blank" style="color:#2563eb; text-decoration:underline;">${videoLink}</a></span>
+                  </div>
+                </div>
+              `;
+            }
+            if (photoStore.videoMovilidadInfo) {
+              cards += `
+                <div class="pdf-card">
+                  <div class="pdf-field-item">
+                    <span class="pdf-field-label" style="color: #059669;">VIDEO REGISTRADO EN EL REPORTE</span>
+                    <span class="pdf-field-val" style="font-weight:700;">🎥 Archivo: ${photoStore.videoMovilidadInfo.name} (${photoStore.videoMovilidadInfo.size})</span>
+                  </div>
+                </div>
+              `;
+            }
+            extraCardsCont.innerHTML = cards;
+          }
 
         } else {
           // Edesal / Municipalidad / Postes
@@ -1864,20 +1994,6 @@ const photoStore = {};
               photoGridEl.appendChild(card);
             });
 
-          } else if (eventoVal === 'Torre Inestable') {
-            photoGridEl.className = 'pdf-photo-grid grid-2';
-            const torrePhotos = [
-              { label: 'BASE / ANCLAJE', src: photoStore.fotoTorreBase },
-              { label: 'PANORÁMICA / RIENDAS', src: photoStore.fotoTorrePanoramica }
-            ];
-            torrePhotos.forEach(p => {
-              const card = document.createElement('div');
-              card.className = 'pdf-photo-card';
-              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
-              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
-              photoGridEl.appendChild(card);
-            });
-
           } else if (isShelter) {
             photoGridEl.className = 'pdf-photo-grid grid-2';
             const dynamicFotoLabel = document.getElementById('label-shelter-foto')?.textContent.replace(':', '') || 'FOTO SHELTER';
@@ -1885,6 +2001,23 @@ const photoStore = {};
               { label: dynamicFotoLabel, src: photoStore.fotoShelter }
             ];
             shelterPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
+          } else if (isMovilidad) {
+            photoGridEl.className = 'pdf-photo-grid';
+            const movPhotos = [
+              { label: 'FOTO CAMIONETA / PATENTE', src: photoStore.fotoCamionetaPatente },
+              { label: 'FOTO 1 - DETALLE DEL PROBLEMA', src: photoStore.fotoMovilidad1 }
+            ];
+            if (photoStore.fotoMovilidadExtra) {
+              movPhotos.push({ label: 'MATERIAL ADICIONAL', src: photoStore.fotoMovilidadExtra });
+            }
+            movPhotos.forEach(p => {
               const card = document.createElement('div');
               card.className = 'pdf-photo-card';
               const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
@@ -1945,6 +2078,10 @@ const photoStore = {};
           } else if (isShelter) {
             const dynamicFotoLabel = document.getElementById('label-shelter-foto')?.textContent.replace(':', '') || 'FOTO SHELTER';
             if (photoStore.fotoShelter) largePhotos.push({ label: dynamicFotoLabel, src: photoStore.fotoShelter });
+          } else if (isMovilidad) {
+            if (photoStore.fotoCamionetaPatente) largePhotos.push({ label: 'FOTO CAMIONETA / PATENTE', src: photoStore.fotoCamionetaPatente });
+            if (photoStore.fotoMovilidad1) largePhotos.push({ label: 'FOTO 1 - DETALLE DEL PROBLEMA', src: photoStore.fotoMovilidad1 });
+            if (photoStore.fotoMovilidadExtra) largePhotos.push({ label: 'MATERIAL FOTOGRÁFICO ADICIONAL', src: photoStore.fotoMovilidadExtra });
           } else {
             const estancoLabel = eventoVal.includes('Poste Inestable') ? 'FOTO CAJA ESTANCO / POSTE' : 'FOTO CAJA ESTANCO';
             if (photoStore.fotoMedidor) largePhotos.push({ label: 'FOTO MEDIDOR', src: photoStore.fotoMedidor });
@@ -2043,41 +2180,40 @@ const photoStore = {};
           mailContainer.style.display = 'none';
         }
 
-        // Smart Clean Filename Generator (Ej: NapSinPotencia-SanLuis3-9-26)
-        let cleanEventoName = 'Reporte';
-        if (eventoVal.includes('NAP') && eventoVal.includes('Sin Potencia')) cleanEventoName = 'NapSinPotencia';
-        else if (eventoVal.includes('NAP') && eventoVal.includes('Elevada')) cleanEventoName = 'NapPotenciaElevada';
-        else if (eventoVal.includes('Torre')) cleanEventoName = 'TorreInestable';
-        else if (eventoVal.includes('Poste') && (eventoVal.includes('Municipal') || eventoVal.includes('Ente'))) cleanEventoName = 'PosteInestableMunicipal';
-        else if (eventoVal.includes('Poste')) cleanEventoName = 'PosteInestableEdesal';
-        else if (eventoVal.includes('Edesal Sin Energía')) cleanEventoName = 'EdesalSinEnergia';
-        else if (eventoVal.includes('Municipalidad') && eventoVal.includes('Sin Energía')) cleanEventoName = 'MunicipalidadSinEnergia';
-        else if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) cleanEventoName = 'SolicitudEnergizacion';
+        // Filename and Print
+        let reportCounter = parseInt(localStorage.getItem('aui_report_counter') || '1', 10);
+        let baseName = 'Reporte_Evento_Accesos';
+        if (eventoVal === 'NAP/Botella Sin Potencia') baseName = 'NAP_Sin_Potencia_Accesos';
+        else if (eventoVal === 'NAP/Botella Potencia Elevada') baseName = 'NAP_Potencia_Elevada_Accesos';
+        else if (eventoVal === 'Edesal Sin Energía') baseName = 'Edesal_Sin_Energia_Accesos';
+        else if (eventoVal === 'Municipalidad/Ente Sin Energía') baseName = 'Municipalidad_Sin_Energia_Accesos';
+        else if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) baseName = 'Solicitud_Energizacion_Accesos';
+        else if (eventoVal.includes('Municipal') || eventoVal.includes('Ente')) baseName = 'Poste_Inestable_Municipal_Accesos';
+        else if (eventoVal.includes('Poste Inestable')) baseName = 'Poste_Inestable_Edesal_Accesos';
         else if (eventoVal === 'Shelter') {
-          const subtipo = (document.getElementById('sel-subtipo-shelter')?.value || 'Shelter').replace(/\s+/g, '');
-          cleanEventoName = `Shelter-${subtipo}`;
+          const subtipo = (document.getElementById('sel-subtipo-shelter')?.value || 'Shelter').replace(/\s+/g, '_');
+          baseName = `Shelter_Accesos_${subtipo}`;
         } else if (eventoVal === 'Informe de Nueva Instalación') {
-          cleanEventoName = 'NuevaInstalacion';
+          baseName = 'Informe_Nueva_Instalacion_Accesos';
+        } else if (isMovilidad) {
+          const patClean = (document.getElementById('input-movilidad-patente')?.value || '').trim().replace(/[^a-zA-Z0-9]/g, '_') || 'PATENTE';
+          if (eventoVal.includes('cubiertas')) baseName = `Movilidad_Cubiertas_${patClean}`;
+          else if (eventoVal.includes('Luces')) baseName = `Movilidad_Luces_${patClean}`;
+          else if (eventoVal.includes('peaje')) baseName = `Movilidad_Peaje_${patClean}`;
+          else baseName = `Movilidad_Problema_${patClean}`;
         }
 
-        // Clean Localidad (quitar tildes, espacios y caracteres raros)
-        const cleanLoc = (localidad || 'SanLuis')
-          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-zA-Z0-9]/g, '');
-
-        // Formato de fecha corta: d-m-yy (ej: 3-9-26)
-        const dNow = new Date();
-        const shortDate = `${dNow.getDate()}-${dNow.getMonth() + 1}-${dNow.getFullYear().toString().slice(-2)}`;
-
-        const pdfFileName = `${cleanEventoName}-${cleanLoc}${shortDate}`;
+        const pdfFileName = `${baseName}(${reportCounter})`;
         document.title = pdfFileName;
+        localStorage.setItem('aui_report_counter', (reportCounter + 1).toString());
 
         showNotification(`📄 Generando ${pdfFileName}.pdf...`);
         setTimeout(() => {
           window.print();
           setTimeout(() => {
             document.title = `${baseName}(${reportCounter + 1})`;
-          }, 1000);
+            mostrarPopupMesaDeAyuda();
+          }, 600);
         }, 200);
 
       } catch(err) {
@@ -2087,5 +2223,68 @@ const photoStore = {};
     });
   </script>
 
+
+  <!-- POP-UP MESA DE AYUDA (APARECE DESPUÉS DE GENERAR/DESCARGAR EL PDF EN TODOS LOS CASOS) -->
+  <div id="popup-mesa-ayuda" class="popup-modal-overlay" style="display: none;">
+    <div class="popup-modal-content">
+      <div class="popup-icon-circle">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+      </div>
+      <h3 class="popup-title">¡Reporte PDF Generado!</h3>
+      <div class="popup-alert-box">
+        <p class="popup-alert-text">
+          Enviar este pdf al grupo de Mesa de Ayuda para generar reclamo interno
+        </p>
+      </div>
+      <div class="popup-buttons">
+        <button type="button" id="btn-cerrar-popup" class="btn-popup-ok">Entendido</button>
+        <button type="button" id="btn-popup-whatsapp" class="btn-popup-wsp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+    // FUNCIÓN PARA MOSTRAR POP-UP OBLIGATORIO EN TODOS LOS CASOS TRAS DESCARGAR PDF
+    function mostrarPopupMesaDeAyuda() {
+      const popup = document.getElementById('popup-mesa-ayuda');
+      if (popup) {
+        popup.style.display = 'flex';
+      }
+    }
+
+    window.addEventListener('afterprint', () => {
+      mostrarPopupMesaDeAyuda();
+    });
+
+    document.getElementById('btn-cerrar-popup')?.addEventListener('click', () => {
+      const popup = document.getElementById('popup-mesa-ayuda');
+      if (popup) popup.style.display = 'none';
+    });
+
+    document.getElementById('popup-mesa-ayuda')?.addEventListener('click', (e) => {
+      if (e.target.id === 'popup-mesa-ayuda') {
+        e.target.style.display = 'none';
+      }
+    });
+
+    document.getElementById('btn-popup-whatsapp')?.addEventListener('click', () => {
+      const evName = selTipoEvento.value;
+      const tec = (document.getElementById('input-tecnico')?.value || '').trim() || 'Técnico';
+      const loc = (document.getElementById('input-localidad')?.value || '').trim() || 'San Luis';
+      const pat = (document.getElementById('input-movilidad-patente')?.value || '').trim();
+      let extraInfo = pat ? `• Patente: ${pat}\n` : '';
+      const msg = encodeURIComponent(`Hola! Adjunto el reporte PDF para generar reclamo interno:\n• Evento: ${evName}\n${extraInfo}• Técnico / Conductor: ${tec}\n• Localidad: ${loc}`);
+      window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+    });
+</script>
 </body>
 </html>
