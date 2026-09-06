@@ -769,6 +769,16 @@
       transform: translateY(-1px);
     }
 
+  
+    /* OCULTAR DIRECCIÓN Y GPS EN MOVILIDAD */
+    body.is-movilidad #col-direccion,
+    body.is-movilidad #group-gps {
+      display: none !important;
+    }
+    body.is-movilidad #group-localidad-direccion {
+      grid-template-columns: 1fr !important;
+    }
+
   </style>
 </head>
 <body>
@@ -799,7 +809,9 @@
           <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
           <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
           <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
+          <option value="Torre Inestable">Torre Inestable</option>
           <option value="Shelter">Shelter</option>
+          <option value="Movilidad">Movilidad</option>
           <option value="Informe de Nueva Instalación">Informe de Nueva Instalación</option>
         </select>
       </div>
@@ -817,19 +829,19 @@
       </div>
 
       <!-- LOCALIDAD & DIRECCIÓN -->
-      <div class="form-group form-row-2">
+      <div id="group-localidad-direccion" class="form-group form-row-2">
         <div>
           <label class="form-label">LOCALIDAD:</label>
           <input type="text" id="input-localidad" class="input-control" placeholder="Ej: Villa Mercedes / San Luis" autocomplete="off">
         </div>
-        <div>
+        <div id="col-direccion">
           <label class="form-label">DIRECCIÓN:</label>
           <input type="text" id="input-direccion" class="input-control" placeholder="Ej: Ruta 40 km" autocomplete="off">
         </div>
       </div>
 
       <!-- GPS (COORDENADAS) -->
-      <div class="form-group">
+      <div id="group-gps" class="form-group">
         <label class="form-label">GPS (COORDENADAS):</label>
         <div class="gps-flex">
           <input type="text" id="input-gps" class="input-control gps-input" placeholder="Ej: -33.156378, -66.313137" autocomplete="off">
@@ -942,6 +954,50 @@
 
       </div>
 
+      <!-- SECCIÓN DINÁMICA: TORRE INESTABLE -->
+      <div id="section-torre-inestable" class="dynamic-section">
+        
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">NOMBRE DE LA TORRE / NODO / SITIO:</label>
+          <input type="text" id="input-torre-nombre" class="input-control" placeholder="Ej: Torre Nodo La Punta / Cerro El Amago / Escuela 25" autocomplete="off">
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">TIPO DE ESTRUCTURA:</label>
+            <input type="text" id="input-torre-tipo" class="input-control" placeholder="Ej: Arriostrada / Autosoportada / Monoposte" autocomplete="off">
+          </div>
+          <div>
+            <label class="form-label">ALTURA ESTIMADA (METROS):</label>
+            <input type="text" id="input-torre-altura" class="input-control" placeholder="Ej: 36 metros / 4 tramos" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">FOTO BASE / ANCLAJE:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-torre-base" accept="image/*">
+              </div>
+              <span id="label-foto-torre-base" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">FOTO PANORÁMICA / RIENDAS:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-torre-panoramica" accept="image/*">
+              </div>
+              <span id="label-foto-torre-panoramica" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
       <!-- SECCIÓN DINÁMICA 3: Shelter con sub-reportes -->
       <div id="section-shelter-nodo" class="dynamic-section">
         <div class="form-group">
@@ -1038,6 +1094,7 @@
       <!-- SECCIÓN DINÁMICA 5: MOVILIDAD -->
       <div id="section-movilidad" class="dynamic-section">
         
+        <!-- PATENTE Y TIPO DE VEHÍCULO ARRIBA -->
         <div class="form-group form-row-2">
           <div>
             <label class="form-label">PATENTE DE LA CAMIONETA / MÓVIL:</label>
@@ -1047,6 +1104,17 @@
             <label class="form-label">TIPO DE VEHÍCULO / MODELO:</label>
             <input type="text" id="input-movilidad-vehiculo" class="input-control" placeholder="Ej: Toyota Hilux, Ford Ranger, Renault Kangoo..." autocomplete="off">
           </div>
+        </div>
+
+        <!-- TIPO DE REPORTE DEBAJO DE PATENTE Y MODELO -->
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">TIPO DE REPORTE DE MOVILIDAD:</label>
+          <select id="sel-subtipo-movilidad" class="select-control">
+            <option value="Reporte de cubiertas" selected>Reporte de cubiertas</option>
+            <option value="Reporte de Luces rotas">Reporte de Luces rotas</option>
+            <option value="Reporte de Tarjeta de peaje sin saldo">Reporte de Tarjeta de peaje sin saldo</option>
+            <option value="Otros problemas">Otros problemas</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -1094,6 +1162,31 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- SECCIÓN GENERAL DE VIDEO ADJUNTO (TORRE, POSTES, NUEVA INSTALACIÓN, SHELTER) -->
+      <div id="section-video-evidencia" class="form-group" style="display: none; background: rgba(30, 41, 59, 0.4); border: 1.5px dashed rgba(56, 189, 248, 0.35); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <label class="form-label" style="color: #38bdf8; margin-bottom: 0; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            ADJUNTAR VIDEO DE EVIDENCIA (OPCIONAL):
+          </label>
+          <span style="font-size: 10px; font-weight: 800; background: rgba(56, 189, 248, 0.15); color: #7dd3fc; padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.3);">Video / Drive</span>
+        </div>
+        <div class="form-group form-row-2" style="margin-bottom: 0;">
+          <div>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(2, 132, 199, 0.4)); border-color: rgba(56, 189, 248, 0.4); color: #7dd3fc;">
+                <span>📹 Seleccionar / Grabar Video</span>
+                <input type="file" id="file-video-evento" accept="video/*">
+              </div>
+              <span id="label-video-evento" class="file-status-text">Sin video seleccionado</span>
+            </div>
+          </div>
+          <div>
+            <input type="text" id="input-video-link-general" class="input-control" placeholder="O pegar enlace de video / Google Drive..." autocomplete="off">
+          </div>
+        </div>
       </div>
 
       <!-- COMENTARIOS / OBSERVACIONES DETALLES -->
@@ -1272,64 +1365,101 @@
 
     function updateDynamicForm() {
       const val = selTipoEvento.value;
+      const isMov = (val === 'Movilidad' || val.startsWith('Movilidad'));
       const secInstalacion = document.getElementById('section-nueva-instalacion');
       const secMovilidad = document.getElementById('section-movilidad');
+      const secTorre = document.getElementById('section-torre-inestable');
       const standardTecnicoGroup = document.getElementById('input-tecnico')?.closest('.form-group');
       const labelTecnico = document.getElementById('input-tecnico')?.closest('div')?.querySelector('.form-label');
       
+      // OCULTAR O MOSTRAR DIRECCIÓN Y GPS SEGÚN MOVILIDAD
+      if (isMov) {
+        document.body.classList.add('is-movilidad');
+      } else {
+        document.body.classList.remove('is-movilidad');
+      }
+
+      const gpsGroup = document.getElementById('group-gps');
+      if (gpsGroup) gpsGroup.style.display = isMov ? 'none' : 'block';
+
+      const colDir = document.getElementById('col-direccion');
+      if (colDir) colDir.style.display = isMov ? 'none' : 'block';
+
+      const groupLoc = document.getElementById('group-localidad-direccion');
+      if (groupLoc) groupLoc.style.gridTemplateColumns = isMov ? '1fr' : '1fr 1fr';
+
       secNap.classList.remove('active');
       secEdesalPoste.classList.remove('active');
       secShelter.classList.remove('active');
       if (secInstalacion) secInstalacion.classList.remove('active');
       if (secMovilidad) secMovilidad.classList.remove('active');
+      if (secTorre) secTorre.classList.remove('active');
       if (standardTecnicoGroup) standardTecnicoGroup.style.display = 'grid';
       
       if (labelTecnico) {
-        labelTecnico.textContent = val.startsWith('Movilidad') ? 'CONDUCTOR / TÉCNICO:' : 'NOMBRE DEL TÉCNICO:';
+        labelTecnico.textContent = isMov ? 'CONDUCTOR / TÉCNICO:' : 'NOMBRE DEL TÉCNICO:';
       }
       
       document.getElementById('group-pre-ingenieria').style.display = 'none';
+
+      // MOSTRAR CAMPO DE VIDEO EN: Torre Inestable, Postes Inestables (Edesal y Ente), Nueva Instalación y Shelter
+      const permitsVideo = (
+        val === 'Torre Inestable' ||
+        val.includes('Poste Inestable') ||
+        val === 'Informe de Nueva Instalación' ||
+        val === 'Shelter'
+      );
+      const secVideo = document.getElementById('section-video-evidencia');
+      if (secVideo) secVideo.style.display = permitsVideo ? 'block' : 'none';
       
       if (val === 'NAP/Botella Sin Potencia' || val === 'NAP/Botella Potencia Elevada') {
         secNap.classList.add('active');
         labelComentarios.textContent = 'COMENTARIOS:';
+      } else if (val === 'Torre Inestable') {
+        if (secTorre) secTorre.classList.add('active');
+        labelComentarios.textContent = 'OBSERVACIONES / ESTADO DE LA TORRE:';
       } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
         secEdesalPoste.classList.add('active');
-        labelComentarios.textContent = 'OBSERVACIONES DETALLES:';
+        labelComentarios.textContent = val.includes('Poste Inestable') ? 'OBSERVACIONES / ESTADO DEL POSTE:' : 'OBSERVACIONES DETALLES:';
         if (val.includes('energización') || val.includes('energizacion')) {
           document.getElementById('group-pre-ingenieria').style.display = 'block';
         }
       } else if (val === 'Informe de Nueva Instalación') {
-        const secInst = document.getElementById('section-nueva-instalacion');
-        if (secInst) secInst.classList.add('active');
-        const standardTecnicoGroup = document.getElementById('input-tecnico')?.closest('.form-group');
+        if (secInstalacion) secInstalacion.classList.add('active');
         if (standardTecnicoGroup) standardTecnicoGroup.style.display = 'none';
         labelComentarios.textContent = 'OBSERVACIONES / NOVEDADES ADICIONALES:';
       } else if (val === 'Shelter') {
         secShelter.classList.add('active');
         labelComentarios.textContent = 'COMENTARIOS Y OBSERVACIONES:';
         updateShelterLabels();
-      } else if (val.startsWith('Movilidad')) {
+      } else if (isMov) {
         if (secMovilidad) secMovilidad.classList.add('active');
         labelComentarios.textContent = 'OBSERVACIONES / COMENTARIOS ADICIONALES:';
-        const labelDetalle = document.getElementById('label-movilidad-detalle');
-        const inputDetalle = document.getElementById('input-movilidad-detalle');
-        if (val === 'Movilidad - Otros problemas') {
-          labelDetalle.textContent = 'DESCRIPCIÓN DEL PROBLEMA (LUGAR PARA ESCRIBIR):';
-          inputDetalle.placeholder = 'Describa detalladamente el problema o desperfecto que presenta la unidad...';
-        } else if (val === 'Movilidad - Reporte de cubiertas') {
-          labelDetalle.textContent = 'DETALLE DEL PROBLEMA DE CUBIERTAS:';
-          inputDetalle.placeholder = 'Indique estado (desinflada, pinchada, reventada, gastada), auxilio o posición (delantera izq/der, trasera)...';
-        } else if (val === 'Movilidad - Reporte de Luces rotas') {
-          labelDetalle.textContent = 'DETALLE DE LUCES ROTAS:';
-          inputDetalle.placeholder = 'Indique si es óptica delantera, trasera, luz baja/alta, giro, stop o posición rota o quemada...';
-        } else if (val === 'Movilidad - Reporte de Tarjeta de peaje sin saldo') {
-          labelDetalle.textContent = 'DETALLE DE TARJETA DE PEAJE:';
-          inputDetalle.placeholder = 'Indique número de tarjeta de peaje, estación/cabina de peaje o saldo...';
-        }
+        if (typeof updateMovilidadLabels === 'function') updateMovilidadLabels();
       }
     }
 
+    function updateMovilidadLabels() {
+      const subVal = document.getElementById('sel-subtipo-movilidad')?.value || 'Reporte de cubiertas';
+      const labelDetalle = document.getElementById('label-movilidad-detalle');
+      const inputDetalle = document.getElementById('input-movilidad-detalle');
+      if (!labelDetalle || !inputDetalle) return;
+      if (subVal === 'Otros problemas') {
+        labelDetalle.textContent = 'DESCRIPCIÓN DE OTROS PROBLEMAS (LUGAR PARA ESCRIBIR):';
+        inputDetalle.placeholder = 'Describa detalladamente cualquier otro problema o desperfecto...';
+      } else if (subVal === 'Reporte de cubiertas') {
+        labelDetalle.textContent = 'DETALLE DEL PROBLEMA DE CUBIERTAS:';
+        inputDetalle.placeholder = 'Indique estado (desinflada, pinchada, reventada, gastada), auxilio o posición (delantera izq/der, trasera)...';
+      } else if (subVal === 'Reporte de Luces rotas') {
+        labelDetalle.textContent = 'DETALLE DE LUCES ROTAS:';
+        inputDetalle.placeholder = 'Indique qué luz está rota o quemada (óptica delantera, trasera, baja/alta, giro, stop, posición)...';
+      } else if (subVal === 'Reporte de Tarjeta de peaje sin saldo') {
+        labelDetalle.textContent = 'DETALLE DE TARJETA DE PEAJE:';
+        inputDetalle.placeholder = 'Indique número de tarjeta de peaje, estación/cabina de peaje o saldo...';
+      }
+    }
+    document.getElementById('sel-subtipo-movilidad')?.addEventListener('change', updateMovilidadLabels);
+    
     function updateShelterLabels() {
       const subVal = selSubtipoShelter.value;
       if (subVal === 'Ordenamiento Shelter') {
@@ -1354,6 +1484,7 @@
     selSubtipoShelter.addEventListener('change', updateShelterLabels);
 
     selTipoEvento.addEventListener('change', updateDynamicForm);
+    updateDynamicForm(); // Init
 
     // 2. Detección GPS del Celular
     document.getElementById('btn-detectar-gps').addEventListener('click', () => {
@@ -1450,6 +1581,25 @@ const photoStore = {};
     handleFileInput('file-foto-medidor', 'label-foto-medidor', 'fotoMedidor');
     handleFileInput('file-foto-estanco', 'label-foto-estanco', 'fotoEstanco');
     handleFileInput('file-foto-shelter', 'label-foto-shelter-status', 'fotoShelter');
+    handleFileInput('file-foto-torre-base', 'label-foto-torre-base', 'fotoTorreBase');
+    handleFileInput('file-foto-torre-panoramica', 'label-foto-torre-panoramica', 'fotoTorrePanoramica');
+    
+    // Listener para video de Torre, Postes, Nueva Instalación y Shelter
+    const fileVideoEv = document.getElementById('file-video-evento');
+    if (fileVideoEv) {
+      fileVideoEv.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        photoStore.videoGeneralInfo = { name: file.name, size: sizeMb + ' MB' };
+        const lbl = document.getElementById('label-video-evento');
+        if (lbl) {
+          lbl.textContent = '✓ Video: ' + file.name + ' (' + sizeMb + ' MB)';
+          lbl.style.color = '#38bdf8';
+        }
+        showNotification('🎥 Video adjuntado correctamente');
+      });
+    }
     handleFileInput('file-foto-camioneta-patente', 'label-foto-camioneta-patente', 'fotoCamionetaPatente');
     handleFileInput('file-foto-movilidad-1', 'label-foto-movilidad-1', 'fotoMovilidad1');
     
@@ -1686,6 +1836,9 @@ const photoStore = {};
           if (eventoVal === 'Shelter') {
             const subVal = document.getElementById('sel-subtipo-shelter')?.value || 'Shelter';
             pillEl.textContent = subVal.toUpperCase();
+          } else if (eventoVal === 'Movilidad') {
+            const subMov = document.getElementById('sel-subtipo-movilidad')?.value || 'Movilidad';
+            pillEl.textContent = 'MOVILIDAD - ' + subMov.toUpperCase();
           } else {
             pillEl.textContent = eventoVal.toUpperCase();
           }
@@ -1694,7 +1847,7 @@ const photoStore = {};
         const isNap = (eventoVal === 'NAP/Botella Sin Potencia' || eventoVal === 'NAP/Botella Potencia Elevada');
         const isShelter = (eventoVal === 'Shelter');
         const isNuevaInstalacion = (eventoVal === 'Informe de Nueva Instalación');
-        const isMovilidad = eventoVal.startsWith('Movilidad');
+        const isMovilidad = (eventoVal === 'Movilidad' || eventoVal.startsWith('Movilidad'));
 
         // Reset extra cards container
         const extraCardsCont = document.getElementById('pdf-extra-cards-container');
@@ -1805,6 +1958,45 @@ const photoStore = {};
             </div>
           `;
 
+        } else if (eventoVal === 'Torre Inestable') {
+          const torreNombre = document.getElementById('input-torre-nombre')?.value.trim() || 'Torre / Nodo Operativo';
+          const torreTipo = document.getElementById('input-torre-tipo')?.value.trim() || 'Arriostrada';
+          const torreAltura = document.getElementById('input-torre-altura')?.value.trim() || 'S/D';
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
+              <span class="pdf-field-val">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">DIRECCIÓN / EMPLAZAMIENTO</span>
+              <span class="pdf-field-val">${direccion}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">NOMBRE DE TORRE / NODO</span>
+              <span class="pdf-field-val" style="font-weight:800; color:#e11d48;">${torreNombre}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TIPO DE ESTRUCTURA</span>
+              <span class="pdf-field-val">${torreTipo}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">ALTURA ESTIMADA</span>
+              <span class="pdf-field-val">${torreAltura}</span>
+            </div>
+          `;
+
         } else if (isShelter) {
           const shelterDesc = document.getElementById('input-shelter-desc')?.value.trim() || 'Sin detalles';
           const dynamicLabel = document.getElementById('label-shelter-desc')?.textContent.replace(':', '') || 'DETALLE SHELTER';
@@ -1838,6 +2030,7 @@ const photoStore = {};
         } else if (isMovilidad) {
           const patente = (document.getElementById('input-movilidad-patente')?.value || '').trim() || 'S/D';
           const vehiculo = (document.getElementById('input-movilidad-vehiculo')?.value || '').trim() || 'Camioneta Operativa';
+          const subMov = document.getElementById('sel-subtipo-movilidad')?.value || 'Movilidad';
           const detalleMov = (document.getElementById('input-movilidad-detalle')?.value || '').trim();
           const videoLink = (document.getElementById('input-movilidad-video-link')?.value || '').trim();
 
@@ -1852,23 +2045,19 @@ const photoStore = {};
             </div>
             <div class="pdf-field-item">
               <span class="pdf-field-label">PATENTE DEL VEHÍCULO</span>
-              <span class="pdf-field-val" style="font-size: 15px; font-weight: 900; color: #e11d48; letter-spacing: 1px;">${patente.toUpperCase()}</span>
+              <span class="pdf-field-val" style="font-size: 16px; font-weight: 900; color: #e11d48; letter-spacing: 1px;">${patente.toUpperCase()}</span>
             </div>
             <div class="pdf-field-item">
               <span class="pdf-field-label">TIPO / MODELO DE MÓVIL</span>
               <span class="pdf-field-val">${vehiculo}</span>
             </div>
             <div class="pdf-field-item">
-              <span class="pdf-field-label">LOCALIDAD / BASE</span>
-              <span class="pdf-field-val">${localidad}</span>
+              <span class="pdf-field-label">TIPO DE REPORTE</span>
+              <span class="pdf-field-val" style="font-weight: 800; color: #0284c7;">${subMov}</span>
             </div>
             <div class="pdf-field-item">
-              <span class="pdf-field-label">DIRECCIÓN / UBICACIÓN</span>
-              <span class="pdf-field-val">${direccion}</span>
-            </div>
-            <div class="pdf-field-item" style="grid-column: span 2;">
-              <span class="pdf-field-label">COORDENADAS GPS</span>
-              <span class="pdf-field-val">${gps}</span>
+              <span class="pdf-field-label">LOCALIDAD / BASE</span>
+              <span class="pdf-field-val">${localidad}</span>
             </div>
           `;
 
@@ -1994,6 +2183,20 @@ const photoStore = {};
               photoGridEl.appendChild(card);
             });
 
+          } else if (eventoVal === 'Torre Inestable') {
+            photoGridEl.className = 'pdf-photo-grid grid-2';
+            const torrePhotos = [
+              { label: 'BASE / ANCLAJE', src: photoStore.fotoTorreBase },
+              { label: 'PANORÁMICA / RIENDAS', src: photoStore.fotoTorrePanoramica }
+            ];
+            torrePhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
           } else if (isShelter) {
             photoGridEl.className = 'pdf-photo-grid grid-2';
             const dynamicFotoLabel = document.getElementById('label-shelter-foto')?.textContent.replace(':', '') || 'FOTO SHELTER';
@@ -2075,6 +2278,9 @@ const photoStore = {};
             if (photoStore.fotoNap) largePhotos.push({ label: 'NRO NAP/BOTELLA', src: photoStore.fotoNap });
             if (photoStore.fotoPotencia) largePhotos.push({ label: 'POTENCIA', src: photoStore.fotoPotencia });
             if (photoStore.fotoPoste) largePhotos.push({ label: 'POSTE', src: photoStore.fotoPoste });
+          } else if (eventoVal === 'Torre Inestable') {
+            if (photoStore.fotoTorreBase) largePhotos.push({ label: 'BASE / ANCLAJE', src: photoStore.fotoTorreBase });
+            if (photoStore.fotoTorrePanoramica) largePhotos.push({ label: 'PANORÁMICA / RIENDAS', src: photoStore.fotoTorrePanoramica });
           } else if (isShelter) {
             const dynamicFotoLabel = document.getElementById('label-shelter-foto')?.textContent.replace(':', '') || 'FOTO SHELTER';
             if (photoStore.fotoShelter) largePhotos.push({ label: dynamicFotoLabel, src: photoStore.fotoShelter });
@@ -2197,9 +2403,10 @@ const photoStore = {};
           baseName = 'Informe_Nueva_Instalacion_Accesos';
         } else if (isMovilidad) {
           const patClean = (document.getElementById('input-movilidad-patente')?.value || '').trim().replace(/[^a-zA-Z0-9]/g, '_') || 'PATENTE';
-          if (eventoVal.includes('cubiertas')) baseName = `Movilidad_Cubiertas_${patClean}`;
-          else if (eventoVal.includes('Luces')) baseName = `Movilidad_Luces_${patClean}`;
-          else if (eventoVal.includes('peaje')) baseName = `Movilidad_Peaje_${patClean}`;
+          const subMovVal = document.getElementById('sel-subtipo-movilidad')?.value || 'Movilidad';
+          if (subMovVal.includes('cubiertas')) baseName = `Movilidad_Cubiertas_${patClean}`;
+          else if (subMovVal.includes('Luces')) baseName = `Movilidad_Luces_${patClean}`;
+          else if (subMovVal.includes('peaje')) baseName = `Movilidad_Peaje_${patClean}`;
           else baseName = `Movilidad_Problema_${patClean}`;
         }
 
