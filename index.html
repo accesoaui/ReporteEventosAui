@@ -417,12 +417,19 @@
       }
 
       .pdf-photo-img {
-        height: 125px !important;
+        height: 110px !important;
+      }
+
+      #pdf-mail-action-container {
+        margin-top: 8px !important;
+        margin-bottom: 6px !important;
+        padding: 6px 10px !important;
+        page-break-inside: avoid !important;
       }
 
       .pdf-footer {
-        margin-top: 18px !important;
-        padding-top: 8px !important;
+        margin-top: 10px !important;
+        padding-top: 6px !important;
         page-break-inside: avoid !important;
       }
 
@@ -1281,29 +1288,29 @@
       <!-- Dynamically filled photos -->
     </div>
 
-    <!-- ANEXO FOTOGRÁFICO AL FINAL DEL PDF -->
-    <div id="pdf-anexo-section" class="pdf-anexo-wrapper" style="display:none;">
-      <div class="pdf-anexo-title">ANEXO FOTOGRÁFICO</div>
-      <div id="pdf-anexo-grid" class="pdf-anexo-grid"></div>
-    </div>
-
-    <!-- SECCIÓN DE FOTOS AMPLIADAS A PÁGINA COMPLETA AL FINAL -->
-    <div id="pdf-large-photos-section" class="pdf-large-photos-wrapper" style="display:none;">
-      <div id="pdf-large-photos-list"></div>
-    </div>
-
-    <!-- Banner de Acción para la Mesa de Ayuda en el PDF (al final del documento) -->
-    <div id="pdf-mail-action-container" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 12px; margin-top: 20px; margin-bottom: 10px; text-align: center;">
+    <!-- Banner de Acción para la Mesa de Ayuda en el PDF (Página 1) -->
+    <div id="pdf-mail-action-container" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 12px; margin-top: 12px; margin-bottom: 8px; text-align: center; page-break-inside: avoid;">
       <span style="font-size: 10px; font-weight: 800; color: #1e40af; text-transform: uppercase;">MESA DE AYUDA: </span>
       <a id="pdf-mail-link" href="#" target="_blank" style="color: #2563eb; font-weight: 900; font-size: 11px; text-decoration: underline; cursor: pointer;">
         ✉️ Hacé clic aquí para abrir Gmail con el correo a Edesal pre-cargado
       </a>
     </div>
 
-    <!-- PDF Footer -->
-    <div class="pdf-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 12px; margin-top: 40px; font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px;">
+    <!-- PDF Footer (Portada) -->
+    <div class="pdf-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 10px; margin-top: 16px; font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px;">
       <span>AUTOPISTA DE LA INFORMACIÓN - AREA ACCESOS - FIRMA DIGITAL TECNICO.</span>
       <span style="font-size: 8px; opacity: 0.8; font-weight: 900; letter-spacing: 0.5px; color: #475569; text-transform: none;">by Merak.ia DevFK</span>
+    </div>
+
+    <!-- ANEXO FOTOGRÁFICO (PÁGINAS SIGUIENTES) -->
+    <div id="pdf-anexo-section" class="pdf-anexo-wrapper" style="display:none; page-break-before: always;">
+      <div class="pdf-anexo-title">ANEXO FOTOGRÁFICO</div>
+      <div id="pdf-anexo-grid" class="pdf-anexo-grid"></div>
+    </div>
+
+    <!-- SECCIÓN DE FOTOS AMPLIADAS A PÁGINA COMPLETA (PÁGINAS SIGUIENTES) -->
+    <div id="pdf-large-photos-section" class="pdf-large-photos-wrapper" style="display:none;">
+      <div id="pdf-large-photos-list"></div>
     </div>
 
   </div>
@@ -2318,7 +2325,14 @@ const photoStore = {};
         const mailContainer = document.getElementById('pdf-mail-action-container');
         const mailLink = document.getElementById('pdf-mail-link');
 
-        const isEdesalEvent = (eventoVal === 'Edesal Sin Energía' || eventoVal === 'Municipalidad/Ente Sin Energía' || eventoVal.includes('energización') || eventoVal.includes('energizacion') || eventoVal.includes('Poste Inestable'));
+        // ÚNICAMENTE para eventos de Edesal, Municipalidad/Ente y Postes Inestables
+        const isEdesalEvent = (
+          eventoVal === 'Edesal Sin Energía' ||
+          eventoVal === 'Municipalidad/Ente Sin Energía' ||
+          eventoVal.includes('energización') ||
+          eventoVal.includes('energizacion') ||
+          eventoVal.includes('Poste Inestable')
+        );
         
         if (isEdesalEvent && mailContainer && mailLink) {
           mailContainer.style.display = 'block';
