@@ -786,6 +786,98 @@
       grid-template-columns: 1fr !important;
     }
 
+    /* ==========================================================================
+       PANTALLAS DE SELECCIÓN (NUEVO - MOBILE FIRST)
+       ========================================================================== */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .cat-screen-header { text-align: center; padding: 10px 0 20px; }
+    .cat-screen-header .logo-text { font-size: 26px; font-weight: 900; color: #fff; }
+    .cat-screen-header .logo-text span { color: #38bdf8; }
+    .cat-screen-header .subtitle { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+    .cat-screen-header h3 { font-size: 14px; font-weight: 800; color: #94a3b8; margin-top: 14px; }
+
+    .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .cat-card {
+      background: #0f172a; border: 1.5px solid rgba(255,255,255,0.1); border-radius: 20px;
+      padding: 20px 14px 18px; text-align: center; cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      min-height: 130px; justify-content: center; -webkit-tap-highlight-color: transparent;
+      position: relative; overflow: hidden;
+    }
+    .cat-card:active { transform: scale(0.96); }
+    .cat-card.tyd { border-color: rgba(59,130,246,0.4); background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(14,165,233,0.05)); }
+    .cat-card.edesal { border-color: rgba(245,158,11,0.4); background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(234,179,8,0.05)); }
+    .cat-card.municipal { border-color: rgba(34,197,94,0.4); background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(16,185,129,0.05)); }
+    .cat-card.interno { border-color: rgba(168,85,247,0.4); background: linear-gradient(135deg, rgba(168,85,247,0.08), rgba(139,92,246,0.05)); }
+    .cat-icon { font-size: 36px; line-height: 1; }
+    .cat-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; }
+    .cat-card.tyd .cat-label { color: #60a5fa; }
+    .cat-card.edesal .cat-label { color: #fbbf24; }
+    .cat-card.municipal .cat-label { color: #4ade80; }
+    .cat-card.interno .cat-label { color: #c084fc; }
+    .cat-count-badge { position: absolute; top: 10px; right: 10px; font-size: 9px; font-weight: 900; background: rgba(255,255,255,0.1); color: #94a3b8; border-radius: 10px; padding: 2px 7px; }
+
+    .subtype-screen-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0 18px; }
+    .btn-back { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #94a3b8; border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .btn-back:active { background: rgba(255,255,255,0.12); }
+    .subtype-screen-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; }
+    .subtype-screen-title.tyd { color: #60a5fa; }
+    .subtype-screen-title.edesal { color: #fbbf24; }
+    .subtype-screen-title.municipal { color: #4ade80; }
+    .subtype-screen-title.interno { color: #c084fc; }
+
+    .subtype-list { display: flex; flex-direction: column; gap: 10px; }
+    .subtype-btn {
+      background: #0f172a; border: 1.5px solid rgba(255,255,255,0.1); border-radius: 16px;
+      padding: 16px 18px; display: flex; align-items: center; gap: 14px; cursor: pointer;
+      transition: all 0.15s; text-align: left; width: 100%; -webkit-tap-highlight-color: transparent;
+    }
+    .subtype-btn:active { transform: scale(0.98); }
+    .subtype-btn.tyd { border-color: rgba(59,130,246,0.25); }
+    .subtype-btn.tyd:active { background: rgba(59,130,246,0.12); }
+    .subtype-btn.edesal { border-color: rgba(245,158,11,0.25); }
+    .subtype-btn.edesal:active { background: rgba(245,158,11,0.12); }
+    .subtype-btn.municipal { border-color: rgba(34,197,94,0.25); }
+    .subtype-btn.municipal:active { background: rgba(34,197,94,0.12); }
+    .subtype-btn.interno { border-color: rgba(168,85,247,0.25); }
+    .subtype-btn.interno:active { background: rgba(168,85,247,0.12); }
+    .subtype-btn-icon { font-size: 26px; flex-shrink: 0; width: 42px; text-align: center; }
+    .subtype-btn-text { flex: 1; }
+    .subtype-btn-name { font-size: 14px; font-weight: 900; color: #e2e8f0; display: block; line-height: 1.2; }
+    .subtype-btn-desc { font-size: 10px; font-weight: 600; color: #64748b; display: block; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-new { background: linear-gradient(135deg,#f59e0b,#ef4444); color: #fff; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(239,68,68,0.4); animation: pulse-new 2s ease-in-out infinite; }
+    @keyframes pulse-new { 0%,100%{box-shadow:0 2px 8px rgba(239,68,68,0.4)} 50%{box-shadow:0 2px 18px rgba(239,68,68,0.7)} }
+    .subtype-btn-arrow { color: #334155; font-size: 16px; flex-shrink: 0; }
+
+    .form-screen-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0 16px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 18px; }
+    .form-screen-event-badge { flex: 1; }
+    .event-category-tag { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-bottom: 4px; }
+    .event-category-tag.tyd { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .event-category-tag.edesal { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .event-category-tag.municipal { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .event-category-tag.interno { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+    .form-screen-event-name { font-size: 14px; font-weight: 900; color: #f8fafc; display: block; }
+
+    /* SECCIÓN CORTE DE FIBRA */
+    .fo-section-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 900; color: #60a5fa; text-transform: uppercase; letter-spacing: 1px; padding: 10px 0 6px; margin-bottom: 12px; border-bottom: 1px solid rgba(59,130,246,0.2); }
+    .fo-switch-row { background: rgba(30,41,59,0.5); border-radius: 14px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.07); font-size: 13px; font-weight: 700; color: #94a3b8; }
+    .fo-switch { position: relative; display: inline-block; width: 48px; height: 26px; }
+    .fo-switch input { opacity: 0; width: 0; height: 0; }
+    .fo-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #334155; transition: 0.3s; border-radius: 34px; }
+    .fo-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
+    input:checked + .fo-slider { background: #2563eb; }
+    input:checked + .fo-slider:before { transform: translateX(22px); }
+    .fo-dynamic-box { display: none; background: rgba(30,41,59,0.4); padding: 14px; border-radius: 14px; margin-top: 8px; margin-bottom: 12px; border-left: 3px solid #f59e0b; }
+    .fo-calc-module { background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 14px; padding: 14px; margin: 12px 0; }
+    .fo-calc-module h4 { font-size: 11px; font-weight: 900; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+    .fo-calc-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.07); font-size: 12px; color: #94a3b8; }
+    .fo-calc-item:last-child { border-bottom: none; }
+    .fo-calc-item span:last-child { font-weight: 800; color: #e2e8f0; }
+    .fo-row-2cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 400px) { .fo-row-2cols { grid-template-columns: 1fr; } }
+
   </style>
 </head>
 <body>
@@ -794,34 +886,88 @@
        SCREEN MODAL CONTAINER (MATCHING AU-IA 5.0 DESIGN)
        ========================================================================== -->
   <div class="modal-container">
-    
-    <div class="modal-header">
-      <div class="modal-title-group" style="display: flex; align-items: center; gap: 8px;">
-        <div style="font-size: 18px; font-weight: 900; color: #2563eb; line-height: 1; display: flex; align-items: center; gap: 2px; user-select: none;">AUI<span style="color: #38bdf8;">4.0</span></div>
-        <h2>REPORTAR EVENTO OPERATIVO</h2>
+
+    <!-- PANTALLA 1: SELECCIÓN DE CATEGORÍA -->
+    <div id="screen-category" class="screen active">
+      <div class="cat-screen-header">
+        <div class="logo-text">AUI<span>4.0</span></div>
+        <div class="subtitle">Autopista de la Información</div>
+        <h3>¿Qué tipo de evento vas a reportar?</h3>
       </div>
-      <button type="button" class="close-btn">&times;</button>
+      <div class="category-grid">
+        <div class="cat-card tyd" onclick="goToSubtype('tyd')">
+          <span class="cat-count-badge">4</span>
+          <div class="cat-icon">📡</div>
+          <div class="cat-label">Reclamos<br>TyD</div>
+        </div>
+        <div class="cat-card edesal" onclick="goToSubtype('edesal')">
+          <span class="cat-count-badge">3</span>
+          <div class="cat-icon">⚡</div>
+          <div class="cat-label">Reclamos<br>Edesal</div>
+        </div>
+        <div class="cat-card municipal" onclick="goToSubtype('municipal')">
+          <span class="cat-count-badge">2</span>
+          <div class="cat-icon">🏛️</div>
+          <div class="cat-label">Municipal<br>/ Ente</div>
+        </div>
+        <div class="cat-card interno" onclick="goToSubtype('interno')">
+          <span class="cat-count-badge">4</span>
+          <div class="cat-icon">🔧</div>
+          <div class="cat-label">Evento<br>Interno AUI</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#334155;margin-top:22px;font-weight:700;letter-spacing:0.5px;">by Merak.ia DevFK</div>
     </div>
 
-    <form id="form-auia-evento">
-      
-      <!-- TIPO DE EVENTO -->
-      <div class="form-group">
-        <label class="form-label">TIPO DE EVENTO:</label>
-        <select id="sel-tipo-evento" class="select-control">
-          <option value="NAP/Botella Sin Potencia" selected>NAP/Botella Sin Potencia</option>
-          <option value="NAP/Botella Potencia Elevada">NAP/Botella Potencia Elevada</option>
-          <option value="Edesal Sin Energía">Edesal Sin Energía</option>
-          <option value="Municipalidad/Ente Sin Energía">Municipalidad/Ente Sin Energía</option>
-          <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
-          <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
-          <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
-          <option value="Torre Inestable">Torre Inestable</option>
-          <option value="Shelter">Shelter</option>
-          <option value="Movilidad">Movilidad</option>
-          <option value="Informe de Nueva Instalación">Informe de Nueva Instalación</option>
-        </select>
+    <!-- PANTALLA 2: SELECCIÓN DE SUBTIPO -->
+    <div id="screen-subtype" class="screen">
+      <div class="subtype-screen-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn-back" onclick="goToCategory()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver
+          </button>
+          <div id="subtype-screen-title" class="subtype-screen-title tyd">Reclamos TyD</div>
+        </div>
+        <div style="font-size: 16px; font-weight: 900; color: #2563eb; line-height: 1; display: flex; align-items: center; gap: 2px; user-select: none;">AUI<span style="color: #38bdf8;">4.0</span></div>
       </div>
+      <div id="subtype-list" class="subtype-list"></div>
+    </div>
+
+    <!-- PANTALLA 3: FORMULARIO -->
+    <div id="screen-form" class="screen">
+      <div class="form-screen-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn-back" onclick="goBackFromForm()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver
+          </button>
+          <div class="form-screen-event-badge">
+            <span id="form-category-tag" class="event-category-tag tyd">TyD</span>
+            <span id="form-event-name" class="form-screen-event-name">NAP/Botella Sin Potencia</span>
+          </div>
+        </div>
+        <div style="font-size: 16px; font-weight: 900; color: #2563eb; line-height: 1; display: flex; align-items: center; gap: 2px; user-select: none;">AUI<span style="color: #38bdf8;">4.0</span></div>
+      </div>
+
+    <form id="form-auia-evento">
+
+      <!-- TIPO DE EVENTO (oculto, controlado por navegación) -->
+      <select id="sel-tipo-evento" style="display:none">
+        <option value="Corte de Fibra">Corte de Fibra</option>
+        <option value="NAP/Botella Sin Potencia" selected>NAP/Botella Sin Potencia</option>
+        <option value="NAP/Botella Potencia Elevada">NAP/Botella Potencia Elevada</option>
+        <option value="NAP Pedido Ampliación">NAP Pedido Ampliación</option>
+        <option value="Edesal Sin Energía">Edesal Sin Energía</option>
+        <option value="Municipalidad/Ente Sin Energía">Municipalidad/Ente Sin Energía</option>
+        <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
+        <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
+        <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
+        <option value="Torre Inestable">Torre Inestable</option>
+        <option value="Shelter">Shelter</option>
+        <option value="Movilidad">Movilidad</option>
+        <option value="Informe de Nueva Instalación">Informe de Nueva Instalación</option>
+      </select>
 
       <!-- NOMBRE DEL TÉCNICO & COORDINADOR -->
       <div class="form-group form-row-2">
@@ -859,7 +1005,7 @@
         </div>
       </div>
 
-      <!-- SECCIÓN DINÁMICA 1: PARA NAP Sin Potencia & NAP Potencia Elevada -->
+      <!-- SECCIÓN DINÁMICA 1: PARA NAP Sin Potencia & NAP Potencia Elevada & NAP Pedido Ampliación -->
       <div id="section-nap" class="dynamic-section active">
         
         <div class="form-group form-row-2">
@@ -1217,7 +1363,7 @@
 
       <!-- FOOTER BUTTONS -->
       <div class="modal-footer">
-        <button type="button" class="btn-cancel">Cancelar</button>
+        <button type="button" class="btn-cancel" onclick="goToCategory()">← Inicio</button>
         <button type="button" id="btn-generar-pdf" class="btn-generate-pdf">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           <span>Generar Reporte PDF</span>
@@ -1230,7 +1376,8 @@
 
     </form>
     <div style="text-align: center; font-size: 10px; color: var(--text-muted); margin-top: 18px; font-weight: 700; opacity: 0.7; letter-spacing: 0.5px;">by Merak.ia DevFK</div>
-  </div>
+    </div><!-- /screen-form -->
+  </div><!-- /modal-container -->
 
 
   <!-- ==========================================================================
@@ -1318,6 +1465,130 @@
   <div id="toast-box" class="toast">Notificación</div>
 
   <script>
+    // ============================================================
+    // NAVEGACIÓN ENTRE PANTALLAS (CATEGORÍA → SUBTIPO → FORMULARIO)
+    // ============================================================
+    let currentCategory = 'tyd';
+
+    const CATEGORIES = {
+      tyd: {
+        label: 'Reclamos TyD',
+        tagLabel: 'TyD',
+        subtypes: [
+          { value: 'Corte de Fibra',              icon: '📡', name: 'Corte de Fibra',           desc: 'Fibra óptica cortada / incidente de red', isNew: true },
+          { value: 'NAP/Botella Sin Potencia',     icon: '🔋', name: 'NAP/Botella Sin Potencia',  desc: 'Nodo de acceso sin señal' },
+          { value: 'NAP/Botella Potencia Elevada', icon: '⚠️', name: 'NAP/Botella Potencia Elevada', desc: 'Potencia fuera de rango' },
+          { value: 'NAP Pedido Ampliación',        icon: '📦', name: 'NAP Pedido Ampliación',     desc: 'Solicitud de capacidad adicional', isNew: true },
+        ]
+      },
+      edesal: {
+        label: 'Reclamos Edesal',
+        tagLabel: 'Edesal',
+        subtypes: [
+          { value: 'Edesal-Pedido de nueva energización', icon: '🔌', name: 'Pedido de nueva Energización', desc: 'Solicitud de nueva conexión eléctrica' },
+          { value: 'Edesal Sin Energía',                  icon: '⚡', name: 'Edesal sin Energía',           desc: 'Sitio sin suministro eléctrico' },
+          { value: 'Poste Inestable - Edesal',            icon: '🪵', name: 'Poste Inestable',              desc: 'Poste con riesgo de caída (Edesal)' },
+        ]
+      },
+      municipal: {
+        label: 'Municipal / Ente',
+        tagLabel: 'Municipal',
+        subtypes: [
+          { value: 'Municipalidad/Ente Sin Energía',    icon: '⚡', name: 'Municipalidad/Ente sin Energía', desc: 'Sitio municipal sin suministro' },
+          { value: 'Poste Inestable - Municipal/Ente',  icon: '🪵', name: 'Poste Inestable',                desc: 'Poste con riesgo (Municipal/Ente)' },
+        ]
+      },
+      interno: {
+        label: 'Evento Interno AUI',
+        tagLabel: 'Interno',
+        subtypes: [
+          { value: 'Informe de Nueva Instalación', icon: '🏗️', name: 'Informe Nueva Instalación', desc: 'Obra nueva / puesta en marcha', isNew: true },
+          { value: 'Torre Inestable',               icon: '🗼', name: 'Torre Inestable',           desc: 'Estructura con riesgo de estabilidad' },
+          { value: 'Shelter',                       icon: '🗄️', name: 'Shelter',                   desc: 'Gabinete técnico / nodo shelter' },
+          { value: 'Movilidad',                     icon: '🚙', name: 'Movilidad',                 desc: 'Vehículo / movilidad operativa', isNew: true },
+        ]
+      }
+    };
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function goToCategory() {
+      showScreen('screen-category');
+    }
+
+    function goToSubtype(cat) {
+      currentCategory = cat;
+      const cfg = CATEGORIES[cat];
+      if (!cfg) return;
+
+      // Update title
+      const titleEl = document.getElementById('subtype-screen-title');
+      if (titleEl) {
+        titleEl.textContent = cfg.label;
+        titleEl.className = 'subtype-screen-title ' + cat;
+      }
+
+      // Render buttons
+      const listEl = document.getElementById('subtype-list');
+      if (listEl) {
+        listEl.innerHTML = cfg.subtypes.map(st => `
+          <button class="subtype-btn ${cat}" onclick="goToForm('${cat}', '${st.value}')">
+            <div class="subtype-btn-icon">${st.icon}</div>
+            <div class="subtype-btn-text">
+              <span class="subtype-btn-name">${st.name}</span>
+              <span class="subtype-btn-desc">${st.desc}</span>
+            </div>
+            ${st.isNew ? '<span class="badge-new">⭐ Nuevo</span>' : ''}
+            <span class="subtype-btn-arrow">›</span>
+          </button>
+        `).join('');
+      }
+
+      showScreen('screen-subtype');
+    }
+
+    function goToForm(cat, eventValue) {
+      if (eventValue === 'Corte de Fibra') {
+        window.location.href = 'Incidentesdefibras-AUI-K.html';
+        return;
+      }
+
+      currentCategory = cat;
+      const cfg = CATEGORIES[cat];
+      if (!cfg) return;
+
+      // Update header badges
+      const tagEl = document.getElementById('form-category-tag');
+      const nameEl = document.getElementById('form-event-name');
+      if (tagEl) { tagEl.textContent = cfg.tagLabel; tagEl.className = 'event-category-tag ' + cat; }
+
+      const sub = cfg.subtypes.find(s => s.value === eventValue);
+      if (nameEl) nameEl.textContent = sub ? (sub.icon + ' ' + sub.name) : eventValue;
+
+      // Set the hidden select value
+      const sel = document.getElementById('sel-tipo-evento');
+      if (sel) {
+        sel.value = eventValue;
+        const ev = new Event('change');
+        sel.dispatchEvent(ev);
+      }
+
+      showScreen('screen-form');
+    }
+
+    function goBackFromForm() {
+      goToSubtype(currentCategory);
+    }
+  </script>
+
+  <script>
 
     function agregarCampoTecnico() {
       const container = document.getElementById('contenedor-tecnicos-instalacion');
@@ -1401,6 +1672,8 @@
       if (secInstalacion) secInstalacion.classList.remove('active');
       if (secMovilidad) secMovilidad.classList.remove('active');
       if (secTorre) secTorre.classList.remove('active');
+      const secCorteFibra = document.getElementById('section-corte-fibra');
+      if (secCorteFibra) secCorteFibra.classList.remove('active');
       if (standardTecnicoGroup) standardTecnicoGroup.style.display = 'grid';
       
       if (labelTecnico) {
@@ -1419,13 +1692,16 @@
       const secVideo = document.getElementById('section-video-evidencia');
       if (secVideo) secVideo.style.display = permitsVideo ? 'block' : 'none';
       
-      if (val === 'NAP/Botella Sin Potencia' || val === 'NAP/Botella Potencia Elevada') {
+      if (val === 'Corte de Fibra') {
+        if (secCorteFibra) secCorteFibra.classList.add('active');
+        labelComentarios.textContent = 'OBSERVACIONES / DETALLES DEL CORTE:';
+      } else if (val === 'NAP/Botella Sin Potencia' || val === 'NAP/Botella Potencia Elevada' || val === 'NAP Pedido Ampliación') {
         secNap.classList.add('active');
         labelComentarios.textContent = 'COMENTARIOS:';
       } else if (val === 'Torre Inestable') {
         if (secTorre) secTorre.classList.add('active');
         labelComentarios.textContent = 'OBSERVACIONES / ESTADO DE LA TORRE:';
-      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
+      } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val === 'Evento Municipalidad/Ente' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
         secEdesalPoste.classList.add('active');
         labelComentarios.textContent = val.includes('Poste Inestable') ? 'OBSERVACIONES / ESTADO DEL POSTE:' : 'OBSERVACIONES DETALLES:';
         if (val.includes('energización') || val.includes('energizacion')) {
@@ -1851,7 +2127,8 @@ const photoStore = {};
           }
         }
 
-        const isNap = (eventoVal === 'NAP/Botella Sin Potencia' || eventoVal === 'NAP/Botella Potencia Elevada');
+        const isNap = (eventoVal === 'NAP/Botella Sin Potencia' || eventoVal === 'NAP/Botella Potencia Elevada' || eventoVal === 'NAP Pedido Ampliación');
+        const isCorte = (eventoVal === 'Corte de Fibra');
         const isShelter = (eventoVal === 'Shelter');
         const isNuevaInstalacion = (eventoVal === 'Informe de Nueva Instalación');
         const isMovilidad = (eventoVal === 'Movilidad' || eventoVal.startsWith('Movilidad'));
@@ -1872,7 +2149,33 @@ const photoStore = {};
         const gridEl = document.getElementById('pdf-grid-details');
         let detailsHtml = '';
 
-        if (isNuevaInstalacion) {
+        if (isCorte) {
+          const causaFO = document.getElementById('fo-causa-raiz')?.value || 'No especificada';
+          const areaTec = document.getElementById('fo-area-tecnico')?.value || 'S/D';
+          const depto = document.getElementById('fo-departamento')?.value || 'S/D';
+          const botella = document.getElementById('fo-botella-afectada')?.value || 'No';
+          const postes = document.getElementById('fo-postes-afectados')?.value || '0';
+          const napDet = document.getElementById('fo-nap-det')?.value || '0';
+          const dropDan = document.getElementById('fo-drop-dan')?.value || '0';
+          const capFO = document.getElementById('fo-capacidad-fo')?.value || '24';
+          const metrosTend = document.getElementById('fo-metros-tender')?.value || '0';
+          detailsHtml = `
+            <div class="pdf-field-item"><span class="pdf-field-label">TÉCNICO REPORTANTE</span><span class="pdf-field-val">${tecnico}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">COORDINADOR</span><span class="pdf-field-val">${coordinador}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">ÁREA DEL TÉCNICO</span><span class="pdf-field-val">${areaTec}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">DEPARTAMENTO</span><span class="pdf-field-val">${depto}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">LOCALIDAD</span><span class="pdf-field-val">${localidad}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">DIRECCIÓN / EMPLAZAMIENTO</span><span class="pdf-field-val">${direccion}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">COORDENADAS GPS</span><span class="pdf-field-val">${gps}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">CAUSA PRINCIPAL</span><span class="pdf-field-val" style="color:#e11d48;font-weight:900;">${causaFO}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">BOTELLA FO DAÑADA</span><span class="pdf-field-val">${botella}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">POSTES AFECTADOS</span><span class="pdf-field-val">${postes}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">NAP DETERIORADOS</span><span class="pdf-field-val">${napDet}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">DROP DAÑADOS</span><span class="pdf-field-val">${dropDan}</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">CAPACIDAD CABLE FO</span><span class="pdf-field-val">${capFO} FO</span></div>
+            <div class="pdf-field-item"><span class="pdf-field-label">METROS A TENDER</span><span class="pdf-field-val">${metrosTend} m</span></div>
+          `;
+        } else if (isNuevaInstalacion) {
           // Collect all technicians
           const tecInputs = document.querySelectorAll('.input-tecnico-item');
           const tecs = [];
@@ -2162,7 +2465,22 @@ const photoStore = {};
         if (photoGridEl) {
           photoGridEl.innerHTML = '';
 
-          if (isNuevaInstalacion) {
+          if (isCorte) {
+            photoGridEl.className = 'pdf-photo-grid';
+            const cortePhotos = [
+              { label: 'FIBRA ÓPTICA CORTADA', src: photoStore.foCorteFoto1 },
+              { label: 'VISTA PANORÁMICA', src: photoStore.foCorteFoto2 },
+              { label: 'EVIDENCIA CAUSA RAÍZ', src: photoStore.foCorteFoto3 }
+            ];
+            cortePhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:10px;font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
+          } else if (isNuevaInstalacion) {
             photoGridEl.className = 'pdf-photo-grid grid-2';
             const instPhotos = [
               { label: 'FOTO PRINCIPAL DE INSTALACIÓN', src: photoStore.fotoInstalacion }
@@ -2279,7 +2597,11 @@ const photoStore = {};
         if (pdfLargeSec && pdfLargeList) {
           pdfLargeList.innerHTML = '';
           let largePhotos = [];
-          if (isNuevaInstalacion) {
+          if (isCorte) {
+            if (photoStore.foCorteFoto1) largePhotos.push({ label: 'FIBRA ÓPTICA CORTADA', src: photoStore.foCorteFoto1 });
+            if (photoStore.foCorteFoto2) largePhotos.push({ label: 'VISTA PANORÁMICA', src: photoStore.foCorteFoto2 });
+            if (photoStore.foCorteFoto3) largePhotos.push({ label: 'EVIDENCIA CAUSA RAÍZ', src: photoStore.foCorteFoto3 });
+          } else if (isNuevaInstalacion) {
             if (photoStore.fotoInstalacion) largePhotos.push({ label: 'FOTO PRINCIPAL DE INSTALACIÓN', src: photoStore.fotoInstalacion });
           } else if (isNap) {
             if (photoStore.fotoNap) largePhotos.push({ label: 'NRO NAP/BOTELLA', src: photoStore.fotoNap });
@@ -2403,7 +2725,9 @@ const photoStore = {};
         // Filename and Print
         let reportCounter = parseInt(localStorage.getItem('aui_report_counter') || '1', 10);
         let baseName = 'Reporte_Evento_Accesos';
-        if (eventoVal === 'NAP/Botella Sin Potencia') baseName = 'NAP_Sin_Potencia_Accesos';
+        if (eventoVal === 'Corte de Fibra') baseName = 'Corte_Fibra_Optica_AUI';
+        else if (eventoVal === 'NAP Pedido Ampliación') baseName = 'NAP_Pedido_Ampliacion_Accesos';
+        else if (eventoVal === 'NAP/Botella Sin Potencia') baseName = 'NAP_Sin_Potencia_Accesos';
         else if (eventoVal === 'NAP/Botella Potencia Elevada') baseName = 'NAP_Potencia_Elevada_Accesos';
         else if (eventoVal === 'Edesal Sin Energía') baseName = 'Edesal_Sin_Energia_Accesos';
         else if (eventoVal === 'Municipalidad/Ente Sin Energía') baseName = 'Municipalidad_Sin_Energia_Accesos';

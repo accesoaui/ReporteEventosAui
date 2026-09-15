@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AUI | Reporte de Corte de Fibra Óptica - San Luis</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Inter', sans-serif; padding: 12px; color: #1a2c3e; }
+        .container { max-width: 700px; margin: 0 auto; }
+        .header-card {
+            background: linear-gradient(135deg, #0b2b44 0%, #0a3a5a 100%);
+            border-radius: 24px; padding: 20px 16px; margin-bottom: 20px; color: white;
+        }
+        .logos-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+        .logo-box { background: rgba(255,255,255,0.12); backdrop-filter: blur(4px); border-radius: 20px; padding: 8px 18px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .logo-box .title { font-weight: 800; font-size: 1.35rem; }
+        .logo-box .sub { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; }
+        .header-card h1 { font-size: 1.6rem; font-weight: 700; margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .badge-version { background: #ff7a2f; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
+        .section-card { background: white; border-radius: 28px; padding: 20px 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e9edf2; }
+        .section-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #0f5c8f; color: #0f5c8f; }
+        .form-group { margin-bottom: 18px; }
+        label { font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 6px; color: #2c3e50; }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 16px; font-size: 0.9rem; transition: 0.2s; background: #fff; font-family: 'Inter', sans-serif; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #0f5c8f; box-shadow: 0 0 0 3px rgba(15,92,143,0.1); }
+        textarea { resize: vertical; min-height: 70px; }
+        .switch-row { background: #f8fafc; border-radius: 20px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #e2edf2; }
+        .switch { position: relative; display: inline-block; width: 52px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: 0.3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #0f5c8f; }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .dynamic-box { display: none; background: #f9fbfd; padding: 16px; border-radius: 20px; margin-top: 12px; border-left: 4px solid #ff7a2f; }
+        .geo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+        .btn { width: 100%; padding: 14px; border-radius: 40px; font-weight: 700; border: none; background: #0f5c8f; color: white; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; margin-top: 8px; text-align: center; }
+        .btn-gps { background: #2c6e2f; }
+        .btn-submit { background: #d93c1f; font-size: 1rem; padding: 16px; }
+        .btn-secondary { background: #475569; margin-top: 10px; }
+        .btn-danger { background: #7f1a1a; margin-top: 10px; }
+        .btn:hover { opacity: 0.9; transform: scale(0.98); }
+        #map { height: 250px; border-radius: 24px; margin-top: 12px; z-index: 1; border: 1px solid #ddd; background: #e2e8f0; }
+        .calc-module { background: #eef4ff; border-radius: 24px; padding: 16px; margin: 20px 0 10px; }
+        .calc-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #b9d0f0; }
+        .photo-grid { display: flex; flex-direction: column; gap: 16px; }
+        .photo-card { background: #fef9e8; border-radius: 20px; padding: 14px; border: 1px solid #ffe2b5; }
+        .preview-img { max-width: 100%; height: 140px; object-fit: cover; border-radius: 16px; margin-top: 8px; display: none; border: 1px solid #cbd5e1; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 40px; font-size: 0.85rem; z-index: 1000; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; max-width: 90%; }
+        .row-2cols { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 500px) { .section-card { padding: 16px; } .logo-box .title { font-size: 1rem; } .row-2cols { grid-template-columns: 1fr; } }
+        .domicilio-input { margin-bottom: 15px; }
+        .domicilio-input input { background: #fef9e8; }
+        .info-hint { font-size: 0.72rem; color: #64748b; margin-top: 4px; display: block; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div style="margin-bottom: 14px;">
+        <a href="index.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0b2b44; color: white; padding: 10px 18px; border-radius: 40px; font-size: 0.85rem; font-weight: 700; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            ← Volver al Menú de Eventos AUI
+        </a>
+    </div>
+    <div class="header-card">
+        <div class="logos-row">
+            <div class="logo-box"><div class="title">AUI <span style="font-size:1rem;">4.0</span></div><div class="sub">Autopista de la Información</div></div>
+            <div class="logo-box logo-gob"><div class="title">SAN LUIS</div><div class="sub">La Provincia</div></div>
+        </div>
+        <h1>📡 Reporte de Corte de Fibra Óptica <span class="badge-version">Georreferenciado</span></h1>
+        <p style="font-size:0.8rem; opacity:0.9;">Formulario técnico de campo - Infraestructura de conectividad</p>
+    </div>
+
+    <form id="incidentForm" onsubmit="return false;">
+        <!-- SECCION 1: GENERAL -->
+        <div class="section-card">
+            <div class="section-title">👥 1. Información del Técnico y Red AUI</div>
+            <div class="form-group"><label>Coordinador a cargo *</label><input type="text" id="coordinador" required placeholder="Nombre del coordinador"></div>
+            <div class="form-group"><label>Nombre y Apellido del técnico que reporta *</label><input type="text" id="tecnicoNombre" required placeholder="Nombre del técnico"></div>
+            
+            <div class="form-group"><label>Área del técnico *</label>
+                <select id="areaTecnico" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Planta Externa">Planta Externa</option>
+                    <option value="Soporte e Infraestructura">Soporte e Infraestructura</option>
+                    <option value="Monitoreo">Monitoreo</option>
+                    <option value="Operaciones NOC">Operaciones NOC</option>
+                    <option value="Mantenimiento Campo">Mantenimiento Campo</option>
+                    <option value="Troncales_Distribucion">Troncales / Distribución</option>
+                    <option value="Asistencia Tecnica">Asistencia Técnica</option>
+                    <option value="Auditoria">Auditoría</option>
+                    <option value="Ingenieria">Ingeniería</option>
+                    <option value="Personal Externo">Personal Externo</option>
+                </select>
+            </div>
+            
+            <div class="form-group"><label>Departamento de San Luis *</label>
+                <select id="departamento" required>
+                    <option value="">-- Seleccione --</option>
+                    <option>Ayacucho</option>
+                    <option>Belgrano</option>
+                    <option>Chacabuco</option>
+                    <option>Coronel Pringles</option>
+                    <option>General Pedernera</option>
+                    <option>Gobernador Dupuy</option>
+                    <option>Juan Martín de Pueyrredón</option>
+                    <option>Junín</option>
+                    <option>Libertador General San Martín</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Fecha y Hora de detección</label><input type="datetime-local" id="fechaHoraDeteccion"></div>
+            <div class="form-group"><label>Hora de llegada al lugar</label><input type="time" id="horaLlegada"></div>
+            <div class="switch-row"><span>¿Pertenece a red AUI?</span><label class="switch"><input type="checkbox" id="redAui" checked><span class="slider"></span></label></div>
+        </div>
+
+        <!-- SECCION 2: GEO + DOMICILIO + ANALISIS -->
+        <div class="section-card">
+            <div class="section-title">📍 2. Georreferencia y Análisis de Infraestructura</div>
+            
+            <div class="domicilio-input form-group">
+                <label>🏠 Domicilio / Dirección del lugar del corte *</label>
+                <input type="text" id="domicilio" required placeholder="Ej: Calle San Martín 1234, esq. Av. España">
+                <span class="info-hint">Ingrese la dirección más precisa posible</span>
+            </div>
+            
+            <button type="button" class="btn btn-gps" id="btnGPS" onclick="obtenerGPS()">📍 Obtener ubicación actual (GPS)</button>
+            
+            <div class="geo-row">
+                <div>
+                    <label>Latitud *</label>
+                    <input type="number" step="any" id="latitud" required placeholder="-33.2993" oninput="actualizarDesdeInputs()">
+                </div>
+                <div>
+                    <label>Longitud *</label>
+                    <input type="number" step="any" id="longitud" required placeholder="-66.3363" oninput="actualizarDesdeInputs()">
+                </div>
+            </div>
+            <span class="info-hint">Puede usar el botón GPS, arrastrar el marcador en el mapa o ingresar las coordenadas a mano.</span>
+            
+            <div id="map"></div>
+            
+            <div class="form-group" style="margin-top:16px;">
+                <label>Causa Principal del Corte *</label>
+                <select id="causaRaiz" required onchange="manejarCausaRaiz()">
+                    <option value="">-- Seleccione --</option>
+                    <option value="Terceros">Acción de Terceros</option>
+                    <option value="Evento Climático">Evento Climático</option>
+                    <option value="Falla Técnica">Falla Técnica / Fatiga de material</option>
+                    <option value="Prestadora Energía">Prestadora de Energía</option>
+                </select>
+            </div>
+            
+            <div id="sec-terceros" class="dynamic-box">
+                <div class="form-group">
+                    <label>Tipo de incidente con terceros *</label>
+                    <select id="subCausaTerceros" onchange="manejarAccidenteCamion()">
+                        <option value="">Seleccionar</option>
+                        <option value="Accidente de camión">Accidente de camión</option>
+                        <option value="Obra civil">Obra civil / Excavación</option>
+                        <option value="Vandalismo">Vandalismo</option>
+                    </select>
+                </div>
+                <div id="sec-camion" style="display:none; margin-bottom:12px;">
+                    <label>Patente del vehículo involucrado</label>
+                    <input type="text" id="patente" placeholder="Ej: AB 123 CD">
+                </div>
+                <div class="form-group"><label>Descripción adicional</label><textarea id="detalleTerceros" rows="2" placeholder="Ej: un vehículo produjo el corte, obra civil sin señalización..."></textarea></div>
+            </div>
+            
+            <div id="sec-clima" class="dynamic-box">
+                <div class="form-group">
+                    <label>Detalle Climático</label>
+                    <select id="subCausaClima">
+                        <option>Caída de árbol</option>
+                        <option>Tormenta eléctrica</option>
+                        <option>Viento Zonda</option>
+                        <option>Granizo</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="sec-falla" class="dynamic-box">
+                <div class="form-group"><label>Descripción de la falla técnica</label><textarea id="detalleFalla" rows="2" placeholder="Ej: fatiga de material, empalme deficiente, antigüedad del cable..."></textarea></div>
+            </div>
+            
+            <div id="sec-prestadora" class="dynamic-box">
+                <div class="form-group"><label>Prestadora de energía involucrada</label><input type="text" id="prestadoraEnergia" placeholder="Ej: EDESAL, EPRE"></div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Botella de fibra óptica dañada?</label>
+                <select id="botellaAfectada">
+                    <option value="No">No</option>
+                    <option value="Sí, dañada">Sí, dañada</option>
+                    <option value="Sí, destruida">Sí, destruida</option>
+                </select>
+            </div>
+            
+            <div class="row-2cols">
+                <div class="form-group"><label>Postes Afectados *</label><input type="number" id="postesAfectados" min="0" value="0" required oninput="calcularMateriales()"></div>
+                <div class="form-group"><label>Distancia entre postes (m) *</label><input type="number" id="distanciaPostes" step="5" value="40" oninput="calcularMateriales()"></div>
+            </div>
+            
+            <div class="row-2cols">
+                <div class="form-group">
+                    <label>📡 NAP (Nodo de Acceso) deteriorados</label>
+                    <input type="number" id="napDeteriorados" min="0" value="0" placeholder="Cantidad" oninput="calcularMateriales()">
+                    <span class="info-hint">Cajas de distribución dañadas</span>
+                </div>
+                <div class="form-group">
+                    <label>🔌 Drop (Derivación) dañados</label>
+                    <input type="number" id="dropDanados" min="0" value="0" placeholder="Cantidad">
+                    <span class="info-hint">Derivaciones a clientes</span>
+                </div>
+            </div>
+            
+            <div class="form-group"><label>Observaciones sobre NAP/Drop afectados</label><textarea id="obsNapDrop" rows="2" placeholder="Ej: NAP #123 destruido, 4 drops sin servicio..."></textarea></div>
+
+            <div class="switch-row"><span>🚦 ¿Cruce de calle afectado?</span><label class="switch"><input type="checkbox" id="cruceCalle" onchange="toggleDynamic('sec-cruce', this.checked)"><span class="slider"></span></label></div>
+            <div id="sec-cruce" class="dynamic-box"><div class="form-group"><label>Tipo de calle</label><select id="tipoCalle"><option>Calle interna</option><option>Avenida</option><option>Ruta Nacional</option><option>Ruta Provincial</option></select></div></div>
+        </div>
+
+        <!-- SECCION 3: RED Y MATERIALES -->
+        <div class="section-card">
+            <div class="section-title">⚙️ 3. Parámetros de Red y Materiales</div>
+            <div class="form-group"><label>Capacidad del Cable *</label>
+                <select id="capacidadFo" required onchange="calcularMateriales()">
+                    <option value="12">12 FO</option>
+                    <option value="24" selected>24 FO</option>
+                    <option value="48">48 FO</option>
+                    <option value="96">96 FO</option>
+                    <option value="144">144 FO (Alta densidad)</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Metros lineales a tender *</label><input type="number" id="metrosTender" min="1" required oninput="calcularMateriales()" placeholder="Ej: 400"></div>
+            <div class="calc-module"><h4>📐 Cómputo técnico (+25% holgura)</h4>
+                <div class="calc-item"><span>Cable FO final:</span><span id="calcMetros">0 m</span></div>
+                <div class="calc-item"><span>Cajas de empalme:</span><span>2 unidades</span></div>
+                <div class="calc-item"><span>Fusiones estimadas:</span><span id="calcFusiones">0</span></div>
+                <div class="calc-item"><span>Herrajes (retención):</span><span id="calcHerrajes">0 u</span></div>
+                <div class="calc-item"><span>📦 NAP/Box de distribución:</span><span id="calcNapBox">0 u</span></div>
+            </div>
+        </div>
+
+        <!-- SECCION 4: FOTOS -->
+        <div class="section-card">
+            <div class="section-title">📸 4. Evidencia Fotográfica (3 obligatorias)</div>
+            <div class="photo-grid">
+                <div class="photo-card">
+                    <label>📷 1. Fibra Óptica Cortada *</label>
+                    <input type="file" accept="image/*" id="foto1" onchange="comprimirYPrevisualizar(this, 'prev1', 'img1_base64')">
+                    <input type="hidden" id="img1_base64">
+                    <img id="prev1" class="preview-img" alt="Vista previa 1">
+                </div>
+                <div class="photo-card">
+                    <label>📷 2. Vista Panorámica del Incidente *</label>
+                    <input type="file" accept="image/*" id="foto2" onchange="comprimirYPrevisualizar(this, 'prev2', 'img2_base64')">
+                    <input type="hidden" id="img2_base64">
+                    <img id="prev2" class="preview-img" alt="Vista previa 2">
+                </div>
+                <div class="photo-card">
+                    <label>📷 3. Evidencia Causa Raíz / Daño en NAP o Drop *</label>
+                    <input type="file" accept="image/*" id="foto3" onchange="comprimirYPrevisualizar(this, 'prev3', 'img3_base64')">
+                    <input type="hidden" id="img3_base64">
+                    <img id="prev3" class="preview-img" alt="Vista previa 3">
+                </div>
+            </div>
+            <p style="font-size:0.75rem; margin-top:12px; color:#b91c1c; font-weight:600;">* Las fotos se optimizan automáticamente para que el reporte sea rápido y compatible con WhatsApp, correo y almacenamiento local.</p>
+        </div>
+
+        <button type="button" class="btn btn-submit" onclick="guardarYExportar()">💾 Guardar / Compartir Reporte HTML</button>
+        <button type="button" class="btn btn-secondary" onclick="cargarDatosGuardados(false)">📂 Cargar último reporte guardado</button>
+        <button type="button" class="btn btn-danger" onclick="limpiarFormulario()">🗑️ Limpiar formulario</button>
+    </form>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // ========== VARIABLES GLOBALES ==========
+    let mapa = null;
+    let marcador = null;
+    const SAN_LUIS_DEFAULT = [-33.2993, -66.3363];
+    
+    // ========== INICIALIZAR MAPA CON TOLERANCIA OFFLINE ==========
+    function initMap() {
+        actualizarCoord(SAN_LUIS_DEFAULT[0], SAN_LUIS_DEFAULT[1]);
+        
+        const mapContainer = document.getElementById('map');
+        if (typeof L === 'undefined') {
+            if (mapContainer) {
+                mapContainer.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;font-size:0.85rem;text-align:center;padding:15px;">🗺️ Modo sin conexión a internet.<br>Puede ingresar las coordenadas o el domicilio manualmente.</div>';
+            }
+            return;
+        }
+
+        try {
+            mapa = L.map('map').setView(SAN_LUIS_DEFAULT, 13);
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles © Esri',
+                maxZoom: 19
+            }).addTo(mapa);
+            
+            marcador = L.marker(SAN_LUIS_DEFAULT, { draggable: true }).addTo(mapa);
+            marcador.on('dragend', function() { 
+                let pos = marcador.getLatLng(); 
+                actualizarCoord(pos.lat, pos.lng); 
+            });
+            mapa.on('click', function(e) { 
+                marcador.setLatLng(e.latlng); 
+                actualizarCoord(e.latlng.lat, e.latlng.lng); 
+            });
+        } catch(e) {
+            console.warn("No se pudo cargar el mapa Leaflet:", e);
+        }
+    }
+    
+    function actualizarCoord(lat, lng) {
+        document.getElementById('latitud').value = parseFloat(lat).toFixed(6);
+        document.getElementById('longitud').value = parseFloat(lng).toFixed(6);
+    }
+
+    function actualizarDesdeInputs() {
+        const lat = parseFloat(document.getElementById('latitud').value);
+        const lng = parseFloat(document.getElementById('longitud').value);
+        if (!isNaN(lat) && !isNaN(lng) && mapa && marcador) {
+            marcador.setLatLng([lat, lng]);
+            mapa.panTo([lat, lng]);
+        }
+    }
+    
+    // ========== GEOLOCALIZACIÓN ROBUSTA ==========
+    function obtenerGPS() {
+        mostrarToast("📍 Solicitando ubicación GPS...");
+        if (!navigator.geolocation) {
+            alert("❌ Su navegador o dispositivo no soporta geolocalización. Ingrese las coordenadas o mueva el marcador en el mapa.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                actualizarCoord(lat, lng);
+                if (mapa && marcador) {
+                    marcador.setLatLng([lat, lng]);
+                    mapa.setView([lat, lng], 16);
+                }
+                mostrarToast("✅ Ubicación GPS obtenida correctamente");
+            },
+            function(error) {
+                let mensaje = "";
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        mensaje = "Permiso de ubicación denegado por el navegador o dispositivo.\n\nNota: Si abrió este archivo directamente desde el almacenamiento local (file://), los navegadores bloquean el GPS por seguridad. Puede ingresar las coordenadas manualmente o tocando el mapa.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        mensaje = "Señal GPS no disponible. Mueva el marcador en el mapa o escriba las coordenadas a mano.";
+                        break;
+                    case error.TIMEOUT:
+                        mensaje = "Tiempo de espera del GPS agotado. Intente nuevamente en un área despejada.";
+                        break;
+                    default:
+                        mensaje = "Error al intentar obtener la ubicación GPS.";
+                }
+                alert("⚠️ " + mensaje);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        );
+    }
+    
+    // ========== DINAMISMO ==========
+    function toggleDynamic(id, show) { 
+        let el = document.getElementById(id);
+        if(el) el.style.display = show ? 'block' : 'none'; 
+    }
+    
+    function manejarCausaRaiz() { 
+        let c = document.getElementById('causaRaiz').value; 
+        toggleDynamic('sec-terceros', c === 'Terceros');
+        toggleDynamic('sec-clima', c === 'Evento Climático');
+        toggleDynamic('sec-falla', c === 'Falla Técnica');
+        toggleDynamic('sec-prestadora', c === 'Prestadora Energía');
+        if (c !== 'Terceros') {
+            toggleDynamic('sec-camion', false);
+        } else {
+            manejarAccidenteCamion();
+        }
+    }
+    
+    function manejarAccidenteCamion() { 
+        let val = document.getElementById('subCausaTerceros').value;
+        toggleDynamic('sec-camion', val === 'Accidente de camión');
+    }
+    
+    // ========== CÁLCULOS ==========
+    function calcularMateriales() { 
+        let m = parseFloat(document.getElementById('metrosTender').value) || 0; 
+        let p = parseInt(document.getElementById('postesAfectados').value) || 0; 
+        let cap = parseInt(document.getElementById('capacidadFo').value) || 24; 
+        let naps = parseInt(document.getElementById('napDeteriorados').value) || 0;
+        document.getElementById('calcMetros').innerText = Math.ceil(m * 1.25) + " m"; 
+        document.getElementById('calcFusiones').innerText = (cap * 2) + " fusiones"; 
+        document.getElementById('calcHerrajes').innerText = Math.ceil((p + 2) * 1.25) + " u";
+        document.getElementById('calcNapBox').innerText = naps + " unidades (reposición)";
+    }
+    
+    // ========== COMPRESIÓN DE IMÁGENES CON CANVAS (MÓVIL + PC) ==========
+    function comprimirYPrevisualizar(input, previewId, hiddenId) { 
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        mostrarToast("⏳ Optimizando imagen...");
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const MAX_DIM = 1280;
+                let w = img.width;
+                let h = img.height;
+
+                if (w > h) {
+                    if (w > MAX_DIM) {
+                        h = Math.round((h * MAX_DIM) / w);
+                        w = MAX_DIM;
+                    }
+                } else {
+                    if (h > MAX_DIM) {
+                        w = Math.round((w * MAX_DIM) / h);
+                        h = MAX_DIM;
+                    }
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.72);
+                
+                const prevEl = document.getElementById(previewId);
+                if (prevEl) {
+                    prevEl.src = compressedBase64;
+                    prevEl.style.display = 'block';
+                }
+                const hiddenEl = document.getElementById(hiddenId);
+                if (hiddenEl) {
+                    hiddenEl.value = compressedBase64;
+                }
+                mostrarToast("✅ Imagen optimizada lista");
+            };
+            img.onerror = function() {
+                mostrarToast("❌ Error al procesar la imagen");
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    function mostrarToast(msg) { 
+        let t = document.getElementById('toast'); 
+        if(!t) return;
+        t.innerText = msg; 
+        t.style.display = 'block'; 
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.style.display = 'none', 3000); 
+    }
+    
+    // ========== LIMPIAR FORMULARIO ==========
+    function limpiarFormulario() {
+        if(confirm("⚠️ ¿Está seguro que desea limpiar TODOS los datos del formulario?")) {
+            const inputsTexto = ['coordinador', 'tecnicoNombre', 'domicilio', 'patente', 'detalleTerceros', 'detalleFalla', 'prestadoraEnergia', 'obsNapDrop'];
+            inputsTexto.forEach(id => { let el = document.getElementById(id); if(el) el.value = ''; });
+            document.getElementById('areaTecnico').value = '';
+            document.getElementById('departamento').value = '';
+            document.getElementById('causaRaiz').value = '';
+            document.getElementById('subCausaTerceros').value = '';
+            document.getElementById('subCausaClima').value = 'Caída de árbol';
+            document.getElementById('botellaAfectada').value = 'No';
+            document.getElementById('tipoCalle').value = 'Calle interna';
+            document.getElementById('capacidadFo').value = '24';
+            document.getElementById('fechaHoraDeteccion').value = '';
+            document.getElementById('horaLlegada').value = '';
+            document.getElementById('redAui').checked = true;
+            document.getElementById('cruceCalle').checked = false;
+            document.getElementById('postesAfectados').value = '0';
+            document.getElementById('distanciaPostes').value = '40';
+            document.getElementById('napDeteriorados').value = '0';
+            const dropEl = document.getElementById('dropDanados');
+            if (dropEl) dropEl.value = '0';
+            document.getElementById('metrosTender').value = '';
+            
+            actualizarCoord(SAN_LUIS_DEFAULT[0], SAN_LUIS_DEFAULT[1]);
+            if(mapa && marcador) { 
+                mapa.setView(SAN_LUIS_DEFAULT, 13); 
+                marcador.setLatLng(SAN_LUIS_DEFAULT); 
+            }
+
+            const dinamicas = ['sec-terceros', 'sec-clima', 'sec-falla', 'sec-prestadora', 'sec-cruce', 'sec-camion'];
+            dinamicas.forEach(id => { let el = document.getElementById(id); if(el) el.style.display = 'none'; });
+            
+            const fotos = ['foto1', 'foto2', 'foto3'];
+            const previews = ['prev1', 'prev2', 'prev3'];
+            const hiddenBases = ['img1_base64', 'img2_base64', 'img3_base64'];
+            for(let i = 0; i < fotos.length; i++) {
+                let fileInput = document.getElementById(fotos[i]);
+                if(fileInput) fileInput.value = '';
+                let preview = document.getElementById(previews[i]);
+                if(preview) { preview.src = ''; preview.style.display = 'none'; }
+                let hidden = document.getElementById(hiddenBases[i]);
+                if(hidden) hidden.value = '';
+            }
+            
+            calcularMateriales();
+            mostrarToast("✅ Formulario limpiado completamente");
+        }
+    }
+    
+    // ========== LOCALSTORAGE SEGURO ==========
+    function guardarEnLocalStorage() {
+        try {
+            const dropEl = document.getElementById('dropDanados');
+            const datos = {
+                coordinador: document.getElementById('coordinador').value,
+                tecnicoNombre: document.getElementById('tecnicoNombre').value,
+                areaTecnico: document.getElementById('areaTecnico').value,
+                departamento: document.getElementById('departamento').value,
+                domicilio: document.getElementById('domicilio').value,
+                fechaHoraDeteccion: document.getElementById('fechaHoraDeteccion').value,
+                horaLlegada: document.getElementById('horaLlegada').value,
+                redAui: document.getElementById('redAui').checked,
+                latitud: document.getElementById('latitud').value,
+                longitud: document.getElementById('longitud').value,
+                causaRaiz: document.getElementById('causaRaiz').value,
+                subCausaTerceros: document.getElementById('subCausaTerceros').value,
+                patente: document.getElementById('patente').value,
+                detalleTerceros: document.getElementById('detalleTerceros').value,
+                subCausaClima: document.getElementById('subCausaClima').value,
+                detalleFalla: document.getElementById('detalleFalla').value,
+                prestadoraEnergia: document.getElementById('prestadoraEnergia').value,
+                botellaAfectada: document.getElementById('botellaAfectada').value,
+                postesAfectados: document.getElementById('postesAfectados').value,
+                distanciaPostes: document.getElementById('distanciaPostes').value,
+                napDeteriorados: document.getElementById('napDeteriorados').value,
+                dropDanados: dropEl ? dropEl.value : '0',
+                obsNapDrop: document.getElementById('obsNapDrop').value,
+                cruceCalle: document.getElementById('cruceCalle').checked,
+                tipoCalle: document.getElementById('tipoCalle').value,
+                capacidadFo: document.getElementById('capacidadFo').value,
+                metrosTender: document.getElementById('metrosTender').value,
+                img1_base64: document.getElementById('img1_base64').value,
+                img2_base64: document.getElementById('img2_base64').value,
+                img3_base64: document.getElementById('img3_base64').value
+            };
+            localStorage.setItem('reporteCorteFO', JSON.stringify(datos));
+            return true;
+        } catch(e) {
+            console.warn("No se pudo persistir en localStorage:", e);
+            return false;
+        }
+    }
+    
+    function cargarDatosGuardados(silent = false) {
+        try {
+            const saved = localStorage.getItem('reporteCorteFO');
+            if(!saved) { 
+                if(!silent) mostrarToast("No hay datos guardados previamente"); 
+                return; 
+            }
+            const d = JSON.parse(saved);
+            if(d.coordinador) document.getElementById('coordinador').value = d.coordinador;
+            if(d.tecnicoNombre) document.getElementById('tecnicoNombre').value = d.tecnicoNombre;
+            if(d.areaTecnico) document.getElementById('areaTecnico').value = d.areaTecnico;
+            if(d.departamento) document.getElementById('departamento').value = d.departamento;
+            if(d.domicilio) document.getElementById('domicilio').value = d.domicilio;
+            if(d.fechaHoraDeteccion) document.getElementById('fechaHoraDeteccion').value = d.fechaHoraDeteccion;
+            if(d.horaLlegada) document.getElementById('horaLlegada').value = d.horaLlegada;
+            document.getElementById('redAui').checked = d.redAui !== undefined ? d.redAui : true;
+            
+            if(d.latitud && d.longitud) { 
+                actualizarCoord(d.latitud, d.longitud);
+                if(mapa && marcador) { 
+                    marcador.setLatLng([parseFloat(d.latitud), parseFloat(d.longitud)]); 
+                    mapa.setView([parseFloat(d.latitud), parseFloat(d.longitud)], 14); 
+                }
+            }
+            
+            if(d.causaRaiz) { 
+                document.getElementById('causaRaiz').value = d.causaRaiz; 
+                manejarCausaRaiz(); 
+            }
+            if(d.subCausaTerceros) {
+                document.getElementById('subCausaTerceros').value = d.subCausaTerceros;
+                manejarAccidenteCamion();
+            }
+            if(d.patente) document.getElementById('patente').value = d.patente;
+            if(d.detalleTerceros) document.getElementById('detalleTerceros').value = d.detalleTerceros;
+            if(d.subCausaClima) document.getElementById('subCausaClima').value = d.subCausaClima;
+            if(d.detalleFalla) document.getElementById('detalleFalla').value = d.detalleFalla;
+            if(d.prestadoraEnergia) document.getElementById('prestadoraEnergia').value = d.prestadoraEnergia;
+            if(d.botellaAfectada) document.getElementById('botellaAfectada').value = d.botellaAfectada;
+            if(d.postesAfectados) document.getElementById('postesAfectados').value = d.postesAfectados;
+            if(d.distanciaPostes) document.getElementById('distanciaPostes').value = d.distanciaPostes;
+            if(d.napDeteriorados) document.getElementById('napDeteriorados').value = d.napDeteriorados;
+            
+            const dropEl = document.getElementById('dropDanados');
+            if(dropEl && (d.dropDanados || d.dropDañados)) {
+                dropEl.value = d.dropDanados || d.dropDañados;
+            }
+            
+            if(d.obsNapDrop) document.getElementById('obsNapDrop').value = d.obsNapDrop;
+            
+            document.getElementById('cruceCalle').checked = d.cruceCalle || false;
+            toggleDynamic('sec-cruce', d.cruceCalle || false);
+            
+            if(d.tipoCalle) document.getElementById('tipoCalle').value = d.tipoCalle;
+            if(d.capacidadFo) document.getElementById('capacidadFo').value = d.capacidadFo;
+            if(d.metrosTender) document.getElementById('metrosTender').value = d.metrosTender;
+            
+            if(d.img1_base64) { 
+                document.getElementById('img1_base64').value = d.img1_base64; 
+                document.getElementById('prev1').src = d.img1_base64; 
+                document.getElementById('prev1').style.display = 'block'; 
+            }
+            if(d.img2_base64) { 
+                document.getElementById('img2_base64').value = d.img2_base64; 
+                document.getElementById('prev2').src = d.img2_base64; 
+                document.getElementById('prev2').style.display = 'block'; 
+            }
+            if(d.img3_base64) { 
+                document.getElementById('img3_base64').value = d.img3_base64; 
+                document.getElementById('prev3').src = d.img3_base64; 
+                document.getElementById('prev3').style.display = 'block'; 
+            }
+            
+            calcularMateriales();
+            if(!silent) mostrarToast("📁 Datos cargados correctamente");
+        } catch(e) {
+            console.error("Error al cargar datos locales:", e);
+        }
+    }
+    
+    // ========== EXPORTAR Y COMPARTIR INTELIGENTE (ANDROID, IPHONE, PC) ==========
+    async function guardarYExportar() {
+        const coord = document.getElementById('coordinador').value.trim();
+        const tec = document.getElementById('tecnicoNombre').value.trim();
+        const dom = document.getElementById('domicilio').value.trim();
+
+        if(!tec || !coord){ 
+            alert("⚠️ Complete los campos obligatorios: Nombre del Técnico y Coordinador a cargo."); 
+            return; 
+        }
+        if(!dom){ 
+            alert("⚠️ Complete el campo Domicilio / Dirección del lugar del corte."); 
+            return; 
+        }
+        if(!document.getElementById('img1_base64').value || !document.getElementById('img2_base64').value || !document.getElementById('img3_base64').value){ 
+            alert("⚠️ Debe cargar las 3 fotos obligatorias para generar el reporte."); 
+            return; 
+        }
+        
+        guardarEnLocalStorage();
+        
+        const fecha = new Date().toLocaleString();
+        const causaVal = document.getElementById('causaRaiz').value || "No especificada";
+        let causaDescripcion = causaVal;
+        if(causaVal === 'Terceros') {
+            const sub = document.getElementById('subCausaTerceros').value || '';
+            const det = document.getElementById('detalleTerceros').value || '';
+            causaDescripcion += " - " + sub + (det ? ": " + det : "");
+        }
+        
+        const tecSanitized = tec.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        const nombreArchivo = "reporte_corte_fo_" + tecSanitized + "_" + Date.now() + ".html";
+        const dropVal = (document.getElementById('dropDanados') || {}).value || '0';
+
+        const htmlContent = '<!DOCTYPE html>\n' +
+'<html lang="es">\n' +
+'<head>\n' +
+'<meta charset="UTF-8">\n' +
+'<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'<title>Reporte Corte FO - ' + tec + '</title>\n' +
+'<style>\n' +
+'    body{font-family:\'Segoe UI\',Arial,sans-serif;padding:20px;max-width:900px;margin:0 auto;background:#f5f5f5;color:#1a2c3e;}\n' +
+'    .reporte{background:white;border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.08);}\n' +
+'    h1{color:#d93c1f;border-bottom:3px solid #0f5c8f;padding-bottom:10px;font-size:1.5rem;}\n' +
+'    h2{color:#0f5c8f;margin-top:20px;font-size:1.15rem;}\n' +
+'    .header-logos{display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}\n' +
+'    .logo{background:linear-gradient(135deg,#0b2b44,#0a3a5a);color:white;padding:8px 16px;border-radius:12px;text-align:center;}\n' +
+'    table{border-collapse:collapse;width:100%;margin:12px 0;background:white;}\n' +
+'    th,td{border:1px solid #ddd;padding:8px 10px;text-align:left;vertical-align:top;font-size:0.9rem;}\n' +
+'    th{background:#0f5c8f;color:white;}\n' +
+'    .foto{max-width:260px;margin:10px;border:1px solid #ddd;padding:8px;border-radius:12px;display:inline-block;background:#fafafa;text-align:center;}\n' +
+'    .foto img{max-width:100%;height:auto;max-height:180px;border-radius:8px;}\n' +
+'    .galeria{display:flex;flex-wrap:wrap;gap:15px;margin-top:15px;justify-content:center;}\n' +
+'    .footer{margin-top:25px;text-align:right;font-size:11px;color:#666;border-top:1px solid #ccc;padding-top:10px;}\n' +
+'    .badge{background:#d93c1f;color:white;padding:3px 10px;border-radius:20px;font-size:11px;display:inline-block;}\n' +
+'    .domicilio-destacado{background:#eef4ff;padding:10px 14px;border-radius:12px;margin:10px 0;font-size:0.95rem;border-left:4px solid #0f5c8f;}\n' +
+'</style>\n' +
+'</head>\n' +
+'<body>\n' +
+'<div class="reporte">\n' +
+'    <div class="header-logos">\n' +
+'        <div class="logo"><strong>AUI 4.0</strong><br><small>Autopista de la Información</small></div>\n' +
+'        <div class="logo"><strong>SAN LUIS</strong><br><small>La Provincia</small></div>\n' +
+'    </div>\n' +
+'    <h1>📡 Reporte de Corte de Fibra Óptica <span class="badge">Georreferenciado</span></h1>\n' +
+'    <p><strong>Fecha de emisión:</strong> ' + fecha + '</p>\n' +
+'    \n' +
+'    <h2>👥 Información del Técnico</h2>\n' +
+'    <table>\n' +
+'        <tr><th>Coordinador</th><td>' + (coord || '-') + '</td><th>Técnico que reporta</th><td>' + (tec || '-') + '</td></tr>\n' +
+'        <tr><th>Área</th><td>' + (document.getElementById('areaTecnico').value || '-') + '</td><th>Departamento</th><td>' + (document.getElementById('departamento').value || '-') + '</td></tr>\n' +
+'        <tr><th>Red AUI</th><td>' + (document.getElementById('redAui').checked ? 'Sí' : 'No') + '</td><th>Ubicación GPS</th><td>' + (document.getElementById('latitud').value || '-') + ', ' + (document.getElementById('longitud').value || '-') + '</td></tr>\n' +
+'    </table>\n' +
+'    \n' +
+'    <h2>📍 Ubicación del Incidente</h2>\n' +
+'    <div class="domicilio-destacado"><strong>🏠 Domicilio/Dirección:</strong> ' + (dom || 'No especificado') + '</div>\n' +
+'    \n' +
+'    <h2>🔍 Análisis del Entorno</h2>\n' +
+'    <table>\n' +
+'        <tr><th>Causa Principal</th><td colspan="3">' + causaDescripcion + '</td></tr>\n' +
+'        <tr><th>Botella FO</th><td>' + document.getElementById('botellaAfectada').value + '</td><th>Postes dañados</th><td>' + document.getElementById('postesAfectados').value + '</td></tr>\n' +
+'        <tr><th>NAP deteriorados</th><td>' + (document.getElementById('napDeteriorados').value || '0') + '</td><th>Drop dañados</th><td>' + dropVal + '</td></tr>\n' +
+'        <tr><th colspan="4">Observaciones: ' + (document.getElementById('obsNapDrop').value || 'Ninguna') + '</th></tr>\n' +
+'    </table>\n' +
+'    \n' +
+'    <h2>⚙️ Materiales Estimados</h2>\n' +
+'    <table>\n' +
+'        <tr><th>Concepto</th><th>Valor final (+25%)</th></tr>\n' +
+'        <tr><td>Cable FO (' + document.getElementById('capacidadFo').value + ' FO)</td><td>' + document.getElementById('calcMetros').innerText + '</td></tr>\n' +
+'        <tr><td>Fusiones</td><td>' + document.getElementById('calcFusiones').innerText + '</td></tr>\n' +
+'        <tr><td>Herrajes</td><td>' + document.getElementById('calcHerrajes').innerText + '</td></tr>\n' +
+'        <tr><td>NAP/Box</td><td>' + document.getElementById('calcNapBox').innerText + '</td></tr>\n' +
+'    </table>\n' +
+'    \n' +
+'    <h2>📸 Evidencia Fotográfica</h2>\n' +
+'    <div class="galeria">\n' +
+'        <div class="foto"><img src="' + document.getElementById('img1_base64').value + '"><p><strong>Fibra Óptica Cortada</strong></p></div>\n' +
+'        <div class="foto"><img src="' + document.getElementById('img2_base64').value + '"><p><strong>Vista Panorámica</strong></p></div>\n' +
+'        <div class="foto"><img src="' + document.getElementById('img3_base64').value + '"><p><strong>Evidencia Causa Raíz</strong></p></div>\n' +
+'    </div>\n' +
+'    \n' +
+'    <div class="footer">informe técnico - por ingeniería aui | desarrollado por ingeniería aui</div>\n' +
+'</div>\n' +
+'</body>\n' +
+'</html>';
+
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+
+        try {
+            const file = new File([blob], nombreArchivo, { type: 'text/html' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    title: "Reporte Corte FO - " + tec,
+                    text: "Reporte técnico: " + dom,
+                    files: [file]
+                });
+                mostrarToast("✅ Reporte compartido / guardado con éxito");
+                return;
+            }
+        } catch(err) {
+            if (err.name === 'AbortError') {
+                return;
+            }
+            console.log("No se pudo usar Web Share, procediendo a descarga directa:", err);
+        }
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = nombreArchivo;
+        document.body.appendChild(a);
+        a.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 2500);
+
+        mostrarToast("✅ Reporte descargado exitosamente");
+    }
+    
+    // ========== INICIALIZAR ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        initMap();
+        calcularMateriales();
+        cargarDatosGuardados(true);
+    });
+</script>
+</body>
+</html>
