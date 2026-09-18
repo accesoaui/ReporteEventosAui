@@ -901,7 +901,7 @@
           <div class="cat-label">Reclamos<br>TyD</div>
         </div>
         <div class="cat-card edesal" onclick="goToSubtype('edesal')">
-          <span class="cat-count-badge">3</span>
+          <span class="cat-count-badge">4</span>
           <div class="cat-icon">⚡</div>
           <div class="cat-label">Reclamos<br>Edesal</div>
         </div>
@@ -962,6 +962,7 @@
         <option value="Municipalidad/Ente Sin Energía">Municipalidad/Ente Sin Energía</option>
         <option value="Edesal-Pedido de nueva energización">Edesal-Pedido de nueva energización</option>
         <option value="Poste Inestable - Edesal">Poste Inestable - Edesal</option>
+        <option value="Riesgo Eléctrico - Edesal">Riesgo Eléctrico - Edesal</option>
         <option value="Poste Inestable - Municipal/Ente">Poste Inestable - Municipal/Ente</option>
         <option value="Torre Inestable">Torre Inestable</option>
         <option value="Shelter">Shelter</option>
@@ -1101,6 +1102,54 @@
                 <input type="file" id="file-foto-estanco" accept="image/*">
               </div>
               <span id="label-foto-estanco" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN DINÁMICA: RIESGO ELÉCTRICO (EDESAL) -->
+      <div id="section-riesgo-electrico" class="dynamic-section">
+        
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" style="color: #f87171; display: flex; align-items: center; gap: 6px; font-weight: 800;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            TIPO DE RIESGO / PELIGRO ELÉCTRICO DETECTADO:
+          </label>
+          <select id="sel-tipo-riesgo-electrico" class="select-control" style="border-color: rgba(239, 68, 68, 0.4);">
+            <option value="Cable cortado / bajo con tensión en vía pública" selected>Cable cortado / bajo con tensión en vía pública</option>
+            <option value="Pilar / caja metálica con tensión o expuesta">Pilar / caja metálica con tensión o expuesta</option>
+            <option value="Conexión precaria / clandestina con chispas">Conexión precaria / clandestina con chispas o sobrecarga</option>
+            <option value="Poste con cables caídos o en contacto con personas">Poste con cables caídos o en contacto con personas</option>
+            <option value="Gabinete / transformador con fuga o chispeo">Gabinete / transformador con fuga o chispeo</option>
+            <option value="Otro peligro eléctrico hacia transeúntes">Otro peligro eléctrico hacia transeúntes o vecinos</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">REFERENCIA DE UBICACIÓN / ENTORNO:</label>
+          <input type="text" id="input-riesgo-ref" class="input-control" placeholder="Ej: Vereda de escuela, frente a vivienda, cruce peatonal, plaza..." autocomplete="off">
+        </div>
+
+        <div class="form-group form-row-2">
+          <div>
+            <label class="form-label">FOTO 1 - DETALLE DEL PELIGRO (CABLE / CONEXIÓN):</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select" style="border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-riesgo-1" accept="image/*">
+              </div>
+              <span id="label-foto-riesgo-1" class="file-status-text">Sin archivos seleccionados</span>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">FOTO 2 - PANORÁMICA DEL ENTORNO / PERSONAS:</label>
+            <div class="file-input-wrapper">
+              <div class="btn-file-select" style="border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">
+                <span>Seleccionar archivo</span>
+                <input type="file" id="file-foto-riesgo-2" accept="image/*">
+              </div>
+              <span id="label-foto-riesgo-2" class="file-status-text">Sin archivos seleccionados</span>
             </div>
           </div>
         </div>
@@ -1488,6 +1537,7 @@
           { value: 'Edesal-Pedido de nueva energización', icon: '🔌', name: 'Pedido de nueva Energización', desc: 'Solicitud de nueva conexión eléctrica' },
           { value: 'Edesal Sin Energía',                  icon: '⚡', name: 'Edesal sin Energía',           desc: 'Sitio sin suministro eléctrico' },
           { value: 'Poste Inestable - Edesal',            icon: '🪵', name: 'Poste Inestable',              desc: 'Poste con riesgo de caída (Edesal)' },
+          { value: 'Riesgo Eléctrico - Edesal',           icon: '⚡⚠️', name: 'Riesgo Eléctrico',            desc: 'Peligro en vía pública / Riesgo para personas', isNew: true },
         ]
       },
       municipal: {
@@ -1669,6 +1719,8 @@
       secNap.classList.remove('active');
       secEdesalPoste.classList.remove('active');
       secShelter.classList.remove('active');
+      const secRiesgo = document.getElementById('section-riesgo-electrico');
+      if (secRiesgo) secRiesgo.classList.remove('active');
       if (secInstalacion) secInstalacion.classList.remove('active');
       if (secMovilidad) secMovilidad.classList.remove('active');
       if (secTorre) secTorre.classList.remove('active');
@@ -1682,12 +1734,13 @@
       
       document.getElementById('group-pre-ingenieria').style.display = 'none';
 
-      // MOSTRAR CAMPO DE VIDEO EN: Torre Inestable, Postes Inestables (Edesal y Ente), Nueva Instalación y Shelter
+      // MOSTRAR CAMPO DE VIDEO EN: Torre Inestable, Postes Inestables, Riesgo Eléctrico, Nueva Instalación y Shelter
       const permitsVideo = (
         val === 'Torre Inestable' ||
         val.includes('Poste Inestable') ||
         val === 'Informe de Nueva Instalación' ||
-        val === 'Shelter'
+        val === 'Shelter' ||
+        val.includes('Riesgo Eléctrico')
       );
       const secVideo = document.getElementById('section-video-evidencia');
       if (secVideo) secVideo.style.display = permitsVideo ? 'block' : 'none';
@@ -1701,6 +1754,11 @@
       } else if (val === 'Torre Inestable') {
         if (secTorre) secTorre.classList.add('active');
         labelComentarios.textContent = 'OBSERVACIONES / ESTADO DE LA TORRE:';
+      } else if (val.includes('Riesgo Eléctrico')) {
+        if (secRiesgo) secRiesgo.classList.add('active');
+        labelComentarios.textContent = 'OBSERVACIONES / COMENTARIO DEL RIESGO:';
+        const inpObs = document.getElementById('input-observaciones');
+        if (inpObs) inpObs.placeholder = 'Describa el peligro para las personas (ej: cables al alcance de niños, riesgo de electrocución, chispazos en vereda)...';
       } else if (val === 'Edesal Sin Energía' || val === 'Municipalidad/Ente Sin Energía' || val === 'Evento Municipalidad/Ente' || val.includes('Poste Inestable') || val.includes('energización') || val.includes('energizacion')) {
         secEdesalPoste.classList.add('active');
         labelComentarios.textContent = val.includes('Poste Inestable') ? 'OBSERVACIONES / ESTADO DEL POSTE:' : 'OBSERVACIONES DETALLES:';
@@ -1866,6 +1924,8 @@ const photoStore = {};
     handleFileInput('file-foto-shelter', 'label-foto-shelter-status', 'fotoShelter');
     handleFileInput('file-foto-torre-base', 'label-foto-torre-base', 'fotoTorreBase');
     handleFileInput('file-foto-torre-panoramica', 'label-foto-torre-panoramica', 'fotoTorrePanoramica');
+    handleFileInput('file-foto-riesgo-1', 'label-foto-riesgo-1', 'fotoRiesgo1');
+    handleFileInput('file-foto-riesgo-2', 'label-foto-riesgo-2', 'fotoRiesgo2');
     
     // Listener para video de Torre, Postes, Nueva Instalación y Shelter
     const fileVideoEv = document.getElementById('file-video-evento');
@@ -2115,15 +2175,27 @@ const photoStore = {};
         if (dateEl) dateEl.textContent = 'FECHA: ' + dateStr;
 
         const pillEl = document.getElementById('pdf-event-pill');
+        const isRiesgo = (eventoVal.includes('Riesgo Eléctrico'));
+
         if (pillEl) {
           if (eventoVal === 'Shelter') {
             const subVal = document.getElementById('sel-subtipo-shelter')?.value || 'Shelter';
             pillEl.textContent = subVal.toUpperCase();
+            pillEl.style.background = '';
+            pillEl.style.color = '';
           } else if (eventoVal === 'Movilidad') {
             const subMov = document.getElementById('sel-subtipo-movilidad')?.value || 'Movilidad';
             pillEl.textContent = 'MOVILIDAD - ' + subMov.toUpperCase();
+            pillEl.style.background = '';
+            pillEl.style.color = '';
+          } else if (isRiesgo) {
+            pillEl.textContent = '⚠️ ALERTA: RIESGO ELÉCTRICO EN VÍA PÚBLICA (EDESAL)';
+            pillEl.style.background = 'linear-gradient(135deg, #dc2626, #b91c1c)';
+            pillEl.style.color = '#ffffff';
           } else {
             pillEl.textContent = eventoVal.toUpperCase();
+            pillEl.style.background = '';
+            pillEl.style.color = '';
           }
         }
 
@@ -2139,7 +2211,7 @@ const photoStore = {};
 
         const obsLabelEl = document.getElementById('pdf-obs-label');
         if (obsLabelEl) {
-          obsLabelEl.textContent = isNuevaInstalacion ? 'OBSERVACIONES / NOVEDADES DE OBRA' : 'OBSERVACIONES / DETALLES';
+          obsLabelEl.textContent = isNuevaInstalacion ? 'OBSERVACIONES / NOVEDADES DE OBRA' : (isRiesgo ? 'OBSERVACIONES / DETALLE DEL RIESGO ELÉCTRICO' : 'OBSERVACIONES / DETALLES');
         }
 
         const obsTextEl = document.getElementById('pdf-obs-text');
@@ -2406,6 +2478,67 @@ const photoStore = {};
             extraCardsCont.innerHTML = cards;
           }
 
+        } else if (isRiesgo) {
+          const tipoRiesgo = document.getElementById('sel-tipo-riesgo-electrico')?.value || 'Riesgo Eléctrico en vía pública';
+          const riesgoRef = (document.getElementById('input-riesgo-ref')?.value || '').trim() || 'Vía pública / Alrededores';
+          const videoGeneralLink = (document.getElementById('input-video-link-general')?.value || '').trim();
+
+          detailsHtml = `
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">TÉCNICO REPORTANTE</span>
+              <span class="pdf-field-val" style="color: #2563eb;">${tecnico}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDENADAS GPS</span>
+              <span class="pdf-field-val" style="font-weight: 800; color: #dc2626;">${gps}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">COORDINADOR</span>
+              <span class="pdf-field-val">${coordinador}</span>
+            </div>
+            <div class="pdf-field-item">
+              <span class="pdf-field-label">LOCALIDAD</span>
+              <span class="pdf-field-val">${localidad}</span>
+            </div>
+            <div class="pdf-field-item" style="grid-column: span 2;">
+              <span class="pdf-field-label">DIRECCIÓN / EMPLAZAMIENTO</span>
+              <span class="pdf-field-val" style="font-weight: 800;">${direccion}</span>
+            </div>
+            <div class="pdf-field-item" style="grid-column: span 2; background: rgba(239, 68, 68, 0.08); border-left: 3px solid #dc2626; padding-left: 10px;">
+              <span class="pdf-field-label" style="color: #dc2626;">RIESGO ELÉCTRICO REPORTADO</span>
+              <span class="pdf-field-val" style="font-weight: 900; color: #b91c1c; font-size: 13px;">⚠️ ${tipoRiesgo}</span>
+            </div>
+            <div class="pdf-field-item" style="grid-column: span 2;">
+              <span class="pdf-field-label">REFERENCIA DE UBICACIÓN / ENTORNO</span>
+              <span class="pdf-field-val">${riesgoRef}</span>
+            </div>
+          `;
+
+          if (extraCardsCont) {
+            let cards = '';
+            if (videoGeneralLink) {
+              cards += `
+                <div class="pdf-card">
+                  <div class="pdf-field-item">
+                    <span class="pdf-field-label" style="color: #2563eb;">ENLACE DE VIDEO / MATERIAL AUDIOVISUAL</span>
+                    <span class="pdf-field-val" style="font-weight:700;"><a href="${videoGeneralLink}" target="_blank" style="color:#2563eb; text-decoration:underline;">${videoGeneralLink}</a></span>
+                  </div>
+                </div>
+              `;
+            }
+            if (photoStore.videoGeneralInfo) {
+              cards += `
+                <div class="pdf-card">
+                  <div class="pdf-field-item">
+                    <span class="pdf-field-label" style="color: #059669;">VIDEO REGISTRADO EN EL REPORTE</span>
+                    <span class="pdf-field-val" style="font-weight:700;">🎥 Archivo: ${photoStore.videoGeneralInfo.name} (${photoStore.videoGeneralInfo.size})</span>
+                  </div>
+                </div>
+              `;
+            }
+            extraCardsCont.innerHTML = cards;
+          }
+
         } else {
           // Edesal / Municipalidad / Postes
           const tipoSitio = document.getElementById('sel-tipo-sitio')?.value || 'Sitio';
@@ -2553,6 +2686,20 @@ const photoStore = {};
               photoGridEl.appendChild(card);
             });
 
+          } else if (isRiesgo) {
+            photoGridEl.className = 'pdf-photo-grid grid-2';
+            const riesgoPhotos = [
+              { label: 'DETALLE DEL PELIGRO (CABLE / CONEXIÓN)', src: photoStore.fotoRiesgo1 },
+              { label: 'PANORÁMICA DEL ENTORNO / PERSONAS', src: photoStore.fotoRiesgo2 }
+            ];
+            riesgoPhotos.forEach(p => {
+              const card = document.createElement('div');
+              card.className = 'pdf-photo-card';
+              const imgHtml = p.src ? `<img src="${p.src}" class="pdf-photo-img" />` : `<div class="pdf-photo-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:10px; font-weight:700;">SIN FOTO</div>`;
+              card.innerHTML = `${imgHtml}<span class="pdf-photo-caption" style="color: #dc2626; font-weight: 800;">${p.label}</span>`;
+              photoGridEl.appendChild(card);
+            });
+
           } else {
             photoGridEl.className = 'pdf-photo-grid grid-2';
             const estancoLabel = eventoVal.includes('Poste Inestable') ? 'FOTO CAJA ESTANCO / POSTE' : 'FOTO CAJA ESTANCO';
@@ -2617,6 +2764,9 @@ const photoStore = {};
             if (photoStore.fotoCamionetaPatente) largePhotos.push({ label: 'FOTO CAMIONETA / PATENTE', src: photoStore.fotoCamionetaPatente });
             if (photoStore.fotoMovilidad1) largePhotos.push({ label: 'FOTO 1 - DETALLE DEL PROBLEMA', src: photoStore.fotoMovilidad1 });
             if (photoStore.fotoMovilidadExtra) largePhotos.push({ label: 'MATERIAL FOTOGRÁFICO ADICIONAL', src: photoStore.fotoMovilidadExtra });
+          } else if (isRiesgo) {
+            if (photoStore.fotoRiesgo1) largePhotos.push({ label: 'DETALLE DEL PELIGRO (CABLE / CONEXIÓN)', src: photoStore.fotoRiesgo1 });
+            if (photoStore.fotoRiesgo2) largePhotos.push({ label: 'PANORÁMICA DEL ENTORNO / PERSONAS', src: photoStore.fotoRiesgo2 });
           } else {
             const estancoLabel = eventoVal.includes('Poste Inestable') ? 'FOTO CAJA ESTANCO / POSTE' : 'FOTO CAJA ESTANCO';
             if (photoStore.fotoMedidor) largePhotos.push({ label: 'FOTO MEDIDOR', src: photoStore.fotoMedidor });
@@ -2653,7 +2803,8 @@ const photoStore = {};
           eventoVal === 'Municipalidad/Ente Sin Energía' ||
           eventoVal.includes('energización') ||
           eventoVal.includes('energizacion') ||
-          eventoVal.includes('Poste Inestable')
+          eventoVal.includes('Poste Inestable') ||
+          eventoVal.includes('Riesgo Eléctrico')
         );
         
         if (isEdesalEvent && mailContainer && mailLink) {
@@ -2674,6 +2825,11 @@ const photoStore = {};
             subjectText = `Pedido de Nueva Energización - Autopista de la Información solicitud interna: ${nroReclamoInfo}`;
             introText = `Solicitamos por la misma se pueda realizar la energización de estos nuevos dispositivos.`;
             linkText = "✉️ Hacé clic aquí para abrir Gmail con el pedido de Nueva Energización pre-cargado";
+          } else if (eventoVal.includes('Riesgo Eléctrico')) {
+            const tipoR = document.getElementById('sel-tipo-riesgo-electrico')?.value || 'Riesgo Eléctrico';
+            subjectText = `🚨 URGENTE: RIESGO ELÉCTRICO EN VÍA PÚBLICA - EDESAL - ${localidad}`;
+            introText = `Se remite con carácter de URGENCIA un reporte de RIESGO ELÉCTRICO que pone en peligro a personas (${tipoR}). Solicitamos inmediata intervención de la guardia de Edesal.`;
+            linkText = "✉️ Hacé clic aquí para abrir Gmail con el reporte de Riesgo Eléctrico Edesal pre-cargado";
           } else if (eventoVal.includes('Municipal') || eventoVal.includes('Ente')) {
             subjectText = `Poste / Sitio Inestable Municipal/Ente - Autopista de la Información: ${nroReclamoInfo}`;
             introText = `Solicitamos por la misma se pueda realizar la verificación y reparación correspondiente.`;
@@ -2702,16 +2858,22 @@ const photoStore = {};
             mapsLink = `https://www.google.com/maps?q=${encodeURIComponent(gps.trim())}`;
           }
 
+          let detalleRiesgoMail = '';
+          if (eventoVal.includes('Riesgo Eléctrico')) {
+            const tipoR = document.getElementById('sel-tipo-riesgo-electrico')?.value || 'Riesgo Eléctrico';
+            const refR = (document.getElementById('input-riesgo-ref')?.value || '').trim();
+            detalleRiesgoMail = `• PELIGRO REPORTADO: ${tipoR}\n` + (refR ? `• REFERENCIA ENTORNO: ${refR}\n` : '');
+          }
+
           let bodyText = `Buenos días:\n\n${introText}\nSe adjunta el pdf con todo el material fotográfico necesario:\n\n` +
             `• TIPO DE EVENTO: ${eventoVal}\n` +
-            `• TIPO DE SITIO: ${tipoSitio}\n` +
-            `• NOMBRE: ${edesalNombre}\n` +
+            detalleRiesgoMail +
             `• LOCALIDAD: ${localidad}\n` +
             `• DIRECCIÓN: ${direccion}\n` +
             `• COORDENADAS GPS: ${dmsFormatted}\n` +
             `• LINK GOOGLE MAPS: ${mapsLink}\n` +
-            `• NIS REFERENCIA: ${nisRef}\n` +
-            `• TÉCNICO: ${tecnico}\n` +
+            (!eventoVal.includes('Riesgo Eléctrico') ? `• TIPO DE SITIO: ${tipoSitio}\n• NOMBRE: ${edesalNombre}\n• NIS REFERENCIA: ${nisRef}\n` : '') +
+            `• TÉCNICO REPORTANTE: ${tecnico}\n` +
             `• OBSERVACIONES: ${obs}\n\n` +
             `Saludos cordiales,\nMesa de Ayuda - Autopista de la Información`;
 
@@ -2730,6 +2892,7 @@ const photoStore = {};
         else if (eventoVal === 'NAP/Botella Sin Potencia') baseName = 'NAP_Sin_Potencia_Accesos';
         else if (eventoVal === 'NAP/Botella Potencia Elevada') baseName = 'NAP_Potencia_Elevada_Accesos';
         else if (eventoVal === 'Edesal Sin Energía') baseName = 'Edesal_Sin_Energia_Accesos';
+        else if (eventoVal.includes('Riesgo Eléctrico')) baseName = 'Riesgo_Electrico_Edesal';
         else if (eventoVal === 'Municipalidad/Ente Sin Energía') baseName = 'Municipalidad_Sin_Energia_Accesos';
         else if (eventoVal.includes('energización') || eventoVal.includes('energizacion')) baseName = 'Solicitud_Energizacion_Accesos';
         else if (eventoVal.includes('Municipal') || eventoVal.includes('Ente')) baseName = 'Poste_Inestable_Municipal_Accesos';
@@ -2825,9 +2988,27 @@ const photoStore = {};
       const evName = selTipoEvento.value;
       const tec = (document.getElementById('input-tecnico')?.value || '').trim() || 'Técnico';
       const loc = (document.getElementById('input-localidad')?.value || '').trim() || 'San Luis';
+      const dir = (document.getElementById('input-direccion')?.value || '').trim() || 'S/D';
+      const gps = (document.getElementById('input-gps')?.value || '').trim();
       const pat = (document.getElementById('input-movilidad-patente')?.value || '').trim();
       let extraInfo = pat ? `• Patente: ${pat}\n` : '';
-      const msg = encodeURIComponent(`Hola! Adjunto el reporte PDF para generar reclamo interno:\n• Evento: ${evName}\n${extraInfo}• Técnico / Conductor: ${tec}\n• Localidad: ${loc}`);
+      
+      let msg = '';
+      if (evName.includes('Riesgo Eléctrico')) {
+        const tipoR = document.getElementById('sel-tipo-riesgo-electrico')?.value || 'Riesgo Eléctrico en vía pública';
+        msg = encodeURIComponent(
+          `🚨 *ALERTA RIESGO ELÉCTRICO (EDESAL)* ⚡⚠️\n` +
+          `Se detectó una situación con peligro para las personas:\n` +
+          `• *Peligro:* ${tipoR}\n` +
+          `• *Localidad:* ${loc}\n` +
+          `• *Dirección:* ${dir}\n` +
+          (gps ? `• *GPS:* https://www.google.com/maps?q=${encodeURIComponent(gps)}\n` : '') +
+          `• *Técnico:* ${tec}\n\n` +
+          `Adjunto reporte PDF con la evidencia y fotos para remitir urgente a la guardia de Edesal.`
+        );
+      } else {
+        msg = encodeURIComponent(`Hola! Adjunto el reporte PDF para generar reclamo interno:\n• Evento: ${evName}\n${extraInfo}• Técnico / Conductor: ${tec}\n• Localidad: ${loc}`);
+      }
       window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
     });
 </script>
