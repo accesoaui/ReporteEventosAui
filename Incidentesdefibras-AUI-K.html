@@ -181,7 +181,7 @@
                         <div style="display: flex; gap: 6px;">
                             <a id="btnDescargarCroquis" href="#" download="Croquis_AUI_700m.svg" style="font-size: 0.8rem; background: #0284c7; color: #ffffff; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-weight: bold;">📥 Descargar Imagen</a>
                             <a id="btnAbrirInforme2" href="informe_interactivo_1km_merakia.html" target="_blank" onclick="abrirOpcionB(event)" style="font-size: 0.8rem; background: #7c3aed; color: #ffffff; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px;">
-                                <span>🛰️</span> Ver Opción B (Leaflet 1km + Merak.ia)
+                                <span>🛰️</span> Ver Opción B (Leaflet 700m + Merak.ia)
                             </a>
                         </div>
                     </div>
@@ -570,7 +570,7 @@
         const lng = document.getElementById('longitud').value || '-65.0122';
         const tecnico = (document.getElementById('tecnicoNombre').value || '').trim() || 'Técnico Guardia FO';
         const coordinador = document.getElementById('coordinador').value || 'Luna';
-        const url = `informe_interactivo_1km_merakia.html?lat=${lat}&lng=${lng}&tecnico=${encodeURIComponent(tecnico)}&coordinador=${encodeURIComponent(coordinador)}`;
+        const url = `informe_interactivo_1km_merakia.html?v=${Date.now()}&lat=${lat}&lng=${lng}&tecnico=${encodeURIComponent(tecnico)}&coordinador=${encodeURIComponent(coordinador)}`;
         window.open(url, '_blank');
     }
 
