@@ -78,7 +78,20 @@
         <!-- SECCION 1: GENERAL -->
         <div class="section-card">
             <div class="section-title">👥 1. Información del Técnico y Red AUI</div>
-            <div class="form-group"><label>Coordinador a cargo *</label><input type="text" id="coordinador" required placeholder="Nombre del coordinador"></div>
+            <div class="form-group">
+                <label>Coordinador a cargo *</label>
+                <select id="coordinador" required>
+                    <option value="">-- Seleccionar Coordinador --</option>
+                    <option value="Luna">Luna</option>
+                    <option value="Lopez">Lopez</option>
+                    <option value="JRuiz">JRuiz</option>
+                    <option value="Romero">Romero</option>
+                    <option value="NRuiz">NRuiz</option>
+                    <option value="FK">FK</option>
+                    <option value="Saldivar">Saldivar</option>
+                    <option value="Zabala">Zabala</option>
+                </select>
+            </div>
             <div class="form-group"><label>Nombre y Apellido del técnico que reporta *</label><input type="text" id="tecnicoNombre" required placeholder="Nombre del técnico"></div>
             
             <div class="form-group"><label>Área del técnico *</label>
@@ -141,6 +154,53 @@
             <span class="info-hint">Puede usar el botón GPS, arrastrar el marcador en el mapa o ingresar las coordenadas a mano.</span>
             
             <div id="map"></div>
+            
+            <!-- TARJETA CROQUIS TÁCTICO 700M -->
+            <div id="croquis700mContainer" style="margin-top: 18px; padding: 16px; background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%); border-radius: 10px; border: 1px solid #334155; color: #f8fafc; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <div style="font-weight: bold; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; color: #38bdf8;">
+                        <span>🗺️</span> Croquis Táctico de Red (Radio 700m)
+                    </div>
+                    <span style="font-size: 0.72rem; background: #0284c7; color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold; letter-spacing: 0.5px;">SEGURIDAD AUI</span>
+                </div>
+                <p style="font-size: 0.83rem; color: #cbd5e1; margin-bottom: 12px; line-height: 1.4;">
+                    Obtiene un recorte confidencial con las trazas de fibra (troncal y distribución), cajas NAP, splitters y postes en un radio de 700 metros alrededor de su ubicación para identificar el corte. Requiere autorización del Coordinador (PIN de 4 dígitos).
+                </p>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <button type="button" id="btnPedirCroquis" onclick="solicitarCroquis700m()" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; font-weight: bold; padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; transition: background 0.2s;">
+                        <span>📡</span> Solicitar Croquis 700m
+                    </button>
+                    <div id="croquisEstado" style="font-size: 0.85rem; color: #38bdf8; font-weight: 500;"></div>
+                </div>
+
+                <!-- Preview del Croquis -->
+                <div id="croquisPreviewWrap" style="display: none; margin-top: 15px; border-top: 1px solid #334155; padding-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                        <span style="font-size: 0.85rem; font-weight: bold; color: #4ade80;">✅ Croquis generado con éxito (Opción A):</span>
+                        <div style="display: flex; gap: 6px;">
+                            <a id="btnDescargarCroquis" href="#" download="Croquis_AUI_700m.svg" style="font-size: 0.8rem; background: #0284c7; color: #ffffff; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-weight: bold;">📥 Descargar Imagen</a>
+                            <a id="btnAbrirInforme2" href="informe_interactivo_1km_merakia.html" target="_blank" onclick="abrirOpcionB(event)" style="font-size: 0.8rem; background: #7c3aed; color: #ffffff; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                                <span>🛰️</span> Ver Opción B (Leaflet 1km + Merak.ia)
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Controles de Zoom Táctil e Interactivo (Opción A) -->
+                    <div style="display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 8px; background: #1e293b; padding: 6px 12px; border-radius: 6px; border: 1px solid #334155;">
+                        <span style="font-size: 0.78rem; color: #94a3b8; font-weight: bold;">ZOOM VECTORIAL TÁCTIL:</span>
+                        <button type="button" onclick="cambiarZoomCroquis(0.3)" style="background:#0284c7; color:white; border:none; padding:3px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.85rem;">🔍 +</button>
+                        <button type="button" onclick="cambiarZoomCroquis(-0.3)" style="background:#0284c7; color:white; border:none; padding:3px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.85rem;">🔍 -</button>
+                        <button type="button" onclick="resetZoomCroquis()" style="background:#475569; color:white; border:none; padding:3px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.78rem;">↺ Restablecer</button>
+                        <span id="zoomNivelTexto" style="font-size:0.8rem; color:#38bdf8; font-weight:bold; min-width:45px; text-align:right;">100%</span>
+                        <span style="font-size:0.72rem; color:#64748b; margin-left:6px;">(Podés arrastrar la imagen)</span>
+                    </div>
+
+                    <div id="croquisImgContainer" style="background: #ffffff; border-radius: 6px; padding: 6px; text-align: center; overflow: hidden; border: 1px solid #475569; cursor: grab; user-select: none; position: relative;">
+                        <img id="croquisImg" src="" alt="Croquis Táctico AUI" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform-origin: center center;">
+                    </div>
+                </div>
+            </div>
             
             <div class="form-group" style="margin-top:16px;">
                 <label>Causa Principal del Corte *</label>
@@ -372,6 +432,230 @@
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
         );
     }
+    
+    // ========== CROQUIS TÁCTICO DE RED 700M (SEGURIDAD BUZÓN AUI) ==========
+    const URL_BUZON_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwQ0AxsyjvclfPUTj7DdVCMw_Chs0CrOjCKG7aJ_8MhoiCJ5FiYAdO67smzivg9U9LEPg/exec";
+    let croquis700mDataUrl = "";
+
+    async function solicitarCroquis700m() {
+        const lat = document.getElementById('latitud').value;
+        const lng = document.getElementById('longitud').value;
+        const tecnico = (document.getElementById('tecnicoNombre').value || '').trim();
+        const coordinador = (document.getElementById('coordinador').value || '').trim();
+
+        if (!lat || !lng) {
+            alert("⚠️ Primero debe obtener la ubicación GPS o ingresar Latitud y Longitud.");
+            return;
+        }
+        if (!coordinador) {
+            alert("⚠️ Ingrese el Coordinador a cargo en la Sección 1.");
+            document.getElementById('coordinador').focus();
+            return;
+        }
+        if (!tecnico) {
+            alert("⚠️ Ingrese su Nombre de Técnico en la Sección 1.");
+            document.getElementById('tecnicoNombre').focus();
+            return;
+        }
+
+        const pin = prompt(`🔐 SEGURIDAD AUI - AUTORIZACIÓN REQUERIDA\n\nIngrese el PIN de 4 dígitos de su Coordinador (${coordinador}):`);
+        if (!pin) return;
+
+        const btn = document.getElementById('btnPedirCroquis');
+        const estado = document.getElementById('croquisEstado');
+        btn.disabled = true;
+
+        // 1. INTENTO DE CARGA DIRECTA DE ALTA DEFINICIÓN (Sin esperas ni truncamiento de Google Sheets)
+        try {
+            estado.innerHTML = "🛰️ Conectando con servidor GIS AUI para croquis 700m de alta resolución...";
+            const directResp = await fetch(`/api/croquis_700m?lat=${lat}&lng=${lng}&tecnico=${encodeURIComponent(tecnico)}&coordinador=${encodeURIComponent(coordinador)}`).catch(() => null);
+            if (directResp && directResp.ok) {
+                const directData = await directResp.json();
+                if (directData && directData.success && directData.imagenDataUrl) {
+                    btn.disabled = false;
+                    estado.innerHTML = `<span style="color:#4ade80;">✅ ¡Croquis táctico de alta resolución cargado (100% íntegro)!</span>`;
+                    croquis700mDataUrl = directData.imagenDataUrl;
+
+                    if (directData.gponData) {
+                        try { localStorage.setItem('croquis700m_gponData', JSON.stringify(directData.gponData)); } catch(e){}
+                    }
+
+                    const previewWrap = document.getElementById('croquisPreviewWrap');
+                    const img = document.getElementById('croquisImg');
+                    const btnDesc = document.getElementById('btnDescargarCroquis');
+
+                    img.src = directData.imagenDataUrl;
+                    btnDesc.href = directData.imagenDataUrl;
+                    btnDesc.download = `Croquis_AUI_700m_${coordinador}.svg`;
+                    previewWrap.style.display = 'block';
+
+                    mostrarToast("🗺️ Croquis táctico generado con éxito.");
+                    return;
+                }
+            }
+        } catch (e) {
+            console.log("Fallo carga directa, continuando por buzón seguro:", e);
+        }
+
+        estado.innerHTML = "⏳ Validando PIN de seguridad con buzón AUI...";
+
+        try {
+            const resp = await fetch(`${URL_BUZON_APPS_SCRIPT}?action=SOLICITAR_MAPA&coordinador=${encodeURIComponent(coordinador)}&pin=${encodeURIComponent(pin)}&tecnico=${encodeURIComponent(tecnico)}&lat=${lat}&lng=${lng}`);
+            const data = await resp.json();
+
+            if (!data.success) {
+                alert("❌ ACCESO DENEGADO: " + (data.error || "PIN de seguridad inválido."));
+                estado.innerHTML = `<span style="color:#f87171;">❌ ${data.error || "PIN inválido"}</span>`;
+                btn.disabled = false;
+                return;
+            }
+
+            const pedidoId = data.pedidoId;
+            estado.innerHTML = "🛰️ PIN Autorizado. El servidor de red AUI está generando el croquis táctico de 700m...";
+            mostrarToast("🔑 PIN Autorizado. Generando croquis...");
+
+            let intentos = 0;
+            const maxIntentos = 30; // 75 segundos max
+            const intervalTime = 2500;
+
+            const timer = setInterval(async () => {
+                intentos++;
+                try {
+                    const resEst = await fetch(`${URL_BUZON_APPS_SCRIPT}?action=CONSULTAR_ESTADO&pedidoId=${pedidoId}`);
+                    const dataEst = await resEst.json();
+
+                    if (dataEst.listo && dataEst.imagenDataUrl) {
+                        clearInterval(timer);
+                        btn.disabled = false;
+                        estado.innerHTML = `<span style="color:#4ade80;">✅ ¡Croquis táctico recibido con éxito!</span>`;
+                        croquis700mDataUrl = dataEst.imagenDataUrl;
+
+                        // Guardar datos GPON en localStorage para que la Opción B (Leaflet) funcione en celulares desde GitHub Pages
+                        if (dataEst.gponData) {
+                            try { localStorage.setItem('croquis700m_gponData', JSON.stringify(dataEst.gponData)); } catch(e){}
+                        }
+
+                        const previewWrap = document.getElementById('croquisPreviewWrap');
+                        const img = document.getElementById('croquisImg');
+                        const btnDesc = document.getElementById('btnDescargarCroquis');
+
+                        img.src = dataEst.imagenDataUrl;
+                        btnDesc.href = dataEst.imagenDataUrl;
+                        btnDesc.download = `Croquis_AUI_700m_${coordinador}_${pedidoId}.svg`;
+                        previewWrap.style.display = 'block';
+
+                        mostrarToast("🗺️ Croquis de red cargado. Quedará adjunto en el reporte.");
+                    } else if (intentos >= maxIntentos) {
+                        clearInterval(timer);
+                        btn.disabled = false;
+                        estado.innerHTML = `<span style="color:#f87171;">⚠️ Tiempo de espera agotado. Verifique que el servicio de red local esté encendido.</span>`;
+                    } else {
+                        estado.innerHTML = `🛰️ Servidor procesando trazas... (${intentos * 2}s)`;
+                    }
+                } catch (pollErr) {
+                    console.error("Error consultando estado del croquis:", pollErr);
+                }
+            }, intervalTime);
+
+        } catch (err) {
+            btn.disabled = false;
+            estado.innerHTML = `<span style="color:#f87171;">❌ Error de conexión</span>`;
+            alert("Error al conectar con el servicio: " + err.message);
+        }
+    }
+
+    function abrirOpcionB(e) {
+        if (e) e.preventDefault();
+        const lat = document.getElementById('latitud').value || '-32.3466';
+        const lng = document.getElementById('longitud').value || '-65.0122';
+        const tecnico = (document.getElementById('tecnicoNombre').value || '').trim() || 'Técnico Guardia FO';
+        const coordinador = document.getElementById('coordinador').value || 'Luna';
+        const url = `informe_interactivo_1km_merakia.html?lat=${lat}&lng=${lng}&tecnico=${encodeURIComponent(tecnico)}&coordinador=${encodeURIComponent(coordinador)}`;
+        window.open(url, '_blank');
+    }
+
+    // ========== ZOOM Y PAN INTERACTIVO DEL CROQUIS TÁCTICO (OPCIÓN A) ==========
+    let currentCroquisScale = 1.0;
+    let croquisTranslateX = 0;
+    let croquisTranslateY = 0;
+    let isDraggingCroquis = false;
+    let startDragX = 0;
+    let startDragY = 0;
+
+    function cambiarZoomCroquis(delta) {
+        currentCroquisScale = Math.min(4.5, Math.max(0.6, currentCroquisScale + delta));
+        aplicarTransformCroquis();
+    }
+
+    function resetZoomCroquis() {
+        currentCroquisScale = 1.0;
+        croquisTranslateX = 0;
+        croquisTranslateY = 0;
+        aplicarTransformCroquis();
+    }
+
+    function aplicarTransformCroquis() {
+        const img = document.getElementById('croquisImg');
+        if (img) {
+            img.style.transform = `translate(${croquisTranslateX}px, ${croquisTranslateY}px) scale(${currentCroquisScale})`;
+            img.style.transition = isDraggingCroquis ? 'none' : 'transform 0.15s ease-out';
+        }
+        const txt = document.getElementById('zoomNivelTexto');
+        if (txt) txt.innerText = Math.round(currentCroquisScale * 100) + '%';
+    }
+
+    // Eventos de arrastre táctil y con mouse
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('croquisImgContainer');
+        if (!container) return;
+
+        container.addEventListener('mousedown', function(e) {
+            isDraggingCroquis = true;
+            startDragX = e.clientX - croquisTranslateX;
+            startDragY = e.clientY - croquisTranslateY;
+            container.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', function(e) {
+            if (!isDraggingCroquis) return;
+            croquisTranslateX = e.clientX - startDragX;
+            croquisTranslateY = e.clientY - startDragY;
+            aplicarTransformCroquis();
+        });
+
+        window.addEventListener('mouseup', function() {
+            if (isDraggingCroquis) {
+                isDraggingCroquis = false;
+                if (container) container.style.cursor = 'grab';
+                aplicarTransformCroquis();
+            }
+        });
+
+        container.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                isDraggingCroquis = true;
+                startDragX = e.touches[0].clientX - croquisTranslateX;
+                startDragY = e.touches[0].clientY - croquisTranslateY;
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchmove', function(e) {
+            if (!isDraggingCroquis || e.touches.length !== 1) return;
+            croquisTranslateX = e.touches[0].clientX - startDragX;
+            croquisTranslateY = e.touches[0].clientY - startDragY;
+            aplicarTransformCroquis();
+        }, { passive: true });
+
+        container.addEventListener('touchend', function() {
+            isDraggingCroquis = false;
+        });
+
+        container.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            const delta = e.deltaY < 0 ? 0.2 : -0.2;
+            cambiarZoomCroquis(delta);
+        }, { passive: false });
+    });
     
     // ========== DINAMISMO ==========
     function toggleDynamic(id, show) { 
@@ -745,8 +1029,13 @@
 '        <div class="foto"><img src="' + document.getElementById('img2_base64').value + '"><p><strong>Vista Panorámica</strong></p></div>\n' +
 '        <div class="foto"><img src="' + document.getElementById('img3_base64').value + '"><p><strong>Evidencia Causa Raíz</strong></p></div>\n' +
 '    </div>\n' +
+(croquis700mDataUrl ? 
+'    <h2 style="margin-top:24px; page-break-before: always;">🗺️ Croquis Táctico de Red (Radio 700m - Confidencial AUI)</h2>\n' +
+'    <div style="text-align:center; margin:14px 0; background:#ffffff; padding:12px; border-radius:8px; border:1px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.06); page-break-inside: avoid;">\n' +
+'        <img src="' + croquis700mDataUrl + '" style="max-width:100%; height:auto; border-radius:6px; display:block; margin:0 auto;">\n' +
+'    </div>\n' : '') +
 '    \n' +
-'    <div class="footer">informe técnico - por ingeniería aui | desarrollado por ingeniería aui</div>\n' +
+'    <div class="footer">informe técnico - por ingeniería aui | Desarrollado By FKdev powered by Merak.ia</div>\n' +
 '</div>\n' +
 '</body>\n' +
 '</html>';

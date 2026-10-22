@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Táctico 1km + Merak.ia | Autopista de la Información</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --aui-blue: #0284c7;
+            --aui-dark: #0f172a;
+            --aui-bg: #f8fafc;
+            --card-border: #cbd5e1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--aui-bg);
+            color: #1e293b;
+            padding: 16px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* HEADER CARD */
+        .header-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .header-title h1 {
+            font-size: 1.25rem;
+            color: var(--aui-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge-opcion {
+            background: #7c3aed;
+            color: white;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .header-meta {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .logo-img {
+            height: 48px;
+            object-fit: contain;
+        }
+        
+        /* BARRA DE HERRAMIENTAS Y PARÁMETROS */
+        .toolbar {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .coord-selectors {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: var(--aui-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn:hover { background: #0369a1; }
+        .btn-outline {
+            background: transparent;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-outline:hover { background: #f1f5f9; }
+
+        /* MAPA INTERACTIVO */
+        #map-container {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 580px;
+        }
+
+        /* ICONOS PERSONALIZADOS TRANSPARENTES SIN FONDO */
+        .marker-nap-custom {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45));
+            transition: transform 0.15s ease-in-out;
+            cursor: pointer;
+        }
+        .marker-nap-custom:hover {
+            transform: scale(1.35);
+            z-index: 9999 !important;
+        }
+        .marker-domo-custom {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            transition: transform 0.15s ease-in-out;
+            cursor: pointer;
+        }
+        .marker-domo-custom:hover {
+            transform: scale(1.35);
+            z-index: 9999 !important;
+        }
+
+        /* CARD PREDICCIÓN MERAK.IA */
+        .merakia-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+            border: 1.5px solid #86efac;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(22, 101, 52, 0.08);
+            margin-bottom: 20px;
+        }
+        .merakia-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+        }
+        .merakia-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #166534;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-chip {
+            background: #15803d;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .merakia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .metric-box {
+            background: #ffffff;
+            border: 1px solid #dcfce7;
+            padding: 12px 14px;
+            border-radius: 8px;
+        }
+        .metric-label { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: bold; }
+        .metric-val { font-size: 1.25rem; font-weight: 800; color: #1e293b; margin-top: 4px; }
+        .metric-hint { font-size: 0.75rem; color: #16a34a; font-weight: 600; margin-top: 2px; }
+
+        /* TABLA DE DESPACHO */
+        .table-dispatch {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .table-dispatch th {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+        }
+        .table-dispatch td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .table-dispatch tr:nth-child(even) { background: #f8fafc; }
+        .table-dispatch tr:hover { background: #f1f5f9; }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            font-size: 0.82rem;
+            color: #64748b;
+            padding: 16px 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* NOMBRE DE LA NAP FIJO PERMANENTE */
+        .nap-fixed-label {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1.2px solid #7c3aed !important;
+            color: #4c1d95 !important;
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            padding: 1px 6px !important;
+            border-radius: 4px !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+            pointer-events: auto !important;
+            white-space: nowrap !important;
+        }
+        .nap-fixed-label::before {
+            border-top-color: #7c3aed !important;
+        }
+
+        /* POPUP NAP ESTILOS */
+        .nap-popup {
+            font-family: inherit;
+        }
+        .nap-popup h3 {
+            font-size: 0.95rem;
+            color: #6b21a8;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #f3e8ff;
+            padding-bottom: 4px;
+        }
+        .nap-bar-bg {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+        .nap-bar-fill {
+            background: #7c3aed;
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .toolbar, .btn, .no-print { display: none !important; }
+            #map { height: 500px; }
+            .merakia-card { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header-card">
+        <div class="header-title">
+            <div>
+                <h1>
+                    <span>📡</span> AUI · Visor de Red Interactivo (Radio 700 m)
+                    <span class="badge-opcion">OPCIÓN B</span>
+                </h1>
+                <div class="header-meta">
+                    📍 <strong>Localidad:</strong> <span id="lblLocalidad">MERLO</span> · 
+                    📅 <strong>Fecha/Hora:</strong> <span id="lblFechaHora">Cargando...</span> · 
+                    🛰️ <strong>GPS Central:</strong> <span id="lblCoords">-32.34660, -65.01220</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <img src="Logoaaui.png" alt="AUI Logo" class="logo-img" onerror="this.style.display='none';">
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar no-print">
+        <div class="coord-selectors">
+            <span style="font-size:0.85rem; font-weight:bold; color:#475569;">📍 Zona de Prueba (Radio 700m):</span>
+            <button type="button" class="btn btn-outline" onclick="cargarZona(-32.3466, -65.0122, 'MERLO')">Merlo (Pantanillo)</button>
+            <button type="button" class="btn btn-outline" onclick="cargarZona(-33.2993, -66.3363, 'SAN LUIS')">San Luis Centro</button>
+            <button type="button" class="btn btn-outline" onclick="cargarZona(-33.6667, -65.4667, 'VILLA MERCEDES')">Villa Mercedes</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <a href="Incidentesdefibras-AUI-K.html" class="btn btn-outline">← Volver al Formulario</a>
+            <button type="button" class="btn" onclick="window.print()">🖨️ Exportar / Imprimir PDF</button>
+        </div>
+    </div>
+
+    <!-- MAPA LEAFLET -->
+    <div id="map-container" style="position: relative;">
+        <!-- BANNER DE SEGURIDAD Y CONFIDENCIALIDAD DIRECTAMENTE EN EL MAPA -->
+        <div style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(254, 242, 242, 0.96); border: 1.5px solid #ef4444; border-radius: 8px; padding: 6px 16px; font-size: 0.8rem; color: #991b1b; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 14px; white-space: nowrap; pointer-events: none; backdrop-filter: blur(4px);">
+            <div>
+                <strong>🔒 DOCUMENTO CONFIDENCIAL AUI</strong> · USO EXCLUSIVO TÉCNICO Y OPERATIVO · PROHIBIDA DIFUSIÓN O COPIA
+            </div>
+            <div style="border-left: 1.5px solid #fca5a5; padding-left: 12px;">
+                👤 <strong>Solicitado por:</strong> <span id="lblTecnico" style="font-weight:bold;">TÉCNICO AUI</span> · 
+                🔑 <strong>Coordinador:</strong> <span id="lblCoord" style="font-weight:bold;">LUNA</span>
+            </div>
+        </div>
+
+        <!-- MARCA DE AGUA DE SEGURIDAD INTERNA AUI -->
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); pointer-events: none; z-index: 400; text-align: center; opacity: 0.13; user-select: none;">
+            <div style="font-size: 34px; font-weight: 900; color: #0f172a; letter-spacing: 2px; white-space: nowrap;">
+                USO EXCLUSIVO AUI · CONFIDENCIAL
+            </div>
+            <div style="font-size: 20px; font-weight: 800; color: #0284c7; margin-top: 6px; white-space: nowrap;" id="watermarkDetalle">
+                SOLICITADO POR: TÉCNICO AUI · COORD: LUNA
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- PREDICCIÓN MERAK.IA DE MATERIALES -->
+    <div class="merakia-card" id="seccionMerakia">
+        <div class="merakia-header">
+            <div class="merakia-title">
+                <span>🤖</span> Predicción Merak.ia · Estimación Inteligente de Materiales
+                <span class="ai-chip">ALTA PRECISIÓN FO</span>
+            </div>
+            <div style="font-size:0.8rem; color:#15803d; font-weight:bold;">
+                By FKdev powered by Merak.ia
+            </div>
+        </div>
+
+        <div class="merakia-grid">
+            <div class="metric-box">
+                <div class="metric-label">Traza de FO Afectada</div>
+                <div class="metric-val" id="aiTraza" style="font-size:1.05rem;">Cargando...</div>
+                <div class="metric-hint" id="aiDistancia">Distancia al corte: calculando...</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Capacidad de Cable (Hilos)</div>
+                <div class="metric-val" id="aiHilos" style="color:#0284c7;">-- FO</div>
+                <div class="metric-hint" id="aiOrigenHilos">Catastro AUI (Base de Datos)</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Metros FO Recomendados</div>
+                <div class="metric-val" id="aiMetros" style="color:#ea580c;">-- m</div>
+                <div class="metric-hint">Vano + Subidas (16m) + Raqueta (35m)</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Fusiones Estimadas</div>
+                <div class="metric-val" id="aiFusiones" style="color:#7c3aed;">--</div>
+                <div class="metric-hint">2 Empalmes de tramo interpuesto</div>
+            </div>
+        </div>
+
+        <!-- LISTA DE DESPACHO DE PAÑOL -->
+        <h4 style="font-size:0.92rem; color:#0f172a; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <span>📦</span> Kit de Despacho Sugerido para Móvil de Planta Externa:
+        </h4>
+        <table class="table-dispatch">
+            <thead>
+                <tr>
+                    <th>Ítem / Material de Reparación</th>
+                    <th style="width: 200px; text-align: right;">Cantidad Requerida</th>
+                </tr>
+            </thead>
+            <tbody id="aiTablaInsumos">
+                <tr><td colspan="2" style="text-align:center;">Cargando lista de despacho...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div>Autopista de la Información · Gobierno de San Luis</div>
+        <div style="color:#0284c7; font-weight:900;">By FKdev powered by Merak.ia</div>
+    </div>
+</div>
+
+<!-- LEAFLET JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map = null;
+    let circle1km = null;
+    let markerCorte = null;
+    let capaTroncal = L.layerGroup();
+    let capaDistribucion = L.layerGroup();
+    let capaNaps = L.layerGroup();
+    let capaSplitters = L.layerGroup();
+
+    let curLat = -32.3466;
+    let curLng = -65.0122;
+
+    // Iconos oficiales sin fondo para NAPs y Botellas/Domos (ÁMBITO GLOBAL PARA EVITAR REFERENCE ERROR)
+    const iconoNap = L.icon({
+        iconUrl: 'icono_nap_marker.png',
+        iconSize: [24, 32],
+        iconAnchor: [12, 16],
+        popupAnchor: [0, -16],
+        className: 'marker-nap-custom'
+    });
+
+    const iconoDomo = L.icon({
+        iconUrl: 'icono_domo_marker.png',
+        iconSize: [18, 42],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -21],
+        className: 'marker-domo-custom'
+    });
+
+    function initMap() {
+        // Inicializar datos de seguridad de quien pidió el mapa
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            let curTecnico = urlParams.get('tecnico') || '';
+            let curCoord = urlParams.get('coordinador') || '';
+
+            if (!curTecnico || !curCoord) {
+                const saved = localStorage.getItem('reporteCorteFO');
+                if (saved) {
+                    const d = JSON.parse(saved);
+                    if (!curTecnico && d.tecnicoNombre) curTecnico = d.tecnicoNombre;
+                    if (!curCoord && d.coordinador) curCoord = d.coordinador;
+                }
+            }
+
+            if (!curTecnico) curTecnico = "Guardia Técnica FO";
+            if (!curCoord) curCoord = "Luna";
+
+            document.getElementById('lblTecnico').innerText = curTecnico.toUpperCase();
+            document.getElementById('lblCoord').innerText = curCoord.toUpperCase();
+            document.getElementById('watermarkDetalle').innerText = `SOLICITADO POR: ${curTecnico.toUpperCase()} · COORD: ${curCoord.toUpperCase()}`;
+
+            const pLat = parseFloat(urlParams.get('lat'));
+            const pLng = parseFloat(urlParams.get('lng'));
+            if (!isNaN(pLat) && !isNaN(pLng)) {
+                curLat = pLat;
+                curLng = pLng;
+            }
+        } catch(e) {}
+
+        map = L.map('map', {
+            center: [curLat, curLng],
+            zoom: 15
+        });
+
+        // OpenStreetMap Standard (capaBlanco oficial)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Tiles &copy; OpenStreetMap | AUI 4.0',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Control de Capas Superior Derecho con miniaturas
+        const overlays = {
+            "🟧 Trazas FO Troncal": capaTroncal,
+            "🟦 Trazas FO Distribución": capaDistribucion,
+            "<img src='icono_nap_marker.png' style='height:16px; vertical-align:middle; margin-right:4px;'> Cajas NAP (con Puertos)": capaNaps,
+            "<img src='icono_domo_marker.png' style='height:18px; vertical-align:middle; margin-right:4px;'> Botellas / Domos Empalme": capaSplitters
+        };
+
+        L.control.layers(null, overlays, { collapsed: false, position: 'topright' }).addTo(map);
+
+        capaTroncal.addTo(map);
+        capaDistribucion.addTo(map);
+        capaNaps.addTo(map);
+        capaSplitters.addTo(map);
+
+        cargarDatos(curLat, curLng, 700);
+    }
+
+    async function cargarDatos(lat, lng, radio = 700) {
+        document.getElementById('lblCoords').innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        document.getElementById('lblFechaHora').innerText = new Date().toLocaleString('es-AR', {
+            timeZone: 'America/Argentina/San_Luis',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+        }) + ' hs';
+
+        // Centrar mapa
+        map.setView([lat, lng], 15);
+
+        // Dibujar Círculo de Cobertura Estricto 700m (Unificado en ambas opciones)
+        if (circle1km) map.removeLayer(circle1km);
+        circle1km = L.circle([lat, lng], {
+            radius: radio,
+            color: '#0284c7',
+            weight: 2.8,
+            dashArray: '10, 6',
+            fillColor: '#0284c7',
+            fillOpacity: 0.05
+        }).addTo(map);
+
+        // Marcador del Corte
+        if (markerCorte) map.removeLayer(markerCorte);
+        markerCorte = L.marker([lat, lng], {
+            icon: L.divIcon({
+                className: 'custom-corte-icon',
+                html: '<div style="background:#dc2626; color:white; font-size:10px; font-weight:bold; padding:4px 8px; border-radius:4px; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4); white-space:nowrap; transform:translate(-50%, -100%);">📍 CORTE FO DETECTADO</div>',
+                iconSize: [0, 0]
+            })
+        }).addTo(map);
+
+        // Limpiar capas
+        capaTroncal.clearLayers();
+        capaDistribucion.clearLayers();
+        capaNaps.clearLayers();
+        capaSplitters.clearLayers();
+
+        try {
+            let data = null;
+
+            // 1. PRIMER INTENTO: Leer datos sincronizados en localStorage (Funciona 100% en Celulares y GitHub Pages sin servidor)
+            try {
+                const localSaved = localStorage.getItem('croquis700m_gponData');
+                if (localSaved) {
+                    const parsed = JSON.parse(localSaved);
+                    if (parsed && parsed.success && parsed.trazas && parsed.trazas.length > 0) {
+                        data = parsed;
+                        console.log("Cargando datos GPON desde almacenamiento local seguro (GitHub / Celular)");
+                    }
+                }
+            } catch(e) {}
+
+            // 2. SEGUNDO INTENTO: Consultar API si hay servidor local/central disponible
+            if (!data) {
+                const resp = await fetch(`/api/red_1km?lat=${lat}&lng=${lng}&radio=${radio}`).catch(() => null);
+                if (resp && resp.ok) {
+                    data = await resp.json();
+                }
+            }
+
+            if (!data || !data.success) {
+                console.error("No se pudieron cargar datos GPON para radio 700m");
+                return;
+            }
+
+            // 1. Renderizar Trazas de FO con soporte robusto multi-array y casing de alto contraste
+            data.trazas.forEach(t => {
+                const isTroncal = (t.tipo || '').toUpperCase().includes('TRONCAL');
+                const strokeColor = isTroncal ? '#ea580c' : '#0284c7';
+                const strokeWidth = isTroncal ? 4.5 : 3.0;
+
+                let lineas = [];
+                function extractLines(arr) {
+                    if (!Array.isArray(arr) || arr.length === 0) return;
+                    if (typeof arr[0][0] === 'number') {
+                        lineas.push(arr.map(c => [c[1], c[0]]));
+                    } else {
+                        arr.forEach(extractLines);
+                    }
+                }
+
+                if (t.geometria) {
+                    if (t.geometria.coordinates) extractLines(t.geometria.coordinates);
+                    else extractLines(t.geometria);
+                }
+
+                lineas.forEach(coords => {
+                    if (coords.length < 2) return;
+
+                    // Línea de base blanca para contraste sobre calles
+                    const casing = L.polyline(coords, {
+                        color: '#ffffff',
+                        weight: strokeWidth + 2.5,
+                        opacity: 0.95,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                    });
+
+                    // Línea principal de FO
+                    const poly = L.polyline(coords, {
+                        color: strokeColor,
+                        weight: strokeWidth,
+                        opacity: 0.95,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                    });
+
+                    poly.bindTooltip(`<b>${t.nombre}</b><br>Tipo: ${t.tipo}<br>Hilos: ${t.hilos || 'No especificado'}`, { sticky: true });
+
+                    if (isTroncal) {
+                        capaTroncal.addLayer(casing);
+                        capaTroncal.addLayer(poly);
+                    } else {
+                        capaDistribucion.addLayer(casing);
+                        capaDistribucion.addLayer(poly);
+                    }
+                });
+            });
+
+            // 2. Renderizar NAPs con icono oficial GLC sin fondo, NOMBRE FIJO PERMANENTE y popup de puertos
+            data.naps.forEach(n => {
+                const tot = n.puertos_totales || 8;
+                const ocu = n.puertos_ocupados || 0;
+                const lib = n.puertos_libres || (tot - ocu);
+                const pct = Math.round((ocu / tot) * 100);
+
+                const m = L.marker([n.lat, n.lng], { icon: iconoNap });
+
+                // Nombre fijo visible de la NAP
+                const idNap = n.identificador || n.nombre || 'NAP';
+                m.bindTooltip(idNap, {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -16],
+                    className: 'nap-fixed-label'
+                });
+
+                m.bindPopup(`
+                    <div class="nap-popup">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <img src="icono_nap_marker.png" style="height:32px;">
+                            <div>
+                                <h3 style="margin:0; font-size:0.95rem; color:#0f172a;">${n.identificador}</h3>
+                                <span style="font-size:0.75rem; color:#64748b;">Caja NAP Óptica GLC</span>
+                            </div>
+                        </div>
+                        <p style="font-size:0.8rem; color:#475569; margin:2px 0;"><b>Nombre:</b> ${n.nombre || '-'}</p>
+                        <p style="font-size:0.8rem; color:#475569; margin:2px 0;"><b>Estado:</b> <span style="color:#16a34a; font-weight:bold;">${n.estado || 'ACTIVA'}</span></p>
+                        
+                        <div style="margin-top:8px; border-top:1px solid #f1f5f9; padding-top:6px;">
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                                <span><b>Ocupación:</b> ${ocu}/${tot} puertos</span>
+                                <span style="font-weight:bold; color:#7c3aed;">${pct}%</span>
+                            </div>
+                            <div class="nap-bar-bg" style="background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden; margin:4px 0;">
+                                <div class="nap-bar-fill" style="width: ${pct}%; height:100%; background:${pct > 80 ? '#dc2626' : (pct > 50 ? '#f59e0b' : '#16a34a')};"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
+                                <span>🟢 Libres: <b>${lib}</b></span>
+                                <span>🔴 Usados: <b>${ocu}</b></span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                capaNaps.addLayer(m);
+            });
+
+            // 3. Renderizar Splitters / Botellas con icono oficial de Cierre Domo sin fondo
+            data.splitters.forEach(s => {
+                const m = L.marker([s.lat, s.lng], { icon: iconoDomo });
+                m.bindPopup(`
+                    <div style="min-width:180px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <img src="icono_domo_marker.png" style="height:36px;">
+                            <div>
+                                <h4 style="margin:0; font-size:0.9rem; color:#0f172a;">Cierre de Empalme (Domo)</h4>
+                                <span style="font-size:0.75rem; color:#d97706; font-weight:bold;">${s.tipo}</span>
+                            </div>
+                        </div>
+                        <p style="font-size:0.8rem; color:#475569; margin:2px 0;"><b>Identificador:</b> ${s.nombre}</p>
+                    </div>
+                `);
+                capaSplitters.addLayer(m);
+            });
+
+            // 4. Actualizar Módulo de Predicción Merak.ia
+            actualizarMerakia(data.prediccionMerakia);
+
+        } catch (err) {
+            console.error("Error al cargar datos GPON 1km:", err);
+        }
+    }
+
+    function actualizarMerakia(p) {
+        if (!p) return;
+        document.getElementById('aiTraza').innerText = p.trazaAfectada;
+        document.getElementById('aiDistancia').innerText = `Distancia aproximada al corte: ${p.distanciaAlCableMts} metros`;
+        document.getElementById('aiHilos').innerText = `${p.hilosDetectados} FO`;
+        document.getElementById('aiOrigenHilos').innerText = p.origenHilos;
+        document.getElementById('aiMetros').innerText = `${p.metrosFoRecomendados} m`;
+        document.getElementById('aiFusiones').innerText = `${p.fusionesEstimadas} fusiones`;
+
+        const tbody = document.getElementById('aiTablaInsumos');
+        tbody.innerHTML = '';
+        (p.insumosDespacho || []).forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${item.item}</b></td>
+                <td style="text-align:right; font-weight:bold; color:#15803d;">${item.cantidad}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function cargarZona(lat, lng, nombre) {
+        curLat = lat;
+        curLng = lng;
+        document.getElementById('lblLocalidad').innerText = nombre;
+        cargarDatos(lat, lng, 700);
+    }
+
+    document.addEventListener('DOMContentLoaded', initMap);
+</script>
+</body>
+</html>
