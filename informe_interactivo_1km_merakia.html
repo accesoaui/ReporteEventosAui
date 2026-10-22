@@ -289,7 +289,7 @@
                     <span class="badge-opcion">OPCIÓN B</span>
                 </h1>
                 <div class="header-meta">
-                    📍 <strong>Localidad:</strong> <span id="lblLocalidad">MERLO</span> · 
+                    📍 <strong>Localidad:</strong> <span id="lblLocalidad" style="font-weight: 800; color: #0284c7;">Cargando...</span> · 
                     📅 <strong>Fecha/Hora:</strong> <span id="lblFechaHora">Cargando...</span> · 
                     🛰️ <strong>GPS Central:</strong> <span id="lblCoords">-32.34660, -65.01220</span>
                 </div>
@@ -302,15 +302,14 @@
 
     <!-- TOOLBAR -->
     <div class="toolbar no-print">
-        <div class="coord-selectors">
-            <span style="font-size:0.85rem; font-weight:bold; color:#475569;">📍 Zona de Prueba (Radio 700m):</span>
-            <button type="button" class="btn btn-outline" onclick="cargarZona(-32.3466, -65.0122, 'MERLO')">Merlo (Pantanillo)</button>
-            <button type="button" class="btn btn-outline" onclick="cargarZona(-33.2993, -66.3363, 'SAN LUIS')">San Luis Centro</button>
-            <button type="button" class="btn btn-outline" onclick="cargarZona(-33.6667, -65.4667, 'VILLA MERCEDES')">Villa Mercedes</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.88rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                <span style="color:#0284c7;">📡</span> Cobertura de Red GPON · Radio Táctico 700 Metros
+            </span>
         </div>
         <div style="display:flex; gap:8px;">
-            <a href="Incidentesdefibras-AUI-K.html" class="btn btn-outline">← Volver al Formulario</a>
-            <button type="button" class="btn" onclick="window.print()">🖨️ Exportar / Imprimir PDF</button>
+            <a href="Incidentesdefibras-AUI-K.html" class="btn btn-outline" style="font-weight:600;">← Volver al Formulario</a>
+            <button type="button" class="btn btn-primary" onclick="window.print()" style="background:#0284c7; color:#ffffff; font-weight:bold; cursor:pointer;">🖨️ Exportar / Imprimir PDF</button>
         </div>
     </div>
 
@@ -429,6 +428,85 @@
         className: 'marker-domo-custom'
     });
 
+    
+    const MUNICIPIOS_SAN_LUIS = [
+        {"municipio":"SAN LUIS","lat":-33.2943,"lng":-66.3026},
+        {"municipio":"VILLA MERCEDES","lat":-33.6761,"lng":-65.4594},
+        {"municipio":"MERLO","lat":-32.3461,"lng":-65.0120},
+        {"municipio":"LA PUNTA","lat":-33.1611,"lng":-66.3110},
+        {"municipio":"JUANA KOSLAY","lat":-33.2949,"lng":-66.2403},
+        {"municipio":"POTRERO DE LOS FUNES","lat":-33.2139,"lng":-66.2443},
+        {"municipio":"EL VOLCAN","lat":-33.3056,"lng":-66.1595},
+        {"municipio":"TRAPICHE","lat":-32.9986,"lng":-66.0109},
+        {"municipio":"ESTANCIA GRANDE","lat":-33.1645,"lng":-66.1318},
+        {"municipio":"CAROLINA","lat":-32.8069,"lng":-66.0836},
+        {"municipio":"NOGOLI","lat":-32.8991,"lng":-66.3309},
+        {"municipio":"VILLA DE LA QUEBRADA","lat":-33.0385,"lng":-66.2995},
+        {"municipio":"SAN FRANCISCO","lat":-32.5931,"lng":-66.1229},
+        {"municipio":"LEANDRO ALEM","lat":-32.4644,"lng":-66.0411},
+        {"municipio":"LUJAN","lat":-32.3596,"lng":-65.9413},
+        {"municipio":"QUINES","lat":-32.2211,"lng":-65.7983},
+        {"municipio":"CANDELARIA","lat":-32.0661,"lng":-65.8169},
+        {"municipio":"LAFINUR","lat":-32.0432,"lng":-65.3291},
+        {"municipio":"SAN MARTIN","lat":-32.3969,"lng":-65.6839},
+        {"municipio":"LAS AGUADAS","lat":-32.3762,"lng":-65.5142},
+        {"municipio":"LAS CHACRAS","lat":-32.5677,"lng":-65.7782},
+        {"municipio":"VILLA DE PRAGA","lat":-32.5255,"lng":-65.6355},
+        {"municipio":"LAS LAGUNAS","lat":-32.6248,"lng":-65.5419},
+        {"municipio":"PASO GRANDE","lat":-32.8974,"lng":-65.6411},
+        {"municipio":"LA TOMA","lat":-33.0496,"lng":-65.6176},
+        {"municipio":"CONCARAN","lat":-32.5537,"lng":-65.2429},
+        {"municipio":"SANTA ROSA DEL CONLARA","lat":-32.3134,"lng":-65.1933},
+        {"municipio":"CARPINTERIA","lat":-32.3903,"lng":-65.0332},
+        {"municipio":"LOS MOLLES","lat":-32.4781,"lng":-65.0088},
+        {"municipio":"CORTADERAS","lat":-32.4962,"lng":-64.9874},
+        {"municipio":"VILLA LARCA","lat":-32.6280,"lng":-64.9212},
+        {"municipio":"PAPAGAYOS","lat":-32.6928,"lng":-64.9380},
+        {"municipio":"VILLA DEL CARMEN","lat":-32.9530,"lng":-65.0060},
+        {"municipio":"LA PUNILLA","lat":-33.1467,"lng":-65.0760},
+        {"municipio":"TILISARAO","lat":-32.7435,"lng":-65.2564},
+        {"municipio":"NASCHEL","lat":-32.9133,"lng":-65.3788},
+        {"municipio":"RENCA","lat":-32.7650,"lng":-65.4074},
+        {"municipio":"SAN PABLO","lat":-32.6483,"lng":-65.3144},
+        {"municipio":"SAN JOSE DEL MORRO","lat":-33.2091,"lng":-65.4827},
+        {"municipio":"JUAN LLERENA","lat":-33.2905,"lng":-65.6256},
+        {"municipio":"JUAN JORBA","lat":-33.6028,"lng":-65.2716},
+        {"municipio":"JUSTO DARACT","lat":-33.8628,"lng":-65.1887},
+        {"municipio":"LAVAISSE","lat":-33.8233,"lng":-65.4255},
+        {"municipio":"FRAGA","lat":-33.4985,"lng":-65.7941},
+        {"municipio":"SALADILLO","lat":-33.2020,"lng":-65.8583},
+        {"municipio":"SAN JERONIMO","lat":-33.1485,"lng":-66.5307},
+        {"municipio":"BALDE","lat":-33.3450,"lng":-66.6250},
+        {"municipio":"ALTO PENCOSO","lat":-33.4322,"lng":-66.9251},
+        {"municipio":"DESAGUADERO","lat":-33.3997,"lng":-67.0726},
+        {"municipio":"BEAZLEY","lat":-33.7457,"lng":-66.6346},
+        {"municipio":"ZANJITAS","lat":-33.7962,"lng":-66.4134},
+        {"municipio":"ALTO PELADO","lat":-33.8286,"lng":-66.1576},
+        {"municipio":"BUENA ESPERANZA","lat":-34.7441,"lng":-65.2502},
+        {"municipio":"BATAVIA","lat":-34.7672,"lng":-65.6950},
+        {"municipio":"FORTIN EL PATRIA","lat":-34.7650,"lng":-65.5238},
+        {"municipio":"NAVIA","lat":-34.7841,"lng":-66.5997},
+        {"municipio":"UNION","lat":-35.1370,"lng":-65.9530},
+        {"municipio":"BAGUAL","lat":-35.1243,"lng":-65.5861},
+        {"municipio":"FORTUNA","lat":-35.1119,"lng":-65.4060},
+        {"municipio":"NUEVA GALIA","lat":-35.1040,"lng":-65.2497},
+        {"municipio":"ANCHORENA","lat":-35.6472,"lng":-65.4503},
+        {"municipio":"ARIZONA","lat":-35.7112,"lng":-65.3161}
+    ];
+
+    function detectarLocalidadPorGPS(lat, lng) {
+        let minDist = Infinity;
+        let mejor = "SAN LUIS";
+        for (let m of MUNICIPIOS_SAN_LUIS) {
+            let d = Math.hypot(m.lat - lat, m.lng - lng);
+            if (d < minDist) {
+                minDist = d;
+                mejor = m.municipio;
+            }
+        }
+        return mejor;
+    }
+
     function initMap() {
         // Inicializar datos de seguridad de quien pidió el mapa
         try {
@@ -491,6 +569,8 @@
 
     async function cargarDatos(lat, lng, radio = 700) {
         document.getElementById('lblCoords').innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        const locDetectada = detectarLocalidadPorGPS(lat, lng);
+        document.getElementById('lblLocalidad').innerText = locDetectada.toUpperCase();
         document.getElementById('lblFechaHora').innerText = new Date().toLocaleString('es-AR', {
             timeZone: 'America/Argentina/San_Luis',
             year: 'numeric', month: '2-digit', day: '2-digit',
@@ -553,6 +633,15 @@
             if (!data || !data.success) {
                 console.error("No se pudieron cargar datos GPON para radio 700m");
                 return;
+            }
+
+                        if (data && data.localidad) {
+                document.getElementById('lblLocalidad').innerText = data.localidad.toUpperCase();
+            } else if (data && data.naps && data.naps.length > 0) {
+                const napLoc = data.naps.find(n => n.localidad && n.localidad.trim() !== '')?.localidad;
+                if (napLoc) {
+                    document.getElementById('lblLocalidad').innerText = napLoc.toUpperCase();
+                }
             }
 
             // 1. Renderizar Trazas de FO con soporte robusto multi-array y casing de alto contraste
@@ -704,12 +793,7 @@
         });
     }
 
-    function cargarZona(lat, lng, nombre) {
-        curLat = lat;
-        curLng = lng;
-        document.getElementById('lblLocalidad').innerText = nombre;
-        cargarDatos(lat, lng, 700);
-    }
+    // Zona de pruebas eliminada
 
     document.addEventListener('DOMContentLoaded', initMap);
 </script>
