@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>AUI 4.0 | Merak.ia CAUSA RAÍZ 4.0 — Análisis Inteligente de Reincidencias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void: #04070d;
+      --bg-obsidian: #09101d;
+      --bg-card-inner: #0b1324;
+      --bg-card-elevated: #101b33;
+      --metal-light: #f1f5f9;
+      --metal-mid: #cbd5e1;
+      --metal-dark: #64748b;
+      --metal-gradient: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 22%, #f8fafc 48%, #64748b 76%, #cbd5e1 100%);
+      --metal-header-grad: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 45%, #94a3b8 100%);
+      --cyan-neon: #00d4ff;
+      --cyan-bright: #38bdf8;
+      --cyan-glow: rgba(0, 212, 255, 0.35);
+      --cyan-soft: rgba(0, 212, 255, 0.12);
+      --emerald: #10b981;
+      --emerald-soft: rgba(16, 185, 129, 0.15);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.16);
+      --crimson: #f43f5e;
+      --crimson-soft: rgba(244, 63, 94, 0.18);
+      --purple: #a855f7;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-cyan: rgba(0, 212, 255, 0.42);
+      --border-metal: rgba(203, 213, 225, 0.32);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-void);
+      background-image:
+        radial-gradient(circle at 12% 8%, rgba(0, 212, 255, 0.12) 0%, transparent 38%),
+        radial-gradient(circle at 88% 15%, rgba(56, 189, 248, 0.09) 0%, transparent 40%),
+        linear-gradient(180deg, #050912 0%, #091120 50%, #050811 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 14px;
+      line-height: 1.45;
+    }
+
+    /* MARCO METÁLICO PRINCIPAL (ESTÉTICA AUI 4.0 | MERAK.IA STATS 4.0) */
+    .metallic-shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 4px;
+      border-radius: 22px;
+      background: var(--metal-gradient);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.85),
+        0 0 28px rgba(0, 212, 255, 0.18),
+        inset 0 2px 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .shell-inner {
+      background: linear-gradient(180deg, #0b1222 0%, #070c17 100%);
+      border-radius: 19px;
+      padding: 18px;
+      border: 1px solid rgba(0, 212, 255, 0.25);
+    }
+
+    /* TOP BAR METÁLICA AUI 4.0 | MERAK.IA */
+    .topbar-metal {
+      background: linear-gradient(135deg, #dde5ef 0%, #b8c4d4 35%, #f1f5f9 65%, #94a3b8 100%);
+      border-radius: 14px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.45),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+      margin-bottom: 16px;
+      border: 1px solid #f8fafc;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(180deg, #0c1425 0%, #070b14 100%);
+      padding: 7px 14px;
+      border-radius: 11px;
+      border: 1.5px solid var(--cyan-neon);
+      box-shadow: 0 0 14px rgba(0, 212, 255, 0.35);
+    }
+
+    .brand-logo-box img {
+      height: 34px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-logo-fallback {
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-logo-fallback span {
+      color: var(--cyan-neon);
+    }
+
+    .merakia-badge {
+      background: linear-gradient(135deg, #091326 0%, #10203d 100%);
+      border: 1.5px solid var(--cyan-neon);
+      border-radius: 10px;
+      padding: 6px 13px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .merakia-badge-title {
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #fff;
+    }
+
+    .merakia-badge-title span {
+      color: var(--cyan-neon);
+    }
+
+    .merakia-badge-sub {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+
+    /* BUSCADOR Y ACCIONES RÁPIDAS */
+    .topbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      justify-content: flex-end;
+      min-width: 280px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      max-width: 440px;
+      min-width: 230px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #091224;
+      color: #f8fafc;
+      border: 1.5px solid var(--cyan-neon);
+      border-radius: 10px;
+      padding: 9px 14px 9px 36px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      outline: none;
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .search-input::placeholder {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .search-input:focus {
+      box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cyan-neon);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .autocomplete-list {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #0b1528;
+      border: 1.5px solid var(--cyan-neon);
+      border-radius: 12px;
+      max-height: 340px;
+      overflow-y: auto;
+      z-index: 999;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
+      display: none;
+    }
+
+    .autocomplete-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+
+    .autocomplete-item:hover {
+      background: rgba(0, 212, 255, 0.14);
+    }
+
+    .autocomplete-item-main {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .autocomplete-item-sub {
+      font-size: 0.73rem;
+      color: #94a3b8;
+    }
+
+    .autocomplete-item-badge {
+      background: rgba(0, 212, 255, 0.16);
+      color: var(--cyan-neon);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .btn-action {
+      background: linear-gradient(180deg, #0f1d36 0%, #091224 100%);
+      color: #f8fafc;
+      border: 1.5px solid var(--cyan-neon);
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-action:hover {
+      background: linear-gradient(180deg, #162a4d 0%, #0d1b36 100%);
+      box-shadow: 0 0 14px rgba(0, 212, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-whatsapp {
+      border-color: #10b981;
+      background: linear-gradient(180deg, #06392c 0%, #04241c 100%);
+      color: #d1fae5;
+    }
+
+    .btn-whatsapp:hover {
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+    }
+
+    /* TARJETA METÁLICA REUTILIZABLE */
+    .metal-card {
+      padding: 2px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(226, 232, 240, 0.75) 0%, rgba(100, 116, 139, 0.4) 50%, rgba(0, 212, 255, 0.55) 100%);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+      margin-bottom: 16px;
+    }
+
+    .metal-card-inner {
+      background: linear-gradient(180deg, #0d172b 0%, #080e1c 100%);
+      border-radius: 14px;
+      padding: 18px 20px;
+      height: 100%;
+    }
+
+    /* CABECERA DE EXPEDIENTE */
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #34d399;
+      font-size: 0.73rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .hero-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 60%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      max-width: 920px;
+      margin-bottom: 14px;
+    }
+
+    .entity-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .entity-pill {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(203, 213, 225, 0.28);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .entity-pill strong {
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .entity-pill.highlight {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 212, 255, 0.12);
+      color: #e0f2fe;
+    }
+
+    /* PANEL CENTRAL IA MERAK.IA (CAUSA RAÍZ + CHECKLIST DE CAMPO) */
+    .ia-hero-card {
+      padding: 2.5px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #00d4ff 0%, #e2e8f0 35%, #0ea5e9 70%, #10b981 100%);
+      box-shadow:
+        0 14px 36px rgba(0, 0, 0, 0.65),
+        0 0 26px rgba(0, 212, 255, 0.25);
+      margin-bottom: 18px;
+    }
+
+    .ia-hero-inner {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(0, 212, 255, 0.14) 0%, transparent 45%),
+        linear-gradient(180deg, #0a1529 0%, #070d19 100%);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .ia-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.22);
+    }
+
+    .ia-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ia-chip-core {
+      background: linear-gradient(90deg, #00d4ff 0%, #38bdf8 100%);
+      color: #04101e;
+      font-weight: 900;
+      font-size: 0.74rem;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .ia-category-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.2px;
+    }
+
+    .ia-confidence-pill {
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+    }
+
+    .ia-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 16px;
+    }
+
+    .ia-box {
+      background: rgba(15, 25, 45, 0.85);
+      border: 1px solid rgba(203, 213, 225, 0.2);
+      border-left: 4px solid var(--cyan-neon);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .ia-box.checklist-box {
+      border-left-color: var(--emerald);
+      background: rgba(10, 28, 36, 0.75);
+    }
+
+    .ia-box-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--cyan-neon);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ia-box.checklist-box .ia-box-label {
+      color: #34d399;
+    }
+
+    .ia-hypothesis-text {
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .prev-findings-list {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.25);
+    }
+
+    .prev-finding-item {
+      font-size: 0.83rem;
+      color: #cbd5e1;
+      background: rgba(2, 6, 23, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 6px;
+    }
+
+    .prev-finding-item strong {
+      color: var(--cyan-bright);
+    }
+
+    .checklist-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(5, 12, 24, 0.65);
+      border: 1px solid rgba(52, 211, 153, 0.22);
+      padding: 9px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.86rem;
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .checklist-item:hover {
+      border-color: #34d399;
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .checklist-item input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: #10b981;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checklist-item.checked {
+      opacity: 0.65;
+      text-decoration: line-through;
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    /* SEÑALES DETECTADAS */
+    .signals-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .signal-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .signal-chip.danger {
+      background: var(--crimson-soft);
+      border: 1px solid rgba(244, 63, 94, 0.55);
+      color: #fda4af;
+    }
+
+    .signal-chip.warning {
+      background: var(--amber-soft);
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      color: #fde68a;
+    }
+
+    .signal-chip.info, .signal-chip.cyan {
+      background: var(--cyan-soft);
+      border: 1px solid rgba(0, 212, 255, 0.45);
+      color: #7dd3fc;
+    }
+
+    /* GRILLA DE 7 TARJETAS KPI METÁLICAS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      padding: 2px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #cbd5e1 0%, #475569 45%, #00d4ff 100%);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .kpi-card-inner {
+      background: linear-gradient(180deg, #0d1629 0%, #070c18 100%);
+      border-radius: 12px;
+      padding: 14px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-label {
+      font-size: 0.69rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 1.38rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .kpi-value.cyan {
+      color: var(--cyan-neon);
+    }
+
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .criticidad-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+    }
+
+    .criticidad-CRÍTICA, .criticidad-CRITICA {
+      background: rgba(244, 63, 94, 0.2);
+      border: 1.5px solid #f43f5e;
+      color: #fda4af;
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
+    }
+
+    .criticidad-ALTA {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1.5px solid #f59e0b;
+      color: #fde68a;
+    }
+
+    .criticidad-MEDIA {
+      background: rgba(0, 212, 255, 0.16);
+      border: 1.5px solid var(--cyan-neon);
+      color: #7dd3fc;
+    }
+
+    /* SECCIÓN DE GRÁFICOS (3 COLUMNAS) */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .section-sub {
+      font-size: 0.77rem;
+      color: #94a3b8;
+      margin-bottom: 14px;
+    }
+
+    .bar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bar-row-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 5px;
+    }
+
+    .bar-row-val {
+      color: var(--cyan-neon);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 9px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #00d4ff 0%, #3b82f6 65%, #10b981 100%);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.45);
+    }
+
+    /* DONUT CHART MOTIVOS */
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .donut-svg-box {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      flex-shrink: 0;
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .donut-center-num {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .donut-center-lbl {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94a3b8;
+      margin-top: 3px;
+    }
+
+    .donut-legend {
+      flex: 1;
+      min-width: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.79rem;
+      color: #cbd5e1;
+    }
+
+    .legend-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* TABLA DE RECLAMOS REINCIDENTES (90 DÍAS) */
+    .table-Header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      background: #0b1528;
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: rgba(0, 212, 255, 0.16);
+      color: #fff;
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    table.reclamos-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    table.reclamos-table th {
+      background: linear-gradient(180deg, #162238 0%, #0f172a 100%);
+      color: #cbd5e1;
+      font-size: 0.71rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 12px 12px;
+      text-align: left;
+      border-bottom: 1.5px solid rgba(0, 212, 255, 0.35);
+    }
+
+    table.reclamos-table td {
+      padding: 12px;
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      vertical-align: middle;
+    }
+
+    table.reclamos-table tr.main-row:hover {
+      background: rgba(0, 212, 255, 0.06);
+    }
+
+    .id-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: var(--cyan-neon);
+      background: rgba(0, 212, 255, 0.12);
+      border: 1px solid rgba(0, 212, 255, 0.35);
+      padding: 4px 8px;
+      border-radius: 7px;
+      display: inline-block;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.73rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status-open {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      color: #fde68a;
+    }
+
+    .status-closed {
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+
+    .btn-detail-toggle {
+      background: rgba(0, 212, 255, 0.12);
+      color: var(--cyan-neon);
+      border: 1px solid rgba(0, 212, 255, 0.45);
+      padding: 6px 11px;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .btn-detail-toggle:hover {
+      background: var(--cyan-neon);
+      color: #04101e;
+    }
+
+    .detail-row {
+      display: none;
+      background: #060b16;
+    }
+
+    .detail-row.open {
+      display: table-row;
+    }
+
+    .detail-drawer {
+      padding: 16px;
+      border-left: 3px solid var(--cyan-neon);
+      background: linear-gradient(90deg, rgba(0, 212, 255, 0.07) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .detail-block {
+      background: rgba(9, 16, 29, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .detail-block.closure-highlight {
+      border-color: rgba(16, 185, 129, 0.45);
+      background: rgba(6, 36, 28, 0.35);
+    }
+
+    .detail-block-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--cyan-neon);
+      margin-bottom: 6px;
+    }
+
+    .detail-block.closure-highlight .detail-block-title {
+      color: #34d399;
+    }
+
+    .detail-block-text {
+      font-size: 0.83rem;
+      color: #f1f5f9;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    /* TIMELINE DE DELEGACIONES */
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      padding-left: 18px;
+      border-left: 2px solid rgba(0, 212, 255, 0.35);
+      margin-left: 8px;
+    }
+
+    .timeline-item {
+      position: relative;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 11px;
+      padding: 12px 14px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 16px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan-neon);
+      box-shadow: 0 0 10px var(--cyan-neon);
+    }
+
+    .timeline-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .timeline-route {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .timeline-route span {
+      color: var(--cyan-neon);
+    }
+
+    .timeline-meta {
+      font-size: 0.76rem;
+      color: #94a3b8;
+    }
+
+    /* DIRECTORIO DE ENTIDADES REINCIDENTES (PARA CAMBIAR RÁPIDO DESDE EL CELULAR) */
+    .directory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .dir-item {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dir-item:hover, .dir-item.active {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 212, 255, 0.12);
+    }
+
+    .footer-sign {
+      text-align: center;
+      padding: 14px 6px 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-sign span {
+      color: var(--cyan-neon);
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 8px; }
+      .shell-inner { padding: 12px; }
+      .ia-grid { grid-template-columns: 1fr; }
+      .detail-drawer { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .topbar-controls, .btn-detail-toggle, #directorySection { display: none !important; }
+      .detail-row { display: table-row !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="metallic-shell">
+    <div class="shell-inner">
+
+      <!-- TOP BAR METÁLICA AUI 4.0 | MERAK.IA -->
+      <header class="topbar-metal">
+        <div class="brand-group">
+          <div class="brand-logo-box">
+            <img src="Logoaaui.png" alt="AUI 4.0" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';" />
+            <div id="logoFallback" class="brand-logo-fallback" style="display:none;">
+              AUI <span>4.0</span>
+            </div>
+          </div>
+          <div class="merakia-badge">
+            <div class="merakia-badge-title">Merak<span>.ia</span> CAUSA RAÍZ 4.0</div>
+            <div class="merakia-badge-sub">Diagnóstico Operativo Sin VPN • Móvil & NOC</div>
+          </div>
+        </div>
+
+        <div class="topbar-controls">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="Buscar ID Reclamo, SL252, GobSL, SAC, DNI o Cliente..."
+              autocomplete="off"
+            />
+            <div id="autocompleteList" class="autocomplete-list"></div>
+          </div>
+          <button type="button" id="btnWhatsapp" class="btn-action btn-whatsapp" title="Enviar diagnóstico y checklist al WhatsApp del técnico">
+            📲 Compartir WhatsApp
+          </button>
+          <button type="button" onclick="window.print()" class="btn-action" title="Imprimir o guardar en PDF">
+            🖨️ PDF / Imprimir
+          </button>
+        </div>
+      </header>
+
+      <!-- CABECERA DEL EXPEDIENTE -->
+      <section class="metal-card">
+        <div class="metal-card-inner">
+          <div class="hero-eyebrow">
+            <span class="hero-dot"></span>
+            <span id="heroEyebrowText">DIAGNÓSTICO OPERATIVO A1000 / SUR • MOTOR NEURAL MERAK.IA</span>
+          </div>
+          <div class="hero-title-row">
+            <div>
+              <h1 class="hero-title" id="heroTitle">Análisis Inteligente de Reincidencias</h1>
+              <p class="hero-subtitle" id="heroSubtitle">
+                Consolidado automático de los últimos 3 meses (90 días) de reclamos del cliente, dispositivo o sitio, con hipótesis de causa raíz IA, historial de cierres técnicos y protocolo de verificación en campo accesible desde el celular sin VPN.
+              </p>
+            </div>
+          </div>
+          <div class="entity-pills" id="entityPillsContainer">
+            <!-- Dinámico -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL ESTRELLA: DIAGNÓSTICO DE CAUSA RAÍZ IA MERAK.IA + CHECKLIST DE CAMPO -->
+      <section class="ia-hero-card">
+        <div class="ia-hero-inner">
+          <div class="ia-header-bar">
+            <div class="ia-title-group">
+              <span class="ia-chip-core">🧠 IA MERAK.IA • CAUSA RAÍZ</span>
+              <span class="ia-category-title" id="iaCategoryTitle">ANALIZANDO PATRÓN TÉCNICO...</span>
+            </div>
+            <span class="ia-confidence-pill" id="iaConfidencePill">94% CERTEZA IA</span>
+          </div>
+
+          <div class="ia-grid">
+            <div class="ia-box">
+              <div class="ia-box-label">🔬 Hipótesis Técnica de Causa Raíz & Evidencia Previa</div>
+              <div class="ia-hypothesis-text" id="iaHypothesisText">
+                Cargando análisis inteligente de los últimos 90 días...
+              </div>
+              <div class="prev-findings-list" id="iaPrevFindingsList"></div>
+            </div>
+
+            <div class="ia-box checklist-box">
+              <div class="ia-box-label">🛠️ Protocolo de Acción en Sitio para el Técnico (Checklist)</div>
+              <ul class="checklist-items" id="iaChecklistContainer"></ul>
+            </div>
+          </div>
+
+          <div class="signals-bar" id="iaSignalsContainer"></div>
+        </div>
+      </section>
+
+      <!-- 7 TARJETAS KPI METÁLICAS -->
+      <section class="kpi-grid" id="kpiGridContainer">
+        <!-- Dinámico -->
+      </section>
+
+      <!-- 3 GRÁFICOS INTERACTIVOS: TIEMPO POR SECTOR, MOTIVOS, PROCEDIMIENTOS -->
+      <section class="charts-grid">
+        <div class="metal-card" style="margin-bottom:0;">
+          <div class="metal-card-inner">
+            <div class="section-title">
+              <span>⏱️ Tiempo por Sector</span>
+              <span style="font-size:0.74rem; color:var(--cyan-neon);" id="sectorCountBadge"></span>
+            </div>
+            <div class="section-sub">Acumulado de horas/días según el sector asignado en SUR</div>
+            <div class="bar-list" id="chartSectoresContainer"></div>
+          </div>
+        </div>
+
+        <div class="metal-card" style="margin-bottom:0;">
+          <div class="metal-card-inner">
+            <div class="section-title">
+              <span>📊 Distribución de Motivos</span>
+              <span style="font-size:0.74rem; color:var(--cyan-neon);">Últimos 90 días</span>
+            </div>
+            <div class="section-sub">Peso relativo de cada síntoma reportado en la ventana trimestral</div>
+            <div class="donut-wrap" id="chartMotivosContainer"></div>
+          </div>
+        </div>
+
+        <div class="metal-card" style="margin-bottom:0;">
+          <div class="metal-card-inner">
+            <div class="section-title">
+              <span>⚙️ Procedimientos</span>
+              <span style="font-size:0.74rem; color:var(--cyan-neon);" id="procCountBadge"></span>
+            </div>
+            <div class="section-sub">Flujos operativos involucrados en los reclamos</div>
+            <div class="bar-list" id="chartProcedimientosContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABLA DE RECLAMOS REINCIDENTES ENCONTRADOS (CON DESPLIEGUE COMPLETO SIN VPN) -->
+      <section class="metal-card" style="margin-top:16px;">
+        <div class="metal-card-inner">
+          <div class="table-Header-bar">
+            <div>
+              <div class="section-title">📋 Reclamos reincidentes encontrados (Últimos 90 días)</div>
+              <div class="section-sub" style="margin-bottom:0;">
+                Tocá <strong>"Ver detalle +"</strong> en cualquier fila para leer la descripción completa y la observación técnica de cierre sin necesitar VPN.
+              </div>
+            </div>
+            <div class="filter-pills">
+              <button type="button" class="filter-btn active" data-filter="ALL">Todos</button>
+              <button type="button" class="filter-btn" data-filter="OPEN">Solo Abiertos</button>
+              <button type="button" class="filter-btn" data-filter="CLOSED">Cerrados con Informe</button>
+              <button type="button" class="filter-btn" id="btnExpandAll">Desplegar Todos +</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="reclamos-table">
+              <thead>
+                <tr>
+                  <th>RECLAMO</th>
+                  <th>ALTA</th>
+                  <th>CIERRE</th>
+                  <th>ESTADO</th>
+                  <th>SECTOR</th>
+                  <th>MOTIVO</th>
+                  <th>PROCEDIMIENTO</th>
+                  <th>DURACIÓN</th>
+                  <th>DETALLE SIN VPN</th>
+                </tr>
+              </thead>
+              <tbody id="reclamosTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TIMELINE DE DELEGACIONES Y TRAZABILIDAD -->
+      <section class="metal-card">
+        <div class="metal-card-inner">
+          <div class="section-title">
+            <span>🔀 Timeline de Delegaciones y Trazabilidad</span>
+            <span style="font-size:0.75rem; color:var(--cyan-neon);" id="timelineCountBadge"></span>
+          </div>
+          <div class="section-sub">Secuencia cronológica de pases, sectores, responsables y cierres técnicos</div>
+          <div class="timeline-list" id="timelineContainer"></div>
+        </div>
+      </section>
+
+      <!-- EXPLORADOR RÁPIDO DE OTROS CASOS REINCIDENTES -->
+      <section class="metal-card" id="directorySection">
+        <div class="metal-card-inner">
+          <div class="table-Header-bar">
+            <div>
+              <div class="section-title">📡 Explorador Rápido de Clientes, Dispositivos y Sitios Reincidentes (90D)</div>
+              <div class="section-sub" style="margin-bottom:0;">Seleccioná cualquier caso activo o histórico para inspeccionar su diagnóstico IA</div>
+            </div>
+            <div class="filter-pills" id="dirCategoryPills">
+              <button type="button" class="filter-btn active" data-cat="ALL">Todos</button>
+              <button type="button" class="filter-btn" data-cat="FTTH">Clientes FTTH</button>
+              <button type="button" class="filter-btn" data-cat="WIFI">Antenas Wi-Fi</button>
+              <button type="button" class="filter-btn" data-cat="CAM">Cámaras CCO/LPR</button>
+              <button type="button" class="filter-btn" data-cat="SAC">Alarmas SAC</button>
+              <button type="button" class="filter-btn" data-cat="SITE">Sitios / Instituciones</button>
+            </div>
+          </div>
+          <div class="directory-grid" id="directoryGrid"></div>
+        </div>
+      </section>
+
+      <div class="footer-sign">
+        AUI 4.0 AUTOPISTA DE LA INFORMACIÓN • <span>Merak.ia CAUSA RAÍZ 4.0</span> • by FKdev by Merak.ia 2026
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const DONUT_COLORS = ['#00d4ff', '#10b981', '#a855f7', '#f59e0b', '#f43f5e', '#3b82f6'];
+    let GLOBAL_DB = null;
+    let CURRENT_EXPEDIENTE = null;
+    let CURRENT_TABLE_FILTER = 'ALL';
+    let ALL_EXPANDED = false;
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatHoursToDHM(totalHours) {
+      if (!totalHours || isNaN(totalHours) || totalHours <= 0) return '1h 15m';
+      const totalMinutes = Math.round(totalHours * 60);
+      const days = Math.floor(totalMinutes / (60 * 24));
+      const remMin = totalMinutes % (60 * 24);
+      const hours = Math.floor(remMin / 60);
+      const mins = remMin % 60;
+      const parts = [];
+      if (days > 0) parts.push(days + 'd');
+      if (hours > 0 || days > 0) parts.push(hours + 'h');
+      if (days < 10 && mins > 0) parts.push(mins + 'm');
+      return parts.join(' ') || '45m';
+    }
+
+    // Decodificar parámetro compacto &p=... desde el enlace de Google Sheets (0ms de latencia)
+    function decodeUrlPayload(b64u) {
+      if (!b64u) return null;
+      try {
+        const b64 = b64u.replace(/-/g, '+').replace(/_/g, '/');
+        const pad = b64.length % 4 === 0 ? '' : '='.repeat(4 - (b64.length % 4));
+        const binStr = atob(b64 + pad);
+        const bytes = Uint8Array.from(binStr, c => c.charCodeAt(0));
+        const jsonStr = new TextDecoder('utf-8').decode(bytes);
+        const c = JSON.parse(jsonStr);
+
+        let totalH = 0;
+        let maxH = 0;
+        let maxId = 0;
+        let abiertos = 0;
+        let cerrados = 0;
+        const secMap = {};
+        const motMap = {};
+        const procMap = {};
+
+        const reclamos = (c.r || []).map(row => {
+          const [id, alta, cierre, estado, sector, motivo, proc, durStr, durH, resumen] = row;
+          const h = parseFloat(durH) || 4;
+          totalH += h;
+          if (h > maxH) { maxH = h; maxId = id; }
+          const isAbierto = !(String(estado || '').toUpperCase().includes('CERRADO'));
+          if (isAbierto) abiertos++; else cerrados++;
+
+          const sKey = sector || 'Asistencia';
+          if (!secMap[sKey]) secMap[sKey] = { nombre: sKey, horas: 0, count: 0 };
+          secMap[sKey].horas += h;
+          secMap[sKey].count += 1;
+
+          const mKey = motivo || 'Sin Servicio';
+          motMap[mKey] = (motMap[mKey] || 0) + 1;
+
+          const pKey = proc || 'General';
+          procMap[pKey] = (procMap[pKey] || 0) + 1;
+
+          return {
+            id,
+            alta: alta || '-',
+            cierre: cierre || '-',
+            estado: estado || 'Pendiente',
+            abierto: isAbierto,
+            sector: sKey,
+            motivo: mKey,
+            procedimiento: pKey,
+            duracionStr: durStr || formatHoursToDHM(h),
+            duracionHoras: h,
+            descripcion: resumen || '',
+            mensaje_cierre: !isAbierto ? (resumen || '') : '',
+            cierreLimpio: !isAbierto ? (resumen || '') : ''
+          };
+        });
+
+        const tot = Math.max(1, reclamos.length);
+        const sectores = Object.values(secMap).sort((a, b) => b.horas - a.horas).map(s => ({
+          ...s,
+          tiempoStr: formatHoursToDHM(s.horas),
+          pct: Math.round((s.horas / Math.max(0.1, totalH)) * 100)
+        }));
+        const motivos = Object.entries(motMap).sort((a, b) => b[1] - a[1]).map(([nombre, count]) => ({
+          nombre, count, pct: Math.round((count / tot) * 100)
+        }));
+        const procedimientos = Object.entries(procMap).sort((a, b) => b[1] - a[1]).map(([nombre, count]) => ({
+          nombre, count, pct: Math.round((count / tot) * 100)
+        }));
+
+        const senales = [];
+        if (abiertos >= 2) senales.push({ label: `🚨 DUPLICADO ACTIVO (${abiertos} ABIERTOS)`, tone: 'danger' });
+        if (c.ia && c.ia.rm >= 1) senales.push({ label: `⚠️ ${c.ia.rm} CIERRE(S) REMOTO SIN INTERVENCIÓN`, tone: 'warning' });
+        if (totalH >= 48) senales.push({ label: '⏳ DEMORA ACUMULADA PROLONGADA', tone: 'warning' });
+        if (motivos[0] && motivos[0].count >= 2) senales.push({ label: '🔁 MISMO SÍNTOMA REITERADO', tone: 'cyan' });
+
+        return {
+          entityKey: c.k || ('CLAIM:' + c.id),
+          entityLabel: c.l || ('Reclamo #' + c.id),
+          entityType: c.t || 'Cliente / Dispositivo',
+          activeClaimId: c.id,
+          dni: c.d || 'No informado',
+          localidad: c.loc || 'San Luis',
+          domicilio: c.dom || '',
+          ventana: 'Últimos 3 meses (90 días)',
+          kpis: {
+            totalReclamos: reclamos.length,
+            reincidenciasPrevias: Math.max(0, reclamos.length - 1),
+            abiertosCount: abiertos,
+            cerradosCount: cerrados,
+            tiempoTotalStr: formatHoursToDHM(totalH),
+            duracionPromedioStr: formatHoursToDHM(totalH / tot),
+            duracionMaximaStr: formatHoursToDHM(maxH),
+            duracionMaximaId: maxId,
+            criticidad: reclamos.length >= 4 || abiertos >= 2 ? 'CRÍTICA' : 'ALTA',
+            scoreCriticidad: Math.min(98, 55 + reclamos.length * 10),
+            mtbfDias: null,
+            sectorMayorDemora: sectores[0] || { nombre: 'Asistencia', tiempoStr: '0h', pct: 100 },
+            motivoFrecuente: motivos[0] || { nombre: 'Sin Servicio', count: 1, pct: 100 },
+            procedimientoFrecuente: procedimientos[0] || { nombre: 'General', count: 1, pct: 100 }
+          },
+          ia: {
+            categoriaCausa: (c.ia && c.ia.cat) || 'DIAGNÓSTICO CAUSA RAÍZ IA MERAK.IA',
+            confianzaIA: (c.ia && c.ia.cf) || 91,
+            hipotesis: (c.ia && c.ia.h) || 'Reincidencia detectada en los últimos 90 días.',
+            checklistCampo: (c.ia && c.ia.ac) || ['Verificar acometida física y niveles ópticos/eléctricos en sitio'],
+            ultimosCierresTecnicos: (c.ia && c.ia.tf) || [],
+            remotoSinIntervCount: (c.ia && c.ia.rm) || 0,
+            senales
+          },
+          charts: { sectores, motivos, procedimientos },
+          reclamos,
+          timeline: reclamos.map(r => ({
+            id: r.id,
+            fecha: r.alta,
+            origen: 'Mesa de Ayuda / SUR',
+            destino: r.sector,
+            autor: 'Gestión Técnica',
+            motivo: r.motivo,
+            comentario: r.cierreLimpio || r.descripcion,
+            duracionStr: r.duracionStr,
+            estado: r.estado
+          }))
+        };
+      } catch (e) {
+        console.warn('Error decodificando payload URL:', e);
+        return null;
+      }
+    }
+
+    function renderExpediente(exp) {
+      if (!exp) return;
+      CURRENT_EXPEDIENTE = exp;
+
+      // Actualizar URL sin recargar
+      try {
+        const u = new URL(window.location.href);
+        if (exp.activeClaimId) u.searchParams.set('id', exp.activeClaimId);
+        if (exp.entityLabel) u.searchParams.set('ent', exp.entityLabel);
+        window.history.replaceState({}, '', u.toString());
+      } catch (e) {}
+
+      // 1. Header & Pills
+      document.getElementById('heroTitle').textContent = `Análisis Inteligente: ${exp.entityLabel}`;
+      const pillsHtml = [
+        `<span class="entity-pill highlight">🎯 Identificador: <strong>${escapeHtml(exp.entityLabel)}</strong></span>`,
+        `<span class="entity-pill">🏷️ Tipo: <strong>${escapeHtml(exp.entityType)}</strong></span>`,
+        `<span class="entity-pill">🪪 Doc / Ref: <strong>${escapeHtml(exp.dni || 'No informado')}</strong></span>`,
+        `<span class="entity-pill">📍 Localidad: <strong>${escapeHtml(exp.localidad || 'San Luis')}</strong></span>`,
+        exp.domicilio ? `<span class="entity-pill">🏠 Domicilio: <strong>${escapeHtml(exp.domicilio)}</strong></span>` : '',
+        `<span class="entity-pill">📅 Ventana: <strong>Últimos 3 meses (90 días)</strong></span>`
+      ].filter(Boolean).join('');
+      document.getElementById('entityPillsContainer').innerHTML = pillsHtml;
+
+      // 2. Panel IA Merak.ia
+      const ia = exp.ia || {};
+      document.getElementById('iaCategoryTitle').textContent = ia.categoriaCausa || 'DIAGNÓSTICO DE CAUSA RAÍZ';
+      document.getElementById('iaConfidencePill').textContent = `${ia.confianzaIA || 90}% CERTEZA IA`;
+      document.getElementById('iaHypothesisText').textContent = ia.hipotesis || '';
+
+      const findingsBox = document.getElementById('iaPrevFindingsList');
+      let findingsHtml = '';
+      if (ia.ultimosCierresTecnicos && ia.ultimosCierresTecnicos.length > 0) {
+        findingsHtml += `<div style="font-size:0.75rem; font-weight:800; color:#38bdf8; text-transform:uppercase; margin-bottom:4px;">📌 Últimas intervenciones técnicas registradas en sitio:</div>`;
+        ia.ultimosCierresTecnicos.forEach(tf => {
+          findingsHtml += `<div class="prev-finding-item">🛠️ ${escapeHtml(tf)}</div>`;
+        });
+      } else if (ia.remotoSinIntervCount > 0) {
+        findingsHtml += `<div class="prev-finding-item" style="border-color:rgba(245,158,11,0.5); color:#fde68a;">⚠️ <strong>Atención Técnica:</strong> Se registran ${ia.remotoSinIntervCount} cierre(s) previo(s) "sin intervención física / restableció de forma remota". Es indispensable inspección física en sitio.</div>`;
+      } else {
+        findingsHtml += `<div class="prev-finding-item">ℹ️ Revisar el detalle desplegable de cada reclamo debajo para consultar las observaciones de cierre anteriores.</div>`;
+      }
+      findingsBox.innerHTML = findingsHtml;
+
+      const checklistEl = document.getElementById('iaChecklistContainer');
+      const steps = (ia.checklistCampo && ia.checklistCampo.length > 0)
+        ? ia.checklistCampo
+        : ['Verificar nivel óptico / acometida física y alimentación eléctrica del equipamiento'];
+      checklistEl.innerHTML = steps.map((step, i) => `
+        <li class="checklist-item" onclick="const cb=this.querySelector('input'); if(event.target!==cb) cb.checked=!cb.checked; this.classList.toggle('checked', cb.checked);">
+          <input type="checkbox" id="chk_${i}" />
+          <span><strong>Paso ${i + 1}:</strong> ${escapeHtml(step)}</span>
+        </li>
+      `).join('');
+
+      const signalsEl = document.getElementById('iaSignalsContainer');
+      signalsEl.innerHTML = (ia.senales || []).map(s => `
+        <span class="signal-chip ${escapeHtml(s.tone || 'cyan')}" title="${escapeHtml(s.detail || '')}">
+          ${escapeHtml(s.label)}
+        </span>
+      `).join('');
+
+      // 3. 7 KPI Cards
+      const k = exp.kpis || {};
+      const secTop = k.sectorMayorDemora || { nombre: 'Asistencia', tiempoStr: '0h', pct: 100 };
+      const motTop = k.motivoFrecuente || { nombre: 'Sin Servicio', count: 1, pct: 100 };
+      const procTop = k.procedimientoFrecuente || { nombre: 'General', count: 1, pct: 100 };
+
+      document.getElementById('kpiGridContainer').innerHTML = `
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">TOTAL RECLAMOS (90D)</div>
+            <div class="kpi-value cyan">${k.totalReclamos || 0}</div>
+            <div class="kpi-sub"><strong>${k.reincidenciasPrevias || 0}</strong> previos • ${k.abiertosCount || 0} abiertos / ${k.cerradosCount || 0} cerrados</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">TIEMPO TOTAL ACUMULADO</div>
+            <div class="kpi-value">${escapeHtml(k.tiempoTotalStr || '0h')}</div>
+            <div class="kpi-sub">Promedio de <strong>${escapeHtml(k.duracionPromedioStr || '0h')}</strong> por reclamo</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">DURACIÓN RECLAMOS</div>
+            <div class="kpi-value">${escapeHtml(k.duracionPromedioStr || '0h')}</div>
+            <div class="kpi-sub">Máximo: <strong>${escapeHtml(k.duracionMaximaStr || '0h')}</strong> ${k.duracionMaximaId ? `(en #${k.duracionMaximaId})` : ''}</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">CRITICIDAD IA MERAK.IA</div>
+            <div class="kpi-value" style="margin:2px 0 6px;">
+              <span class="criticidad-pill criticidad-${escapeHtml(k.criticidad || 'ALTA')}">${escapeHtml(k.criticidad || 'ALTA')}</span>
+            </div>
+            <div class="kpi-sub">Score IA: <strong>${k.scoreCriticidad || 80}/100</strong>${k.mtbfDias ? ` • Cae cada ~${k.mtbfDias}d` : ''}</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">SECTOR MAYOR DEMORA</div>
+            <div class="kpi-value" style="font-size:1.05rem;">${escapeHtml(secTop.nombre)}</div>
+            <div class="kpi-sub">${escapeHtml(secTop.tiempoStr)} acumulados (${secTop.pct || 100}%)</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">MOTIVO FRECUENTE</div>
+            <div class="kpi-value" style="font-size:1.05rem;">${escapeHtml(motTop.nombre)}</div>
+            <div class="kpi-sub">${motTop.count || 1} repeticiones (${motTop.pct || 100}%)</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card-inner">
+            <div class="kpi-label">PROCEDIMIENTO FRECUENTE</div>
+            <div class="kpi-value" style="font-size:1.05rem;">${escapeHtml(procTop.nombre)}</div>
+            <div class="kpi-sub">${procTop.count || 1} apariciones (${procTop.pct || 100}%)</div>
+          </div>
+        </div>
+      `;
+
+      // 4. Gráficos: Sectores, Motivos (Donut SVG), Procedimientos
+      const sectores = (exp.charts && exp.charts.sectores) || [];
+      document.getElementById('sectorCountBadge').textContent = `${sectores.length} sector(es)`;
+      document.getElementById('chartSectoresContainer').innerHTML = sectores.slice(0, 5).map(s => `
+        <div>
+          <div class="bar-row-head">
+            <span>${escapeHtml(s.nombre)}</span>
+            <span class="bar-row-val">${escapeHtml(s.tiempoStr)} • ${s.pct}%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${Math.max(6, s.pct)}%;"></div>
+          </div>
+        </div>
+      `).join('');
+
+      const motivos = (exp.charts && exp.charts.motivos) || [];
+      renderDonutMotivos(motivos, k.totalReclamos || 1);
+
+      const procs = (exp.charts && exp.charts.procedimientos) || [];
+      document.getElementById('procCountBadge').textContent = `${procs.length} flujo(s)`;
+      document.getElementById('chartProcedimientosContainer').innerHTML = procs.slice(0, 5).map(p => `
+        <div>
+          <div class="bar-row-head">
+            <span>${escapeHtml(p.nombre)}</span>
+            <span class="bar-row-val">${p.count} (${p.pct}%)</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${Math.max(8, p.pct)}%; background:linear-gradient(90deg, #10b981 0%, #00d4ff 100%);"></div>
+          </div>
+        </div>
+      `).join('');
+
+      // 5. Tabla de Reclamos
+      renderReclamosTable();
+
+      // 6. Timeline de Delegaciones
+      const tl = exp.timeline || [];
+      document.getElementById('timelineCountBadge').textContent = `${tl.length} evento(s)`;
+      document.getElementById('timelineContainer').innerHTML = tl.map(item => `
+        <div class="timeline-item">
+          <div class="timeline-head">
+            <div class="timeline-route">
+              <span class="id-badge" style="margin-right:6px;">#${item.id}</span>
+              ${escapeHtml(item.origen)} <span>➔</span> ${escapeHtml(item.destino)}
+            </div>
+            <div class="timeline-meta">
+              🕒 ${escapeHtml(item.fecha)} • ⏱️ <strong>${escapeHtml(item.duracionStr || '')}</strong>
+            </div>
+          </div>
+          <div class="timeline-meta" style="color:#cbd5e1;">
+            👤 <strong>Responsable / Guardia:</strong> ${escapeHtml(item.autor || 'SUR')} &nbsp;|&nbsp;
+            🏷️ <strong>Motivo:</strong> ${escapeHtml(item.motivo || '-')}
+            ${item.comentario ? `<div style="margin-top:5px; color:#94a3b8; font-style:italic;">💬 "${escapeHtml(item.comentario)}"</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderDonutMotivos(motivos, total) {
+      const container = document.getElementById('chartMotivosContainer');
+      const r = 54;
+      const c = 2 * Math.PI * r;
+      let offset = 0;
+
+      const circles = motivos.slice(0, 6).map((m, idx) => {
+        const pct = Math.max(2, m.pct || 0);
+        const dash = (pct / 100) * c;
+        const color = DONUT_COLORS[idx % DONUT_COLORS.length];
+        const svgCircle = `<circle cx="75" cy="75" r="${r}" fill="transparent" stroke="${color}" stroke-width="18" stroke-dasharray="${dash} ${c - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 75 75)" />`;
+        offset += dash;
+        return svgCircle;
+      }).join('');
+
+      const legend = motivos.slice(0, 6).map((m, idx) => {
+        const color = DONUT_COLORS[idx % DONUT_COLORS.length];
+        return `
+          <div class="legend-item">
+            <div class="legend-left">
+              <span class="legend-dot" style="background:${color};"></span>
+              <span>${escapeHtml(m.nombre)}</span>
+            </div>
+            <strong style="color:#fff; font-family:'JetBrains Mono',monospace; font-size:0.76rem;">${m.count} (${m.pct}%)</strong>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="donut-svg-box">
+          <svg width="150" height="150" viewBox="0 0 150 150">
+            <circle cx="75" cy="75" r="${r}" fill="transparent" stroke="rgba(148,163,184,0.15)" stroke-width="18" />
+            ${circles}
+          </svg>
+          <div class="donut-center">
+            <span class="donut-center-num">${total}</span>
+            <span class="donut-center-lbl">Reclamos</span>
+          </div>
+        </div>
+        <div class="donut-legend">${legend}</div>
+      `;
+    }
+
+    function renderReclamosTable() {
+      if (!CURRENT_EXPEDIENTE) return;
+      const tbody = document.getElementById('reclamosTableBody');
+      const list = (CURRENT_EXPEDIENTE.reclamos || []).filter(r => {
+        if (CURRENT_TABLE_FILTER === 'OPEN') return r.abierto;
+        if (CURRENT_TABLE_FILTER === 'CLOSED') return !r.abierto;
+        return true;
+      });
+
+      tbody.innerHTML = list.map((r, idx) => {
+        const rowId = `detail_${r.id}_${idx}`;
+        const descText = r.descripcion || 'Sin descripción adicional registrada en apertura.';
+        const cierreText = r.mensaje_cierre || r.cierreLimpio || (r.abierto ? '⏳ Reclamo actualmente abierto / en gestión técnica.' : 'Cerrado en SUR sin observación detallada.');
+        const surUrl = `https://suraui.sanluis.gov.ar/AsistenciaWeb/Admin/AUI/ReclamoVer.asp?ReclamoId=${r.id}`;
+        const mapsQuery = encodeURIComponent(`${r.domicilio || CURRENT_EXPEDIENTE.entityLabel} ${r.localidad || CURRENT_EXPEDIENTE.localidad || 'San Luis'}, Argentina`);
+
+        return `
+          <tr class="main-row">
+            <td><span class="id-badge">#${r.id}</span></td>
+            <td>${escapeHtml(r.alta)}</td>
+            <td>${escapeHtml(r.cierre || '-')}</td>
+            <td>
+              <span class="status-badge ${r.abierto ? 'status-open' : 'status-closed'}">
+                ${r.abierto ? '⏳ ' : '✅ '}${escapeHtml(r.estado)}
+              </span>
+            </td>
+            <td>${escapeHtml(r.sector)}</td>
+            <td><strong>${escapeHtml(r.motivo)}</strong></td>
+            <td>${escapeHtml(r.procedimiento)}</td>
+            <td style="font-family:'JetBrains Mono',monospace; font-weight:700; color:#38bdf8;">${escapeHtml(r.duracionStr)}</td>
+            <td>
+              <button type="button" class="btn-detail-toggle" onclick="toggleDetailRow('${rowId}', this)">
+                ${ALL_EXPANDED ? 'Ocultar -' : 'Ver detalle +'}
+              </button>
+            </td>
+          </tr>
+          <tr id="${rowId}" class="detail-row ${ALL_EXPANDED ? 'open' : ''}">
+            <td colspan="9">
+              <div class="detail-drawer">
+                <div class="detail-block">
+                  <div class="detail-block-title">📄 Descripción Completa de Apertura (Sin VPN)</div>
+                  <div class="detail-block-text">${escapeHtml(descText)}</div>
+                  <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                    ${r.telefono ? `<span class="entity-pill">📞 Tel: <strong>${escapeHtml(r.telefono)}</strong></span>` : ''}
+                    ${r.domicilio ? `<span class="entity-pill">🏠 Dir: <strong>${escapeHtml(r.domicilio)}</strong></span>` : ''}
+                    <a href="https://www.google.com/maps/search/?api=1&query=${mapsQuery}" target="_blank" rel="noopener" class="btn-action" style="padding:5px 10px; font-size:0.74rem;">📍 Mapa GPS</a>
+                    <a href="${surUrl}" target="_blank" rel="noopener" class="btn-action" style="padding:5px 10px; font-size:0.74rem;">🔗 Ficha SUR (Con VPN)</a>
+                  </div>
+                </div>
+                <div class="detail-block closure-highlight">
+                  <div class="detail-block-title">🛠️ Mensaje de Cierre / Intervención Técnica Anterior</div>
+                  <div class="detail-block-text">${escapeHtml(cierreText)}</div>
+                  ${r.delegacion && r.delegacion.autor ? `
+                    <div style="margin-top:10px; padding-top:8px; border-top:1px dashed rgba(52,211,153,0.3); font-size:0.77rem; color:#a7f3d0;">
+                      👤 <strong>Último pase SUR:</strong> ${escapeHtml(r.delegacion.autor)} (${escapeHtml(r.delegacion.fecha)}) • ${escapeHtml(r.delegacion.origen)} ➔ ${escapeHtml(r.delegacion.destino)}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleDetailRow(rowId, btn) {
+      const row = document.getElementById(rowId);
+      if (!row) return;
+      const isOpen = row.classList.toggle('open');
+      if (btn) btn.textContent = isOpen ? 'Ocultar -' : 'Ver detalle +';
+    }
+
+    // Buscar un expediente en GLOBAL_DB por ID de reclamo, código de dispositivo (ej. SL252), DNI o nombre
+    function findExpedienteByQuery(query) {
+      if (!GLOBAL_DB || !GLOBAL_DB.entities) return null;
+      const qRaw = String(query || '').trim();
+      if (!qRaw) return null;
+      const qUpper = qRaw.toUpperCase();
+      const qClean = qUpper.replace(/[^A-Z0-9]/g, '');
+
+      // 1. Por ID de reclamo exacto
+      if (GLOBAL_DB.claimToEntity && GLOBAL_DB.claimToEntity[qClean]) {
+        const eKey = GLOBAL_DB.claimToEntity[qClean];
+        if (GLOBAL_DB.entities[eKey]) return GLOBAL_DB.entities[eKey];
+      }
+
+      // 2. Por alias exacto (ej. SL252, GOBSL-JD-06, DNI)
+      if (GLOBAL_DB.aliasToEntity) {
+        const k1 = GLOBAL_DB.aliasToEntity[qUpper] || GLOBAL_DB.aliasToEntity[qClean];
+        if (k1 && GLOBAL_DB.entities[k1]) return GLOBAL_DB.entities[k1];
+      }
+
+      // 3. Directo en entities
+      if (GLOBAL_DB.entities[qUpper]) return GLOBAL_DB.entities[qUpper];
+      if (GLOBAL_DB.entities['DEV:' + qUpper]) return GLOBAL_DB.entities['DEV:' + qUpper];
+      if (GLOBAL_DB.entities['SITE:' + qUpper]) return GLOBAL_DB.entities['SITE:' + qUpper];
+
+      // 4. Búsqueda parcial por subcadena
+      for (const [k, exp] of Object.entries(GLOBAL_DB.entities)) {
+        if (
+          k.toUpperCase().includes(qUpper) ||
+          (exp.entityLabel && exp.entityLabel.toUpperCase().includes(qUpper)) ||
+          (exp.dni && exp.dni.includes(qClean))
+        ) {
+          return exp;
+        }
+      }
+      return null;
+    }
+
+    function renderDirectory(catFilter = 'ALL') {
+      if (!GLOBAL_DB || !GLOBAL_DB.entities) return;
+      const grid = document.getElementById('directoryGrid');
+      const all = Object.values(GLOBAL_DB.entities)
+        .filter(e => {
+          const t = (e.entityType || '').toUpperCase();
+          if (catFilter === 'FTTH') return t.includes('FTTH') || t.includes('CLIENTE');
+          if (catFilter === 'WIFI') return t.includes('WI-FI') || t.includes('ANTENA');
+          if (catFilter === 'CAM') return t.includes('CÁMARA') || t.includes('CAMARA') || t.includes('LPR');
+          if (catFilter === 'SAC') return t.includes('ALARMA');
+          if (catFilter === 'SITE') return t.includes('SITIO') || t.includes('INSTITUCI');
+          return true;
+        })
+        .sort((a, b) => (b.kpis.totalReclamos - a.kpis.totalReclamos) || (b.activeClaimId - a.activeClaimId))
+        .slice(0, 60);
+
+      grid.innerHTML = all.map(e => `
+        <div class="dir-item ${CURRENT_EXPEDIENTE && CURRENT_EXPEDIENTE.entityKey === e.entityKey ? 'active' : ''}" onclick="selectEntityFromDir('${escapeHtml(e.entityKey)}')">
+          <div>
+            <div style="font-size:0.82rem; font-weight:800; color:#f8fafc;">${escapeHtml(e.entityLabel)}</div>
+            <div style="font-size:0.71rem; color:#94a3b8;">${escapeHtml(e.entityType)} • ${escapeHtml(e.localidad || 'San Luis')}</div>
+          </div>
+          <span class="autocomplete-item-badge">🔄 ${e.kpis.totalReclamos}</span>
+        </div>
+      `).join('');
+    }
+
+    function selectEntityFromDir(entityKey) {
+      if (!GLOBAL_DB || !GLOBAL_DB.entities || !GLOBAL_DB.entities[entityKey]) return;
+      renderExpediente(GLOBAL_DB.entities[entityKey]);
+      renderDirectory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Compartir resumen por WhatsApp para el técnico de campo
+    document.getElementById('btnWhatsapp').addEventListener('click', () => {
+      if (!CURRENT_EXPEDIENTE) return;
+      const e = CURRENT_EXPEDIENTE;
+      const lines = [
+        `🧠 *DIAGNÓSTICO IA MERAK.IA 4.0 — REINCIDENCIAS (90D)*`,
+        `🎯 *Afectado:* ${e.entityLabel} (${e.entityType})`,
+        `📍 *Localidad:* ${e.localidad}${e.domicilio ? ' - ' + e.domicilio : ''}`,
+        `🔁 *Reclamos en 90 días:* ${e.kpis.totalReclamos} (${e.kpis.abiertosCount} abierto / ${e.kpis.cerradosCount} cerrados)`,
+        ``,
+        `🔬 *Causa Raíz IA (${e.ia.confianzaIA}%):* ${e.ia.categoriaCausa}`,
+        `• ${e.ia.hipotesis}`,
+        ``,
+        `🛠️ *Checklist en Sitio:*`,
+        ...(e.ia.checklistCampo || []).map((s, i) => `${i + 1}. ${s}`),
+        ``,
+        `🔗 *Expediente completo (Sin VPN):* ${window.location.href}`
+      ];
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(lines.join('\n'))}`;
+      window.open(waUrl, '_blank');
+    });
+
+    // Filtros de tabla
+    document.querySelectorAll('.filter-pills .filter-btn[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pills .filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        CURRENT_TABLE_FILTER = btn.getAttribute('data-filter');
+        renderReclamosTable();
+      });
+    });
+
+    document.getElementById('btnExpandAll').addEventListener('click', function() {
+      ALL_EXPANDED = !ALL_EXPANDED;
+      this.textContent = ALL_EXPANDED ? 'Contraer Todos -' : 'Desplegar Todos +';
+      renderReclamosTable();
+    });
+
+    // Filtros de directorio
+    document.querySelectorAll('#dirCategoryPills .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#dirCategoryPills .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderDirectory(btn.getAttribute('data-cat'));
+      });
+    });
+
+    // Buscador con Autocompletado en vivo
+    const searchInput = document.getElementById('searchInput');
+    const autoList = document.getElementById('autocompleteList');
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toUpperCase();
+      if (!q || !GLOBAL_DB || !GLOBAL_DB.entities) {
+        autoList.style.display = 'none';
+        return;
+      }
+
+      const matches = [];
+      for (const exp of Object.values(GLOBAL_DB.entities)) {
+        const hayClaim = (exp.reclamos || []).some(r => String(r.id).includes(q));
+        if (
+          hayClaim ||
+          (exp.entityLabel && exp.entityLabel.toUpperCase().includes(q)) ||
+          (exp.entityKey && exp.entityKey.toUpperCase().includes(q)) ||
+          (exp.dni && exp.dni.includes(q))
+        ) {
+          matches.push(exp);
+          if (matches.length >= 12) break;
+        }
+      }
+
+      if (matches.length === 0) {
+        autoList.style.display = 'none';
+        return;
+      }
+
+      autoList.innerHTML = matches.map(m => `
+        <div class="autocomplete-item" onclick="selectEntityFromSearch('${escapeHtml(m.entityKey)}')">
+          <div>
+            <div class="autocomplete-item-main">${escapeHtml(m.entityLabel)}</div>
+            <div class="autocomplete-item-sub">${escapeHtml(m.entityType)} • ${escapeHtml(m.localidad || 'San Luis')} • Último #${m.activeClaimId}</div>
+          </div>
+          <span class="autocomplete-item-badge">🔄 ${m.kpis.totalReclamos} reclamos</span>
+        </div>
+      `).join('');
+      autoList.style.display = 'block';
+    });
+
+    function selectEntityFromSearch(entityKey) {
+      autoList.style.display = 'none';
+      searchInput.value = '';
+      selectEntityFromDir(entityKey);
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-wrapper')) {
+        autoList.style.display = 'none';
+      }
+    });
+
+    // INICIALIZACIÓN (3 CAPAS SIN VPN: Payload URL -> reincidencias_data.json -> Fallback)
+    async function initApp() {
+      const params = new URLSearchParams(window.location.search);
+      const idParam = params.get('id') || '';
+      const entParam = params.get('ent') || params.get('institucion') || '';
+      const payloadParam = params.get('p') || '';
+
+      // Capa 1: Renderizado instantáneo (< 10ms) desde el parámetro compacto &p=... del link de Google Sheets
+      let decodedExp = null;
+      if (payloadParam) {
+        decodedExp = decodeUrlPayload(payloadParam);
+        if (decodedExp) {
+          renderExpediente(decodedExp);
+        }
+      }
+
+      // Capa 2: Cargar base completa reincidencias_data.json para enriquecer textos completos y habilitar buscador
+      try {
+        const res = await fetch('./reincidencias_data.json?v=' + Date.now());
+        if (res.ok) {
+          GLOBAL_DB = await res.json();
+          const matchedFromDb =
+            (idParam && findExpedienteByQuery(idParam)) ||
+            (entParam && findExpedienteByQuery(entParam));
+
+          if (matchedFromDb) {
+            renderExpediente(matchedFromDb);
+          } else if (!decodedExp) {
+            // Si se abrió sin parámetros, mostrar SL252 o el caso más crítico activo
+            const defExp = findExpedienteByQuery('SL252') || Object.values(GLOBAL_DB.entities)[0];
+            if (defExp) renderExpediente(defExp);
+          }
+          renderDirectory('ALL');
+        }
+      } catch (errFetch) {
+        console.warn('Usando modo autónomo URL Payload (sin JSON externo):', errFetch);
+      }
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
